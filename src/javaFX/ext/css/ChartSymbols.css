@@ -1,0 +1,406 @@
+/*
+ * CSS class definition replacements for the JavaFX original CSS class definitions
+ * class definitions for the Chart symbols and lines are replaced/updated below
+ */
+
+p {
+	text-indent: -1.5em;
+	margin-left:  2.0em;
+	margin-top: 0;
+	margin-bottom: 0;
+	}
+	
+// Outer part of the chart is white
+.chart {
+	-fx-background-color: white;
+}
+
+// Chart bacground is white
+.chart-plot-background {
+    -fx-background-color: white;
+}
+
+// Chart legend is transparent (so white)
+.chart-legend {
+   -fx-background-color:  transparent;
+   -fx-border-color: black;
+}
+
+// default line width is 2 pixels
+.chart-series-line-updated {
+    -fx-stroke-width: 2px;
+}
+
+// if nothing else is changed all symbols will be black boxes
+.chart-line-symbol-updated {
+		-fx-border-color: black;
+		-fx-border-width: 1.2;
+		-fx-padding: 6px
+}
+
+/* in general, every symbol will have the following set:
+ * -fx-shape: "M....z"; 
+ *			-- The SVG 'path' code that creates the basic shape (circle, square, diamond, etc.)
+ * -fx-padding: 6px; 
+ *			-- Sets shape size, some shapes 'normally' look bigger or smaller than others so this is used to make them similar sizes relative to each other
+ * -fx-padding: 5px 7px 5px 7px; 
+ *			-- Sets the shape for the h_ or v_ variants (horizontal or vertical variants, this squishes the shape (top, left, botton, and right sizes are different)
+ * -fx-border-width: 1.2px; 
+ *			-- Sets the size of the border line drawn around the shape
+ * -fx-background-color: color;
+ *			-- if present this "fills" the shape.  Could be transparent
+ *
+ * Variations: 
+ *	_h or _v variants typically squish the shape horizontally or vertically using the -fx-padding property
+ *			-- _h or _v variants provide us with more symbol options
+ *	_whitefilled variants typically increase the -fx-border-width to 2px and sets the -fx-background-color to whitesmoke
+ *			-- _whitefilled variants provide us with a different look and feel for the data 
+ */  
+
+.diamond {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 6px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+	
+.diamond_whitefilled {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.diamond_filled {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.h_diamond_new {
+	-fx-shape: "M 10,10    l6,10    l-6,10    l-6,-10  l6,-10";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+
+.h_diamond {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.h_diamond_whitefilled {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.h_diamond_filled {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.v_diamond {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 7px 4px 7px 4px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+
+.v_diamond_whitefilled {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 7px 4px 7px 4px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.v_diamond_filled {
+	-fx-shape: "M 10,10    l10,10    l-10,10    l-10,-10  l10,-10";
+	-fx-padding: 7px 4px 7px 4px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+
+.circle {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 5px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+	
+.circle_whitefilled {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 5px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.circle_filled {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 5px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.h_ellipse {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+	
+.h_ellipse_whitefilled {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.h_ellipse_filled {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 4px 7px 4px 7px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+
+.v_ellipse {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 7px 4px 7px 4px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+	
+.v_ellipse_whitefilled {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 7px 4px 7px 4px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.v_ellipse_filled {
+	-fx-shape: "M 25, 50    a 25,25 0 1,1 50,0    a 25,25 0 1,1 -50,0";
+	-fx-padding: 7px 4px 7px 4px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.square {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 5px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.square_whitefilled {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 5px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.square_filled {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 5px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.h_rectangle {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 3px 7px 3px 7px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.h_rectangle_whitefilled {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 3px 7px 3px 7px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.h_rectangle_filled {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 3px 7px 3px 7px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.v_rectangle {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 7px 3px 7px 3px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.v_rectangle_whitefilled {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 7px 3px 7px 3px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.v_rectangle_filled {
+	-fx-shape: "M 10,10    l10,0    l0,10    l-10,0  l0,-10";
+	-fx-padding: 7px 3px 7px 3px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.up_triangle {
+	-fx-shape: "M10,10 l5,4  l-10,0  z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.up_triangle_whitefilled {
+	-fx-shape: "M10,10 l5,4  l-10,0  z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.up_triangle_filled {
+	-fx-shape: "M10,10 l5,4  l-10,0  z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+
+.down_triangle {
+	-fx-shape: "M10,10 l10,0  l-5,4 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.down_triangle_whitefilled {
+	-fx-shape: "M10,10 l10,0  l-5,4 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.down_triangle_filled {
+	-fx-shape: "M10,10 l10,0  l-5,4 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+
+.right_triangle {
+	-fx-shape: "M10,10 l0,10  l4,-5 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.right_triangle_whitefilled {
+	-fx-shape: "M10,10 l0,10  l4,-5 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.right_triangle_filled {
+	-fx-shape: "M10,10 l0,10  l4,-5 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-tim
+	}
+	
+.left_triangle {
+	-fx-shape: "M10,10 l0,10  l-4,-5 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}
+.left_triangle_whitefilled {
+	-fx-shape: "M10,10 l0,10  l-4,-5 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+.left_triangle_filled {
+	-fx-shape: "M10,10 l0,10  l-4,-5 z";
+	-fx-padding: 6px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-tim
+	}
+	
+.star5 {
+	-fx-shape: "M32 48L15 58l4-19L5 26l19-2 8-18 8 18 19 2-14 13 4 19-17-10z";
+	-fx-padding: 8px;
+	-fx-border-width: 1.6;
+	-fx-background-color: transparent;
+	}	
+.star5_whitefilled {
+	-fx-shape: "M32 48L15 58l4-19L5 26l19-2 8-18 8 18 19 2-14 13 4 19-17-10z";
+	-fx-padding: 8px;
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}	
+.star5_filled {
+	-fx-shape: "M32 48L15 58l4-19L5 26l19-2 8-18 8 18 19 2-14 13 4 19-17-10z";
+	-fx-padding: 8px;
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}		
+	
+		
+.cross {
+	-fx-padding: 5px;
+	 -fx-shape: "M44 26l-4-4-7 7-7-7-4 4 7 7-7 7 4 4 7-7 7 7 4-4-7-7 7-7z";
+	-fx-border-width: 1.6;
+	}
+	
+.cross_whitefilled {
+	-fx-padding: 5px;
+	-fx-shape: "M44 26l-4-4-7 7-7-7-4 4 7 7-7 7 4 4 7-7 7 7 4-4-7-7 7-7z";
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;
+	}
+	
+.cross_filled {
+	-fx-padding: 5px;
+	-fx-shape: "M44 26l-4-4-7 7-7-7-4 4 7 7-7 7 4 4 7-7 7 7 4-4-7-7 7-7z";
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+.plus {
+	-fx-padding: 5px;
+	-fx-shape: "M44 29h-9v-9h-6v9h-9v6h9v9h6v-9h9v-6z";
+	-fx-border-width: 1.6;
+	}
+	
+.plus_whitefilled {
+	-fx-padding: 5px;
+	-fx-shape: "M44 29h-9v-9h-6v9h-9v6h9v9h6v-9h9v-6z";
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;	
+	}
+	
+.plus_filled {
+	-fx-padding: 5px;
+	-fx-shape: "M44 29h-9v-9h-6v9h-9v6h9v9h6v-9h9v-6z";
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time
+	}
+	
+	
+.checkmark{ 
+	-fx-padding: 5px;
+    -fx-shape: "M0,4 L2,4 L4,8 L7,0 L9,0 L4,11 Z";
+	-fx-border-width: 1.6;
+	}
+	
+.checkmark_whitefilled { 
+	-fx-padding: 5px;
+    -fx-shape: "M0,4 L2,4 L4,8 L7,0 L9,0 L4,11 Z";
+	-fx-border-width: 1.8;
+	-fx-background-color: whitesmoke;	    
+	}
+	
+.checkmark_filled { 
+	-fx-padding: 5px;
+    -fx-shape: "M0,4 L2,4 L4,8 L7,0 L9,0 L4,11 Z";
+	-fx-border-width: 1.8;
+	-fx-background-color: black;  // needs to be replaced at run-time    
+	}
+	
+	
