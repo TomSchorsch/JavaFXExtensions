@@ -9,7 +9,7 @@ import javaFX.ext.utility.ListIterator;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.callouts.CallOut;
-import javaFX.plots.callouts.CallOutSettings.Angle;
+import javaFX.plots.callouts.CallOutSettings;
 import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;
 import javafx.scene.Scene;
@@ -26,9 +26,10 @@ public class TestRotateCallOutsDrag implements FXTester {
 	Random random = new Random();
 	@Override
 	public void execute(Logger logger) {
-		final int RANGE = Angle.values().length;
+
+		final int RANGE = CallOutSettings.Angle.length;
 		
-		ListIterator<Angle> angleList = new ListIterator<Angle>(Angle.values());
+		ListIterator<Double> angleList = new ListIterator<Double>(CallOutSettings.Angle);
 		
 		XYChart.Series<Number,Number> sAngle0 = FXTester.getSeriesData("Angles 0 - 90", angleList.size()/4, 1.0,  4.0,  
 				(xx -> xx.doubleValue()+RANGE/(angleList.size()/4)), 

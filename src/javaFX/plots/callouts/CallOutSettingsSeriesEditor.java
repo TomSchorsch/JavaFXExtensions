@@ -9,7 +9,6 @@ import javaFX.ext.css.CSS.FontFamily;
 import javaFX.ext.css.CSS.FontStyle;
 import javaFX.ext.css.CSS.FontWeight;
 import javaFX.ext.utility.FXUtil;
-import javaFX.plots.callouts.CallOutSettings.Angle;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
@@ -44,8 +43,8 @@ public class CallOutSettingsSeriesEditor  {
 
 		ChoiceBox<Double> lineLengthChoiceBox = null;
 		ChangeListener<? super Double> lineLengthListener = null; 
-		ChoiceBox<Angle> angleChoiceBox = null;
-		ChangeListener<? super Angle> angleListener = null; 
+		ChoiceBox<Double> angleChoiceBox = null;
+		ChangeListener<? super Double> angleListener = null; 
 		
 		
 		static final double MAX_CHOICEBOX_SIZE = 100.0;  // set a universal max size for the Choice Boxes that are created below 
@@ -95,12 +94,12 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Angle"), 1, row); // col, row
-				ChoiceBox<Angle> angleChoiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getAngle());
+				ChoiceBox<Double> angleChoiceBox = Editor.getDoubleChoiceBox(CallOutSettings.Angle, callOut.defaultCallOutSettings.getAngle());
 				angleChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 
-				ChangeListener<? super Angle> angleListener = (observable, oldValue, newValue) -> {
-					callOut.defaultCallOutSettings.setAngle((Angle)newValue);
-					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setAngle((Angle)newValue));
+				ChangeListener<? super Double> angleListener = (observable, oldValue, newValue) -> {
+					callOut.defaultCallOutSettings.setAngle(newValue);
+					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setAngle(newValue));
 					resetText(callOut);
 					resetLineAndText(callOut);
 					resetCallOutLocation(callOut);

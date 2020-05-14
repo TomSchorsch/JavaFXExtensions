@@ -10,7 +10,7 @@ import javaFX.ext.utility.Logger;
 import javaFX.ext.utility.MyColors;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.callouts.CallOut;
-import javaFX.plots.callouts.CallOutSettings.Angle;
+import javaFX.plots.callouts.CallOutSettings;
 import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;
 import javafx.scene.Scene;
@@ -27,9 +27,11 @@ public class TestLineProperties implements FXTester {
 	Random random = new Random();
 	@Override
 	public void execute(Logger logger) {
-		final int RANGE = Angle.values().length;
+
+		final int RANGE = CallOutSettings.Angle.length;
 		
-		ListIterator<Angle> angleList = new ListIterator<Angle>(Angle.values());
+		ListIterator<Double> angleList = new ListIterator<Double>(CallOutSettings.Angle);
+		
 		ListIterator<Double> lengthList = new ListIterator<Double>(new Double[] {6.0, 8.0, 10.0, 14.0, 20.0, 30.0, 40.0, 60.0, 80.0, 100.0});
 		ListIterator<Double> widthList = new ListIterator<Double>(new Double[] {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0});
 		ListIterator<Color> colorList = new ListIterator<Color>(MyColors.plotColors);
@@ -102,7 +104,7 @@ public class TestLineProperties implements FXTester {
 		}
 		{
 			var callOutColor = new CallOut("line color");
-			callOutColor.defaultCallOutSettings.setAngle(Angle.a345);
+			callOutColor.defaultCallOutSettings.setAngle(345.0);
 			var cos = callOutColor.copyDefaultSettings();
 			for (var data : sColor.getData()) {
 				cos.setLineColor(colorList.getNext());
@@ -116,7 +118,7 @@ public class TestLineProperties implements FXTester {
 			var cos = callOutLength.copyDefaultSettings();
 			for (var data : sLength.getData()) {
 				cos.setLineLength(lengthList.getNext());
-				cos.setAngle(Angle.a345);
+				cos.setAngle(345.0);
 				cos.setTextRotated(false);
 				callOutLength.create(data.getXValue(), data.getYValue(),"length "+lengthList.repeat().toString(),cos);			
 			}
@@ -128,7 +130,7 @@ public class TestLineProperties implements FXTester {
 			var cos = callOutWidth.copyDefaultSettings();
 			for (var data : sWidth.getData()) {
 				cos.setLineWidth(widthList.getNext());
-				cos.setAngle(Angle.a345);
+				cos.setAngle(345.0);
 				cos.setTextRotated(false);
 				callOutWidth.create(data.getXValue(), data.getYValue(),"width "+widthList.repeat().toString(),cos);			
 			}

@@ -6,7 +6,7 @@ import javaFX.ext.utility.ListIterator;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.callouts.CallOut;
-import javaFX.plots.callouts.CallOutSettings.Angle;
+import javaFX.plots.callouts.CallOutSettings;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
 import javafx.scene.chart.NumberAxis;
@@ -22,7 +22,7 @@ public class TestRotateCallOutsDoubleClick implements FXTester {
 	public void execute(Logger logger) {
 		final int RANGE = 14;
 		
-		ListIterator<Angle> angleList = new ListIterator<Angle>(Angle.values());
+		ListIterator<Double> angleList = new ListIterator<Double>(CallOutSettings.Angle);		
 		
 		XYChart.Series<Number,Number> sAngle0 = FXTester.getSeriesData("Angles 0 - 180", angleList.size()/2, 1.0,  2.0,  
 				(xx -> xx.doubleValue()+RANGE/(angleList.size()/2)), 

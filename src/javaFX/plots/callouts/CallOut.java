@@ -10,7 +10,6 @@ import java.util.Set;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
-import javaFX.plots.callouts.CallOutSettings.Angle;
 import javaFX.plots.overlay.SceneOverlay;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -53,8 +52,7 @@ public class CallOut {
 	 * 	 *  
 	 * The CallOut consists of a line and a text value and its initial positioning is set by the angle (as shown in the examples above)
 	 * 
-	 * An angle of 0 is to the right of the point, 90 is straight up, 180 is to the left, 2870 is down, etc. around to 360
-	 * The available angles for the CallOut lines are limited to 15 degree increments
+	 * An angle of 0 is to the right of the point, 90 is straight up, 180 is to the left, 270 is down, etc. around to 360
 	 * 
 	 * The CallOUt Text can be horizontal as depicted above.  The CallOut text can also be rotated to be aligned with the line
 	 * 
@@ -65,7 +63,7 @@ public class CallOut {
 	 * -- The Text is then "added" to the end of the line at appropriate positioning (appropriate distance from 0,0 at the end of the drawn line) 
 	 * (2) The line and text are added to a group and the size (Height, Width) of the group as a combined entity is determined
 	 * (3) The Group (consisting of the line and text) replaces the StackPane that normally represents the Datapoint
-	 * Note - The Stack Pane (and now the Grooup) centers its node over the data point (this is not good as the line is not pointing to that center point)
+	 * Note - The Stack Pane (and now the Group) centers its node over the data point (this is not good as the line is not pointing to that center point)
 	 * (4) Translate the group so that the line (0,0) is overlayed on the center of the StackPane (where the data point is)
 	 * -- I.e. shift the group by 1/2 its width and/or height (positively or negatively depending on the angle) so the line end point is now in the center of the stack pane
 	 * (5) Make the original data point transparent and mouse invisible so all that is seen is the CallOut
@@ -319,17 +317,16 @@ public class CallOut {
 			double textHeight = FXUtil.getHeight(text);
 			// This fudge is based on the text height being different from the font size
 			// Sometimes the fudge is needed to overcome that delta
-			Angle angle = cos.getAngle(); 
-			double ang = cos.angle2degrees(angle);
-			if (ang < 90.0 || angle.equals(Angle.a90R)) { 			// Upper Right
+			double ang = cos.getAngle(); 
+			if (ang <= 90.0) { 			// Upper Right
 				text.getTransforms().add(new Rotate(-cos.getAngleDegrees()));
 				text.getTransforms().add(new Translate(cos.getLineLength()+gap,(textHeight/3.0)*(ang/90.0)));
 			}
-			else if (ang < 180.0 || angle.equals(Angle.a180T)) {	// Upper Left
+			else if (ang <= 180.0) {	// Upper Left
 				text.getTransforms().add(new Rotate(180-cos.getAngleDegrees(),0,0));
 				text.getTransforms().add(new Translate(-(cos.getLineLength()+textWidth+gap),-(textHeight/3.0)*((ang-180)/90.0)));
 			}
-			else if (ang < 270.0 || angle.equals(Angle.a270L)) {	// Lower Left
+			else if (ang <= 270.0) {	// Lower Left
 				text.getTransforms().add(new Rotate(180-cos.getAngleDegrees(),0,0));
 				text.getTransforms().add(new Translate(-(cos.getLineLength()+textWidth+gap),(textHeight/3.0)*((ang-180)/90.0)));
 			}
@@ -347,15 +344,15 @@ public class CallOut {
 			// This fudge is based on the text height being different from the font size
 			// Sometimes the fudge is needed to overcome that delta
 			double fudge = textHeight-cos.getFontSize();
-			Angle angle = cos.getAngle(); 
-			double ang = cos.angle2degrees(angle);
-			if (ang < 90.0 || angle.equals(Angle.a90R)) { 			// Upper Right
+
+			double ang = cos.getAngle(); 
+			if (ang <= 90.0) { 			// Upper Right
 				text.getTransforms().add(new Translate(endX,endY-fudge));
 			}
-			else if (ang < 180.0 || angle.equals(Angle.a180T)) {	// Upper Left
+			else if (ang <= 180.0) {	// Upper Left
 				text.getTransforms().add(new Translate(endX-textWidth,endY-fudge));
 			}
-			else if (ang < 270.0 || angle.equals(Angle.a270L)) {	// Lower Left
+			else if (ang <= 270.0) {	// Lower Left
 				text.getTransforms().add(new Translate(endX-textWidth,endY+textHeight-fudge));
 			}
 			else {													// Lower Right
@@ -401,13 +398,12 @@ public class CallOut {
 		final double width = FXUtil.getWidth(group);
 		final double height = FXUtil.getHeight(group);
 
-		Angle angle = cos.getAngle();
-		double ang = cos.angle2degrees(angle);
+		double ang = cos.getAngle();
 
 		group.getTransforms().clear();
 
 		// This accomplishes the major shifting from the CallOut being centered over the spot to being in the correct quadrant
-		if (ang > 270 || ang < 90.0 || angle.equals(Angle.a90R) || angle.equals(Angle.a270R)) {
+		if (ang >= 270.0 || ang <= 90.0) {
 			double translateX = width/2.0;
 			group.getTransforms().add(new Translate(translateX,0));		// Shift to Right				
 //			group.setTranslateX(translateX);			// Shift to Right
@@ -417,7 +413,7 @@ public class CallOut {
 			group.getTransforms().add(new Translate(translateX,0));		// Shift to Left				
 //			group.setTranslateX(translateX);			// Shift to Left
 		}
-		if ((ang >= 0 && ang < 180) || angle.equals(Angle.a180T)) {
+		if (ang >= 0 && ang < 180) {
 			double translateY = -height/2.0;
 			group.setTranslateY(translateY);			// Shift Up
 		}
@@ -438,19 +434,18 @@ public class CallOut {
 		}
 		Bounds lBounds = line.getBoundsInParent();
 		Bounds gBounds = group.getBoundsInLocal();
-		if (angle == Angle.a0 || angle == Angle.a180T) {
-			double deltaY = gBounds.getMaxY() - lBounds.getMaxY();
-			group.getTransforms().add(new Translate(0,deltaY));
-		}
-		else if (ang < 90 || angle.equals(Angle.a90R)) {
+
+		if (ang <= 90) {
 			double deltaX = gBounds.getMinX() - lBounds.getMinX();
 			group.getTransforms().add(new Translate(deltaX,0));
+			double deltaY = gBounds.getMaxY() - lBounds.getMaxY();
+			group.getTransforms().add(new Translate(0,deltaY));
 		}
 		else if (ang < 180 ) {
 			double deltaX = gBounds.getMaxX() - lBounds.getMaxX();
 			group.getTransforms().add(new Translate(deltaX,0));
 		}
-		else if (ang < 270 || angle.equals(Angle.a270L)) {
+		else if (ang < 270) {
 			double deltaX = gBounds.getMaxX() - lBounds.getMaxX();
 			group.getTransforms().add(new Translate(deltaX,0));
 			double deltaY = gBounds.getMinY() - lBounds.getMinY();
@@ -493,9 +488,10 @@ public class CallOut {
 	}
 
 
-	// sets the CallOut offset based on the size of the CallOut group (line + text)creates line
+	// fools the autoresize capability to include the CallOut in its calculations (by adding a 2nd datapoint for the callOut)
 	// By default the CallOut is "centered" on the data point
-	// its needs to be shifted by 1/2 its width and width either positively or negatively based on the CallOut rotation angle
+	// When the callout is shifted so the line start point is on the data point, the Callout text may be off screen (no longer visible)
+	// By setting a data2 location near the end of the callout text, this enables the auto-resize function of the chart to grow the chart (if needed) to include that 2nd datapoint
 	static final double translationFactor = 0.5;  	// This factors in the translation (1/2 width or height)
 	static final double widthSizeFactor = 0.75;			// This factors in the overall size (not quite the full height or width of the group holding the annotation
 	static final double heightSizeFactor = 0.55;			// This factors in the overall size (not quite the full height or width of the group holding the annotation
@@ -505,13 +501,12 @@ public class CallOut {
 	private void setCallOutData2Location(Group group, CallOutSettings cos) {
 		final double width = FXUtil.getWidth(group);
 		final double height = FXUtil.getHeight(group);
-		Angle angle = cos.getAngle();
-		double ang = cos.angle2degrees(angle);
+		double ang = cos.getAngle();
 		double xPixels = lineChart.getXAxis().getDisplayPosition(cos.getData().getXValue());
 		double yPixels = lineChart.getYAxis().getDisplayPosition(cos.getData().getYValue());
 		Object x2 = null;
 		Object y2 = null;
-		if (ang > 270 || ang < 90.0 || angle.equals(Angle.a90R) || angle.equals(Angle.a270R)) {
+		if (ang >= 270 || ang <= 90.0) {
 			double x2Scene = xPixels + width*widthFactor;	// Shift to Right
 			x2 = lineChart.getXAxis().getValueForDisplay(x2Scene);
 		}
@@ -519,7 +514,7 @@ public class CallOut {
 			double xS2cene = xPixels - width*widthFactor;	// Shift to Left
 			x2 = lineChart.getXAxis().getValueForDisplay(xS2cene);
 		}
-		if ((ang >= 0 && ang < 180) || angle.equals(Angle.a180T)) {
+		if (ang >= 0 && ang < 180) {
 			double y2Scene = yPixels - height*heightFactor;  // Shift Up
 			y2 = lineChart.getYAxis().getValueForDisplay(y2Scene);
 		}
@@ -624,15 +619,6 @@ public class CallOut {
 	@SuppressWarnings("unchecked")
 	private void draggingTextToRotate(MouseEvent mouseEvent, CallOutSettings cos, Data<Object,Object> data) {
 		if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-			//			System.out.println("Dragging");
-
-			// The idea is to use the mouse position as an indication as to where the line should be drawn to
-			// The line is subject to the pre-determined lengths and rotation angles (of 15 degrees)
-			// All of this needs to be done in Chart space (pixel space) not data space
-			// -- Pixels are uniform and a spot 0,0 to 50,50 is 45 degrees
-			// -- Data is not uniform along the X and y Axis and so data points 0,0 and 50,50 may NOT be at the 45 degree angle
-			// -- lesson learned... don't use data space when calculating angles
-
 			// Get mouse coordinates on scene
 			Point2D pointInScene = new Point2D(mouseEvent.getSceneX(), mouseEvent.getSceneY());
 			// get mouse coordinates on the chart part of the screen
@@ -644,7 +630,7 @@ public class CallOut {
 
 			// Chart and Data coordinates are in local chart coordinates in "pixels"
 			// calculate the angle using delta pixels from origin
-			Angle angle = cos.getAngleType(localDataX, localDataY, localMouseX,  localMouseY);
+			Double angle = cos.getAngleType(localDataX, localDataY, localMouseX,  localMouseY);
 
 
 			// calculate the line length in pixels
