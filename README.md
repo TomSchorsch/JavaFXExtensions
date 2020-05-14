@@ -8,7 +8,7 @@
 <b>Contains a LineChart Plot Editor</b>
 The default JavaFX LineChart had some limitations and some of those limitations are addressed by this project.
 
-<b>New and Modified LineChart Features</b>
+<b>New and Modified LineChart Features:</b>
   - 17 symbols:<br>
     - diamond, circle, square, 
     - h_diamond, v_diamond, h_ellipse, v_ellipse, h_rectangle, v_rectangle,
@@ -25,45 +25,46 @@ The default JavaFX LineChart had some limitations and some of those limitations 
     - A CallOut consists of a line starting at a datapoint value and extending in some direction for some length with some text at the end that can either be horizontal or in-line with the CallOut line angle.
     - A plot can have several different "series" of callouts each with unique settings for the CallOuts.
     
-<b>LineChart editing Features</b><br>
+<b>LineChart editing Features:</b><br>
+After the LineChart is created and displayed a user can modify all of the following features using pop-up editors.<br>
 Pop-up editors are invoked by right-clicking on:
   - The chart (Plot Editor, Axis Editors, CallOut Series Editors)
   - An item (data series) in the legend (Series Editor)
   - A CallOut (CallOut Editor)
   
-Plot Editor: 
+<b>Plot Editor:</b> 
   - Chart title and sub title text and font sizes
   - Legend visibility or position
   - Plot Info (additional text on the plot in the lower left corner)
-  - Symbol info (for all series): visibility, symbol, color, size, style
-  - Line info (for all series): visibility, color, width
-  
-Axis Editor: 
-  - Axis title, font size
-  - Tic mark label font size and rotation
-  
-Call Out Series Editors (for all callouts in a series):
-  - Line Angle, Length, Width, and Color
-  - Whether Text is rotated with the line
-  - Text Size, Font Family, color, bold (or not), italicized (or not)
-  
-Series Editor (for individual series):
+  - For all Series
+    - Symbol info (for all series): visibility, symbol, color, size, style
+    - Line info (for all series): visibility, color, width
+
+<b>Series Editor (for individual series):</b>
   - Series name
   - Symbol info: visibility, symbol, color, size, style
   - Line info: visibility, color, width
-
-Plots can be zoomed via typical mouse movements.
-
-Plots can be saved via a contextRight-Click menu
-
-Pop-up editors are invoked by right-clicking on the chart or an item (data series) in the legend.
-
-
-  - All aspects of the CallOuts can be edited as a series or individually 
   
+<b>Axis Editor: </b>
+  - Axis title, font size
+  - Tic mark label font size and rotation
+  
+<b>Call Out Series Editor (for all callouts in a series):</b>
+  - Line Angle, Length, Width, and Color
+  - Whether Text is rotated with the line
+  - Text Size, Font Family, color, bold (or not), italicized (or not)
+
+<b>Call Out Editor (for individual CallOut):</b>
+  - CallOut text
+  - Line Angle, Length, Width, and Color
+  - Whether Text is rotated with the line
+  - Text Size, Font Family, color, bold (or not), italicized (or not)
+
 <b>Additional features:</b>
-- Has a Seconds Since Midnight (SSM) axis which turns a double axis value into a HH:MM:SS.sss value (How much of HH:MM:SS.sss that is displayed depends on the zoomlevel).
-- Has a hover capability for data items that will display additional info when the mouse hovers over a data item.
+- Plots can be zoomed in/out via typical mouse movements.
+- Right-click on chart Context Menu has plot save and save as options   
+- A Seconds Since Midnight (SSM) axis which turns a double axis value into a HH:MM:SS.sss value (How much of HH:MM:SS.sss that is displayed depends on the zoomlevel).
+- A Hover capability for data items that will display additional info when the mouse hovers over a data item.
 
 <b>Requirements:<b/>  Java 11+ and and JavaFX 11+
 
