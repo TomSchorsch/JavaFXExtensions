@@ -5,12 +5,15 @@
   - <b>MappedRadioButtons</b> - creates a bunch of radio buttons which display strings (the mapped-to value) but when selected return the mapped-from value.  2 features include indented sub-radio buttons and multiple columns of radio buttons.   
   - <b>Config</b> - config is a helper utility for the above.  It enables the "history state" of the FileChoiceBox control and the selected items in the MappedRadioButtons control to be saved between successive executions of your program.
 
-Contains Plot editor that has rewritten some of the LineChart capabilities.<br>
-There are 17 symbols:<br>
-  - diamond, circle, square, 
-  - h_diamond, v_diamond, h_ellipse, v_ellipse, h_rectangle, v_rectangle,
-  - up_triangle, down_triangle, right_triangle, left_triangle,
-  - star5, cross, plus, checkmark
+<b>Contains a LineChart Plot Editor</b>
+The default JavaFX LineChart had some limitations and some of those limitations are addressed by this project.
+
+<b>New LineChart Features</b>
+  - 17 symbols:<br>
+    - diamond, circle, square, 
+    - h_diamond, v_diamond, h_ellipse, v_ellipse, h_rectangle, v_rectangle,
+    - up_triangle, down_triangle, right_triangle, left_triangle,
+    - star5, cross, plus, checkmark
   
 There are 3 symbol styles for each symbol:
   filled, transparent, and white-filled
@@ -36,22 +39,22 @@ Plots can be saved via a contextRight-Click menu
 
 Pop-up editors are invoked by right-clicking on the chart or an item (data series) in the legend.
 
-CallOuts (Annotations) can be addedd to the plot progaramatticaly and edited as well.
+CallOuts (Annotations) can be added to the plot programaticaly and edited as well.
   - A CallOut consists of a line starting at a datapoint value and extending in some direction for some length with some text at the end that can either be horizontal or in-line with the CallOut line angle.
   - A plot can have several different "series" of callouts each with unique settings for the CallOuts.
   - All aspects of the CallOuts can be edited as a series or individually 
   
-Additional features:
+<b>Additional features:</b>
 - Has a Seconds Since Midnight (SSM) axis which turns a double axis value into a HH:MM:SS.sss value (How much of HH:MM:SS.sss that is displayed depends on the zoomlevel).
 - Has a hover capability for data items that will display additional info when the mouse hovers over a data item.
 
-Requirements:  Java 11+ and and JavaFX 11+
+<b>Requirements:<b/>  Java 11+ and and JavaFX 11+
 
-Dependencies:  This project depends of GitHub project https://github.com/gillius/jfxutils for several features
+<b>Dependencies:</b>  This project depends of GitHub project https://github.com/gillius/jfxutils for several features
   - The Zooming and Panning
   - A foundation for SSM axis
 
-To download and use (in eclipse):
+<b>To download and use (in eclipse):</b>
 Current project does not use gradle or maven or any other such system.
 
 You will need to download this project and https://github.com/gillius/jfxutils as separate projects in eclipse.
