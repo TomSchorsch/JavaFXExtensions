@@ -23,6 +23,7 @@ import org.gillius.jfxutils.chart.AxisConstraint;
 import org.gillius.jfxutils.chart.AxisConstraintStrategies;
 import org.gillius.jfxutils.chart.AxisConstraintStrategy;
 import org.gillius.jfxutils.chart.DefaultChartInputContext;
+import org.gillius.jfxutils.chart.JFXChartUtil;
 import org.gillius.jfxutils.chart.XYChartInfo;
 
 import javafx.animation.KeyFrame;

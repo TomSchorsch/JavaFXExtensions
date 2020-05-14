@@ -38,8 +38,7 @@ public class Legend {
 	
 	static Map<Scene,FlowPane> MapScene2Legend = new HashMap<Scene,FlowPane>();
 	static Map<Scene,BorderPane> MapScene2BorderPane = new HashMap<Scene,BorderPane>();
-	static Map<Scene,List<Label>> mapScene2ListLegendItems = new HashMap<Scene,List<Label>>();
-	
+	static Map<Scene,List<Label>> mapScene2ListLegendItems = new HashMap<Scene,List<Label>>();	
 	static Map<Series<?,?>,Label> MapSeries2LegendItem = new LinkedHashMap<Series<?,?>,Label>();
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

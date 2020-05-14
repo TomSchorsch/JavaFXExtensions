@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.converter.DoubleStringConverter;
 
 public class Editor {
 
@@ -168,7 +170,7 @@ public class Editor {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T>> ChoiceBox<T> getEnumEntry(T value) {
+	public static <T extends Enum<T>> ChoiceBox<T> getEnumChoiceBox(T value) {
 		// get list of enumerations
 		ObservableList<T> list = FXCollections.observableArrayList();
 		list.addAll((T[])value.getClass().getEnumConstants());
@@ -178,7 +180,7 @@ public class Editor {
 		choiceBox.setValue(value);
 		return choiceBox;
 	}
-	public static <T extends Enum<T>> ChoiceBox<T> getEnumEntry(T[] listT, T value) {
+	public static <T extends Enum<T>> ChoiceBox<T> getEnumChoiceBox(T[] listT, T value) {
 		// get list of enumerations
 		ObservableList<T> list = FXCollections.observableArrayList();
 		list.addAll(listT);
@@ -188,13 +190,13 @@ public class Editor {
 		choiceBox.setValue(value);
 		return choiceBox;
 	}
-	public static <T extends Enum<T>> void setEnumPicker(ChoiceBox<T> cb, T value) {
+	public static <T extends Enum<T>> void setEnumChoiceBox(ChoiceBox<T> cb, T value) {
 		EventHandler<ActionEvent> eh = cb.getOnAction();
 		cb.setOnAction(null);
 		cb.setValue(value);
 		cb.setOnAction(eh);
 	}
-	public static ChoiceBox<Double> getDoubleEntry(Double[] values, Double value) {
+	public static ChoiceBox<Double> getDoubleChoiceBox(Double[] values, Double value) {
 		// get list of enumerations
 		ObservableList<Double> list = FXCollections.observableArrayList();
 		list.addAll(values);
@@ -204,12 +206,32 @@ public class Editor {
 		choiceBox.setValue(value);
 		return choiceBox;
 	}
-	public static void setDoublePicker(ChoiceBox<Double> cb, Double value) {
+	public static void setDoubleChoiceBox(ChoiceBox<Double> cb, Double value) {
 		EventHandler<ActionEvent> eh = cb.getOnAction();
 		cb.setOnAction(null);
 		cb.setValue(value);
 		cb.setOnAction(eh);
 	}
+	
+	public static ComboBox<Double> getDoubleComboBox(Double[] values, Double value) {
+		// get list of enumerations
+		ObservableList<Double> list = FXCollections.observableArrayList();
+		list.addAll(values);
+		// create a ChoiceBox with those values, set the default value, set the size, etc.
+		var comboBox = new ComboBox<Double>(list);
+		comboBox.setEditable(true);
+		comboBox.setConverter(new DoubleStringConverter());
+		GridPane.setFillWidth(comboBox, true);
+		comboBox.setValue(value);
+		return comboBox;
+	}
+	public static void setDoubleComboBox(ComboBox<Double> cb, Double value) {
+		EventHandler<ActionEvent> eh = cb.getOnAction();
+		cb.setOnAction(null);
+		cb.setValue(value);
+		cb.setOnAction(eh);
+	}
+
 
 	public static ColorPicker getColorPicker(Color color) {
 		ColorPicker colorPicker = new ColorPicker();

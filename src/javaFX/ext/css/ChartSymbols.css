@@ -2,13 +2,6 @@
  * CSS class definition replacements for the JavaFX original CSS class definitions
  * class definitions for the Chart symbols and lines are replaced/updated below
  */
-
-p {
-	text-indent: -1.5em;
-	margin-left:  2.0em;
-	margin-top: 0;
-	margin-bottom: 0;
-	}
 	
 // Outer part of the chart is white
 .chart {

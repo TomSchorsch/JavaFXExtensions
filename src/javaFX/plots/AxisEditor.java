@@ -167,7 +167,7 @@ public class AxisEditor {
 		// Tick Label
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		ChoiceBox<Double> fontSizeChoiceBox = Editor.getDoubleEntry(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
+		ChoiceBox<Double> fontSizeChoiceBox = Editor.getDoubleChoiceBox(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
 		{
 			gridPane.add(new Text("Tick Label Font : "),1, row);
 			fontSizeChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
@@ -181,7 +181,7 @@ public class AxisEditor {
 			
 			gridPane.add(new Text("Tick Label rotation : "),1, row);
 			Double d = -axis.getTickLabelRotation();
-			ChoiceBox<Double> choiceBox = Editor.getDoubleEntry(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
+			ChoiceBox<Double> choiceBox = Editor.getDoubleChoiceBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
 			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			choiceBox.setOnAction(event -> { 
 				axis.setTickLabelRotation(-choiceBox.getValue());

@@ -2,7 +2,7 @@ package test.plots;
 
 import java.util.Random;
 
-import javaFX.ext.css.Instructions;
+import javaFX.ext.controls.Instructions;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
 import javafx.scene.Scene;

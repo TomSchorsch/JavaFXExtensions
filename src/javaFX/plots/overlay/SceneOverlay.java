@@ -2,7 +2,6 @@ package javaFX.plots.overlay;
 
 import java.io.File;
 
-
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.FontWeight;
 import javaFX.ext.utility.Logger;

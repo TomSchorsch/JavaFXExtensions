@@ -2,9 +2,9 @@ package test.plotEditMenu;
 
 import java.util.Random;
 
+import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
-import javaFX.ext.css.Instructions;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.overlay.SceneOverlay;

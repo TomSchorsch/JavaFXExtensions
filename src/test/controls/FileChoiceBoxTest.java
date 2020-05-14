@@ -1,7 +1,7 @@
 package test.controls;
 import javaFX.ext.controls.Config;
 import javaFX.ext.controls.FileChoiceBox;
-import javaFX.ext.css.Instructions;
+import javaFX.ext.controls.Instructions;
 import javaFX.ext.utility.Logger;
 import javafx.scene.control.Control;
 import javafx.scene.layout.BorderPane;

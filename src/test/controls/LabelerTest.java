@@ -5,11 +5,11 @@ package test.controls;
 import java.util.ArrayList;
 import java.util.List;
 
+import javaFX.ext.controls.Instructions;
 import javaFX.ext.controls.Labeler;
 import javaFX.ext.controls.Labeler.HPos;
 import javaFX.ext.controls.Labeler.VPos;
 import javaFX.ext.css.CSS;
-import javaFX.ext.css.Instructions;
 import javaFX.ext.utility.Logger;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;

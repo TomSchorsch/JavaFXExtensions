@@ -4,9 +4,9 @@ import java.util.Random;
 
 import org.gillius.jfxutils.chart.StableTicksAxis;
 
+import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
-import javaFX.ext.css.Instructions;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;

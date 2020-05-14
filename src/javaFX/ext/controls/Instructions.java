@@ -1,6 +1,5 @@
-package javaFX.ext.css;
+package javaFX.ext.controls;
 
-import javaFX.ext.controls.Editor;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;

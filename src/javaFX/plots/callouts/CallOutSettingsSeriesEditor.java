@@ -18,6 +18,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
@@ -94,7 +95,7 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Angle"), 1, row); // col, row
-				ChoiceBox<Angle> angleChoiceBox = Editor.getEnumEntry(callOut.defaultCallOutSettings.getAngle());
+				ChoiceBox<Angle> angleChoiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getAngle());
 				angleChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 
 				ChangeListener<? super Angle> angleListener = (observable, oldValue, newValue) -> {
@@ -113,16 +114,16 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Line Length"), 1, row); // col, row
-				ChoiceBox<Double>lineLengthChoiceBox = Editor.getDoubleEntry(CallOutSettings.LineLength, callOut.defaultCallOutSettings.getLineLength());
-				lineLengthChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+				ComboBox<Double> lineLengthComboBox = Editor.getDoubleComboBox(CallOutSettings.LineLength, callOut.defaultCallOutSettings.getLineLength());
+				lineLengthComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 				ChangeListener<? super Double> lineLengthListener = (observable, oldValue, newValue) -> {
 					callOut.defaultCallOutSettings.setLineLength((Double)newValue);
 					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setLineLength((Double)newValue));
 					resetLineAndText(callOut);
 					resetCallOutLocation(callOut);
 				};
-				lineLengthChoiceBox.getSelectionModel().selectedItemProperty().addListener(lineLengthListener);
-				gridPane.add(lineLengthChoiceBox,3,row++);
+				lineLengthComboBox.getSelectionModel().selectedItemProperty().addListener(lineLengthListener);
+				gridPane.add(lineLengthComboBox,3,row++);
 			}	
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,15 +131,15 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Line Width"), 1, row); // col, row
-				ChoiceBox<Double> choiceBox = Editor.getDoubleEntry(CallOutSettings.LineWidth, callOut.defaultCallOutSettings.getLineWidth());
-				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-				choiceBox.getSelectionModel().selectedItemProperty().addListener(
+				ComboBox<Double> choicelineWidthComboBox = Editor.getDoubleComboBox(CallOutSettings.LineWidth, callOut.defaultCallOutSettings.getLineWidth());
+				choicelineWidthComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+				choicelineWidthComboBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
 							callOut.defaultCallOutSettings.setLineWidth((Double)newValue);
 							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setLineWidth((Double)newValue));
 							resetLineAndText(callOut);
 						});
-				gridPane.add(choiceBox,3,row++);
+				gridPane.add(choicelineWidthComboBox,3,row++);
 			}	
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,16 +164,16 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Font Size"), 1, row); // col, row
-				ChoiceBox<Double> choiceBox = Editor.getDoubleEntry(CallOutSettings.FontSize, callOut.defaultCallOutSettings.getFontSize());
-				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-				choiceBox.getSelectionModel().selectedItemProperty().addListener(
+				ComboBox<Double> fontSizeComboBox = Editor.getDoubleComboBox(CallOutSettings.FontSize, callOut.defaultCallOutSettings.getFontSize());
+				fontSizeComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+				fontSizeComboBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
 							callOut.defaultCallOutSettings.setFontSize((Double)newValue);
 							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setFontSize((Double)newValue));
 							resetText(callOut);
 							resetCallOutLocation(callOut);
 						});
-				gridPane.add(choiceBox,3,row++);
+				gridPane.add(fontSizeComboBox,3,row++);
 			}			
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,7 +196,7 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Font Style"), 1, row); // col, row
-				ChoiceBox<FontStyle> choiceBox = Editor.getEnumEntry(callOut.defaultCallOutSettings.getFontStyle());
+				ChoiceBox<FontStyle> choiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getFontStyle());
 				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 				choiceBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
@@ -211,7 +212,7 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Font Weight"), 1, row); // col, row
-				ChoiceBox<FontWeight> choiceBox = Editor.getEnumEntry(callOut.defaultCallOutSettings.getFontWeight());
+				ChoiceBox<FontWeight> choiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getFontWeight());
 				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 				choiceBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
@@ -227,7 +228,7 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Font Family"), 1, row); // col, row
-				ChoiceBox<FontFamily> choiceBox = Editor.getEnumEntry(callOut.defaultCallOutSettings.getFontFamily());
+				ChoiceBox<FontFamily> choiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getFontFamily());
 				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 				choiceBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {

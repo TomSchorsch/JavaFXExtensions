@@ -382,7 +382,7 @@ public class CSS  {
 				for (Series series : getSeriesFromChart()) {
 					// get new Symbol based on changed style
 					Symbol symbol = mapSeries2Symbol.get(series);
-					Symbol newSymbol = changeSymbolStyle(symbol,newSymbolStyle);
+					Symbol newSymbol = getChangedSymbol(symbol,newSymbolStyle);
 					// clear old style settings
 					clearStyleSettings(series);
 					// save the new Symbol
@@ -394,12 +394,19 @@ public class CSS  {
 				defaultSymbol = getSymbol(getSeriesFromChart().get(0));
 			}
 		}
-		private Symbol changeSymbolStyle(Symbol symbol, SymbolStyle newSymbolStyle) {
+		public static Symbol getChangedSymbol(Symbol symbol, SymbolStyle newSymbolStyle) {
 			String text = symbol.toString().replace("_filled", "").replace("_whitefilled", "");
 			if (newSymbolStyle.equals(SymbolStyle.unfilled)) return Symbol.valueOf(text);
 			if (newSymbolStyle.equals(SymbolStyle.whitefilled)) return Symbol.valueOf(text+"_whitefilled");
 			if (newSymbolStyle.equals(SymbolStyle.filled)) return Symbol.valueOf(text+"_filled");
 			return null;
+		}
+		
+		public static SymbolStyle getSymbolStyle(Symbol symbol) {
+			if (setUnfilledSymbols.contains(symbol)) return SymbolStyle.unfilled;
+			else if (setFilledSymbols.contains(symbol)) return SymbolStyle.filled;
+			else if (setWhitefilledSymbols.contains(symbol)) return SymbolStyle.whitefilled;	
+			return SymbolStyle.filled;
 		}
 
 		public SymbolStyle	getSymbolStyle()	{ return defaultSymbolStyle;}
@@ -443,15 +450,10 @@ public class CSS  {
 		public void setLineWidth(Series series, double width)		{ setLineStrokeWidth(series.getNode(),width); mapSeries2LineWidth.put(series, width);}
 
 		public void setSymbol(Series series, Symbol symbol)		{ 
-			Symbol currentSymbol = getSymbol(series);
 			getDataFromSeries(series).stream().forEach(data -> {setSymbol(data.getNode(), symbol);});
 			mapSeries2Symbol.put(series,symbol);
 			fillIfNeeded(series,symbol); 
-			// symbols may need to be resized if changed
-			if (currentSymbol == null || !getSymbolSet(currentSymbol).equals(getSymbolSet(symbol))) {
-				double size = getSymbolSize(series);
-				setSymbolSize(series,size);  
-			}
+			setSymbolSize(series,getSymbolSize(series)); 
 			series.getNode().getParent().getParent().getParent().requestLayout();
 		}
 
@@ -461,6 +463,12 @@ public class CSS  {
 				if (mapSeries2SymbolColor.containsKey(series)) {
 					setSymbolFillColor(series, mapSeries2SymbolColor.get(series));
 				}
+			}
+			else if (setWhitefilledSymbols.contains(mapSeries2Symbol.get(series))) {
+				setSymbolFillColor(series, Color.WHITESMOKE);
+			}
+			else if (setUnfilledSymbols.contains(mapSeries2Symbol.get(series))) {
+				setSymbolFillColor(series, Color.TRANSPARENT);
 			}
 		}
 
@@ -491,6 +499,9 @@ public class CSS  {
 				else if (setWhitefilledSymbols.contains(mapSeries2Symbol.get(series))) {
 					setSymbolFillColor(series, Color.WHITESMOKE);
 				}
+				else if (setUnfilledSymbols.contains(mapSeries2Symbol.get(series))) {
+					setSymbolFillColor(series, Color.TRANSPARENT);
+				}
 			}
 		}
 
@@ -512,6 +523,8 @@ public class CSS  {
 
 		public boolean getLinesVisible(Series series)	{ return mapSeries2LinesVisible.containsKey(series)?mapSeries2LinesVisible.get(series):defaultLinesVisible;}
 
+		public SymbolStyle getSymbolStyle(Series series) { return getSymbolStyle(getSymbol(series)); }
+		
 		////////////////////////////////////////////////////////////////////////
 		// Data
 		////////////////////////////////////////////////////////////////////////

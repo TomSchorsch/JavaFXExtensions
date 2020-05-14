@@ -3,8 +3,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javaFX.ext.controls.Config;
+import javaFX.ext.controls.Instructions;
 import javaFX.ext.controls.MappedRadioButtons;
-import javaFX.ext.css.Instructions;
 import javaFX.ext.utility.Logger;
 import javafx.stage.Stage;
 import test.FXTester;

@@ -7,6 +7,7 @@ import javaFX.ext.controls.Editor;
 import javaFX.ext.controls.SymbolPicker;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.Symbol;
+import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
 import javaFX.plots.legend.Legend;
 import javafx.event.ActionEvent;
@@ -64,7 +65,7 @@ public class SeriesEditor {
 	}
 	public static void setEditorsSymbolSize(Double size) {
 		for(Series<?,?> series : mapSeries2Editor.keySet()) {
-			Editor.setDoublePicker(mapSeries2SymbolSizePicker.get(series), size);
+			Editor.setDoubleChoiceBox(mapSeries2SymbolSizePicker.get(series), size);
 		}
 	}
 	public static void setEditorsSymbolColor(Color color, CSS css) {
@@ -81,7 +82,7 @@ public class SeriesEditor {
 	}
 	public static void setEditorsLineWidth(Double width) {
 		for(Series<?,?> series : mapSeries2Editor.keySet()) {
-			Editor.setDoublePicker(mapSeries2LineWidthPicker.get(series), width);
+			Editor.setDoubleChoiceBox(mapSeries2LineWidthPicker.get(series), width);
 		}
 	}
 
@@ -118,9 +119,10 @@ public class SeriesEditor {
 		ColorPicker seriesColorPicker = Editor.getColorPicker(css.getSymbolColor(series));		
 		SymbolPicker symbolPicker = Editor.getSymbolPicker(css.getSymbol(series), css.getSymbolColor(series));
 		ColorPicker symbolColorPicker = Editor.getColorPicker(css.getSymbolColor(series));
-		ChoiceBox<Double> symbolSizePicker = Editor.getDoubleEntry(CSS.symbolSizeArray, css.getSymbolSize(series));
+		ChoiceBox<Double> symbolSizePicker = Editor.getDoubleChoiceBox(CSS.symbolSizeArray, css.getSymbolSize(series));
+		ChoiceBox<SymbolStyle> symbolStyleChoiceBox = Editor.getEnumChoiceBox(css.getSymbolStyle(series));
 		ColorPicker lineColorPicker = Editor.getColorPicker(css.getLineColor(series));
-		ChoiceBox<Double> lineWidthPicker = Editor.getDoubleEntry(CSS.lineWidthArray, css.getLineWidth(series));
+		ChoiceBox<Double> lineWidthPicker = Editor.getDoubleChoiceBox(CSS.lineWidthArray, css.getLineWidth(series));
 		
 		mapSeries2SeriesColorPicker.put(series,seriesColorPicker);
 		mapSeries2SymbolPicker.put(series,symbolPicker);
@@ -202,6 +204,8 @@ public class SeriesEditor {
 				css.setSymbol(series, symbolPicker.getValue());
 				css.setSymbolColor(series, css.getSymbolColor(series));
 				Legend.createLegendItem(series, css, label);
+				SymbolStyle symbolStyle = CSS.getSymbolStyle(symbolPicker.getValue());
+				symbolStyleChoiceBox.setValue(symbolStyle);
 			});
 			gridPane.add(symbolPicker,3,row++);
 		}	
@@ -226,6 +230,20 @@ public class SeriesEditor {
 				css.setSymbolSize(series, symbolSizePicker.getValue());
 			});
 			gridPane.add(symbolSizePicker,3,row++);
+		}
+		
+		{
+			gridPane.add(new Text("Symbol Style"), 1, row); // col, row
+			symbolStyleChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			symbolStyleChoiceBox.setOnAction(event -> {
+				Symbol symbol = css.getSymbol(series);
+				SymbolStyle newSymbolStyle = symbolStyleChoiceBox.getValue();
+				Symbol newSymbol = CSS.getChangedSymbol(symbol,newSymbolStyle);
+				symbolPicker.setValue(newSymbol, css.getSymbolColor(series));
+				css.setSymbol(series, newSymbol);
+				Legend.createLegendItem(series, css, label);
+			});
+			gridPane.add(symbolStyleChoiceBox,3,row++);
 		}
 		
 		addSeparator(gridPane, row++);
@@ -266,28 +284,6 @@ public class SeriesEditor {
 		}
 		
 		addSeparator(gridPane, row++);
-		
-//		{
-//			gridPane.add(new Text("Series Data:"), 1, row); // col, row
-//			Button button = new Button();
-//			button.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-//			if(mapSeries2SeriesRemoved.get(series)) { button.setText("Add");}
-//			else { button.setText("Remove");}
-//		
-//			button.setOnAction(event -> { 
-//				LineChart lineChart = SceneOverlay.getLineChart(label.getScene());	
-//				if (mapSeries2SeriesRemoved.get(series)) { 
-//					lineChart.getData().add((Series<?, ?>) series); 
-//					button.setText("Remove");
-//					mapSeries2SeriesRemoved.put(series, false);
-//				}
-//				else  { 
-//					lineChart.getData().remove(series); 
-//					button.setText("Add");}	
-//				mapSeries2SeriesRemoved.put(series, true);
-//			});
-//			gridPane.add(button,3,row++);
-//		}
 
 		return gridPane;		
 	}

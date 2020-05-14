@@ -172,7 +172,7 @@ public class PlotEditor {
 		}
 		{
 			gridPane.add(new Text("Legend Position : "),1, row);
-			ChoiceBox<Side> choiceBox = Editor.getEnumEntry(new Side[] {Side.BOTTOM, Side.LEFT, Side.RIGHT}, lineChart.getLegendSide());
+			ChoiceBox<Side> choiceBox = Editor.getEnumChoiceBox(new Side[] {Side.BOTTOM, Side.LEFT, Side.RIGHT}, lineChart.getLegendSide());
 			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			choiceBox.setOnAction(event -> { Legend.repositionLegend(scene, choiceBox.getValue());});
 			gridPane.add(choiceBox,3,row++);
@@ -229,14 +229,18 @@ public class PlotEditor {
 		}
 		
 		SymbolPicker symbolPicker = Editor.getSymbolPicker(css.getSymbol(), css.getSymbolColor());
+		ChoiceBox<SymbolStyle> symbolStyleChoiceBox = Editor.getEnumChoiceBox(css.getSymbolStyle());
+
 		{
-			symbolPicker.setAvailableSymbols(css.defaultSymbols);
+//			symbolPicker.setAvailableSymbols(css.defaultSymbols);
 			gridPane.add(new Text("Symbol :"), 1, row); // col, row
 			symbolPicker.setOnSymbolSelection(event -> {
 				css.setSymbol(symbolPicker.getValue());
 				if (Legend.isLegendVisible(scene)) {
 					Legend.addLegend(scene);
 				}
+				SymbolStyle ss = CSS.getSymbolStyle(symbolPicker.getValue());
+				symbolStyleChoiceBox.setValue(ss);
 				SeriesEditor.setEditorsSymbol(symbolPicker.getValue(),css);
 			});
 			gridPane.add(symbolPicker,3,row++);
@@ -259,7 +263,7 @@ public class PlotEditor {
 		
 		{
 			gridPane.add(new Text("Symbol Size"), 1, row); // col, row
-			ChoiceBox<Double> choiceBox = Editor.getDoubleEntry(CSS.symbolSizeArray, css.getSymbolSize());
+			ChoiceBox<Double> choiceBox = Editor.getDoubleChoiceBox(CSS.symbolSizeArray, css.getSymbolSize());
 			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			choiceBox.setOnAction(event -> {
 				css.setSymbolSize(choiceBox.getValue());
@@ -270,18 +274,16 @@ public class PlotEditor {
 		
 		{
 			gridPane.add(new Text("Symbol Style"), 1, row); // col, row
-			ChoiceBox<SymbolStyle> choiceBox = Editor.getEnumEntry(css.getSymbolStyle());
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.setOnAction(event -> {
-				css.changeSymbolStyle(choiceBox.getValue());
+			symbolStyleChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			symbolStyleChoiceBox.setOnAction(event -> {
+				css.changeSymbolStyle(symbolStyleChoiceBox.getValue());
 				SeriesEditor.setEditorsSymbol(css);
 				symbolPicker.setValue(css.getSymbol(), css.getSymbolColor());
-				symbolPicker.setAvailableSymbols(css.defaultSymbols);
 				if (Legend.isLegendVisible(lineChart.getScene())) {
 					Legend.addLegend(lineChart.getScene());;
 				}
 			});
-			gridPane.add(choiceBox,3,row++);
+			gridPane.add(symbolStyleChoiceBox,3,row++);
 		}
 
 		addSeparator(gridPane, row++);
@@ -312,7 +314,7 @@ public class PlotEditor {
 
 		{
 			gridPane.add(new Text("Line Width"), 1, row); // col, row
-			ChoiceBox<Double> choiceBox = Editor.getDoubleEntry(CSS.lineWidthArray, css.getLineWidth());
+			ChoiceBox<Double> choiceBox = Editor.getDoubleChoiceBox(CSS.lineWidthArray, css.getLineWidth());
 			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			choiceBox.setOnAction(event -> { 
 				css.setLineWidth(choiceBox.getValue());
