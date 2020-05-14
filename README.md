@@ -51,5 +51,26 @@ Dependencies:  This project depends of GitHub project https://github.com/gillius
   - The Zooming and Panning
   - A foundation for SSM axis
 
+To download and use (in eclipse):
+Current project does not use gradle or maven or any other such system.
 
+You will need to download this project and https://github.com/gillius/jfxutils as separate projects in eclipse.
 
+This project expects a user Library (called JavaFX) 
+  - Download JavaFX 11 (download the SDK not the Jmods): https://gluonhq.com/products/javafx/.
+
+Setup a user library in eclipse and point it to the JavaFX /lib folder (where there is about 8 Javafx....jar files).
+  - Add  a new user library in eclipse via Windows | Preferences | Java | Build Path | User Libraries (Call it JavaFX do not make it a System library)
+  - Add jars so select "Add External Jars" and browse to the JavaFX /lib directory and select the .jar files
+
+Set up a VMargument that will include the needed JavaFX jars
+  - Modify the following vm argument line below so that it points to the JavaFX lib folder (and version) you downloaded above
+  
+--module-path C:\Users\...\JAVA_INSTALL\javafx-sdk-11.0.2\lib --add-modules=javafx.controls,javafx.fxml,javafx.web,javafx.graphics,javafx.media
+
+  - Basically replace the C:\....\lib text above with your path to the lib directory of the version of JavaFX that you downloaded.
+
+  - In eclispe go  to: windows | preferences | java | installed JREs 
+  - Highlight your installed JRE and click edit.
+  - Paste the modified argument in the "default VM arguments" field.
+  
