@@ -1,5 +1,6 @@
 /*
  * Copyright 2013 Jason Winnebeck
+ * Copyright 2020 Tom Schorsch  -- changed tic marks from seconds since midnight to HH:MM:SS.sss format (or variations of that format)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +15,12 @@
  * limitations under the License.
  */
 
-package org.gillius.jfxutils.chart;
+package javaFX.plots.timessmaxis;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.gillius.jfxutils.chart.AxisTickFormatter;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -36,20 +39,18 @@ import javafx.util.Duration;
  * The StableTicksAxis places tick marks at consistent (axis value rather than graphical) locations.
  *
  * @author Jason Winnebeck
- * @author Tom Schorsch - Modified StableTicsAxis to make it work for Seconds Since Midnight
  */
-public class StableTicksSSMAxis2 extends ValueAxis<Number> {
+public class StableTicksSSMAxis extends ValueAxis<Number> {
 
 	/**
-	 * Possible tick spacing at the 10^1 level. These numbers must be >= 1 and < ticMultiple
+	 * Schorsch additions
+	 * Possible tick spacing at the 'ticMultiple'^1 level. These numbers must be >= 1 and < ticMultiple
 	 * 
 	 * The individual values indicate where divisions sill be made to split the range into major tics
 	 * Since we are dealing with seconds, the divisions below make sense in terms of splits of 1, 2, 5, 10, 15, and 30 seconds
 	 * And because the ticMultiple is set to 60, minutes (and hours) of 1, 2, 5, 10, 15 and 30 as well
 	 */
 	private static final double[] dividers = new double[] { 1.0, 2.0, 5.0, 10.0, 15.0, 30.0 };
-
-	private static final int minDisplayedTics = 1;
 	private static final int ticMultiple = 60;
 	private static final int numMinorTicks = 3;
 
@@ -66,6 +67,7 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 		}
 	};
 
+	// changed to SSM axis formatter - Schorsch
 	private AxisTickFormatter axisTickFormatter = new DefaultSSMAxisTickFormatter();
 
 	private List<Number> minorTicks;
@@ -80,10 +82,10 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 	 */
 	private BooleanProperty forceZeroInRange = new SimpleBooleanProperty( true );
 
-	public StableTicksSSMAxis2() {
+	public StableTicksSSMAxis() {
 	}
 
-	public StableTicksSSMAxis2( double lowerBound, double upperBound ) {
+	public StableTicksSSMAxis( double lowerBound, double upperBound ) {
 		super( lowerBound, upperBound );
 	}
 
@@ -138,7 +140,7 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 	}
 
 	@Override
-	protected Range autoRange ( double minValue, double maxValue, double length, double labelSize ) {
+	protected Range autoRange( double minValue, double maxValue, double length, double labelSize ) {
 //		System.out.printf( "autoRange(%f, %f, %f, %f)",
 //		                   minValue, maxValue, length, labelSize );
 		//By dweil: if the range is very small, display it like a flat line, the scaling doesn't work very well at these
@@ -188,30 +190,29 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 		double delta = maxValue - minValue;
 		double scale = calculateNewScale( length, minValue, maxValue );
 
-		int maxTicks = Math.max( minDisplayedTics, (int) ( length / getLabelSize() ) );
+		int maxTicks = Math.max( 1, (int) ( length / getLabelSize() ) );
 
 		Range ret;
-		ret = new Range( minValue, maxValue, calculateTickSpacing( delta, maxTicks, ticMultiple), scale );
+		ret = new Range( minValue, maxValue, calculateTickSpacing( delta, maxTicks ), scale );
+		
+		// Schorsch
 		axisTickFormatter.setRange( ret.low, ret.high, ret.tickSpacing );
+		
 		return ret;
 	}
 
-	public static double calculateTickSpacing( double delta, int maxTicks, int localTicMultiple ) {
-		double[] localDividers = dividers;
+	public static double calculateTickSpacing( double delta, int maxTicks ) {
 		if ( delta == 0.0 )
 			return 0.0;
 		if ( delta <= 0.0 )
 			throw new IllegalArgumentException( "delta must be positive" );
-		if ( maxTicks < minDisplayedTics )
-			throw new IllegalArgumentException( "must be at least "+minDisplayedTics+" tick" );
-//		if (delta < 110) {
-//			localTicMultiple = 20;
-//			localDividers = new double[] {1.0, 1.1, 2.5, 5.0, 10.0, 15.0, 18.0};
-//		}
+		if ( maxTicks < 1 )
+			throw new IllegalArgumentException( "must be at least one tick" );
+
 		//The factor will be close to the log10, this just optimizes the search
 		int factor = (int) Math.log10( delta );
 		int divider = 0;
-		double numTicks = delta / ( localDividers[divider] * Math.pow( localTicMultiple, factor ) );
+		double numTicks = delta / ( dividers[divider] * Math.pow( ticMultiple, factor ) );
 
 		//We don't have enough ticks, so increase ticks until we're over the limit, then back off once.
 		if ( numTicks < maxTicks ) {
@@ -220,17 +221,17 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 				--divider;
 				if ( divider < 0 ) {
 					--factor;
-					divider = localDividers.length - 1;
+					divider = dividers.length - 1;
 				}
 
-				numTicks = delta / ( localDividers[divider] * Math.pow( localTicMultiple, factor ) );
+				numTicks = delta / ( dividers[divider] * Math.pow( ticMultiple, factor ) );
 			}
 
 			//Now back off once unless we hit exactly
 			//noinspection FloatingPointEquality
 			if ( numTicks != maxTicks ) {
 				++divider;
-				if ( divider >= localDividers.length ) {
+				if ( divider >= dividers.length ) {
 					++factor;
 					divider = 0;
 				}
@@ -239,23 +240,21 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 			//We have too many ticks or exactly max, so decrease until we're just under (or at) the limit.
 			while ( numTicks > maxTicks ) {
 				++divider;
-				if ( divider >= localDividers.length ) {
+				if ( divider >= dividers.length ) {
 					++factor;
 					divider = 0;
 				}
 
-				numTicks = delta / ( localDividers[divider] * Math.pow( localTicMultiple, factor ) );
+				numTicks = delta / ( dividers[divider] * Math.pow( ticMultiple, factor ) );
 			}
 		}
 
 //		System.out.printf( "calculateTickSpacing( %f, %d ) = %f%n",
 //		                   delta, maxTicks, dividers[divider] * Math.pow( 10, factor ) );
-		double tickSpacing = localDividers[divider] * Math.pow( ticMultiple, factor );
-		
-		return tickSpacing;
+
+		return dividers[divider] * Math.pow( ticMultiple, factor );
 	}
-	
-	
+
 	@Override
 	protected List<Number> calculateMinorTickMarks() {
 //		System.out.println( "StableTicksAxis.calculateMinorTickMarks" );
@@ -285,7 +284,7 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 		}
 		setLowerBound( rangeVal.low );
 		setUpperBound( rangeVal.high );
-		// added call to give the tick formatter the the current range values
+
 		axisTickFormatter.setRange( rangeVal.low, rangeVal.high, rangeVal.tickSpacing );
 	}
 
@@ -319,7 +318,6 @@ public class StableTicksSSMAxis2 extends ValueAxis<Number> {
 			}
 		}
 //		System.out.printf( " = %s%n", ret );
-
 		return ret;
 	}
 

@@ -102,6 +102,7 @@ public class TestFontProperties implements FXTester {
 		yAxis.setLabel("Y");
 		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
 		lineChart.getData().addAll(plotData.getJavaFXSeries());
+		lineChart.setTitle("Test Font Properties");
 		callOut.addToChart(lineChart);
 		
 		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
@@ -113,6 +114,7 @@ public class TestFontProperties implements FXTester {
 		Stage stage = FXTester.displayResults(scene);
 
 		CallOut.configureCallOuts(stage);		
+		System.out.println("wofh;WEUIFH;WEIUFH");
 		
 		Instructions txt = new Instructions(stage.getScene());
 		txt.addCenter("Tests CallOut Text (Font) properties");

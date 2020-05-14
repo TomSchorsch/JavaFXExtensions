@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package org.gillius.jfxutils.chart;
+package javaFX.plots.zoommanager;
 
 import java.lang.reflect.InvocationTargetException;
 
 import org.gillius.jfxutils.EventHandlerManager;
+import org.gillius.jfxutils.chart.AxisConstraint;
+import org.gillius.jfxutils.chart.AxisConstraintStrategies;
+import org.gillius.jfxutils.chart.AxisConstraintStrategy;
+import org.gillius.jfxutils.chart.DefaultChartInputContext;
+import org.gillius.jfxutils.chart.XYChartInfo;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -95,10 +100,15 @@ zoomManager.start();</pre>
  *
  * @author Jason Winnebeck
  * @author Hollis Waite
+ * @Author Tom Schorsch
+ * --- changed the name to not conflict with "ChartZoomManager"
+ * --- added a handler for MouseEvent.MOUSE_CLICKED 
+ * --- (Note: a different/better change would have been to make the 'handlerManager' protected in the original "ChartZoomManager" code
+ *      so I could have extended the class and added the MouseEvent.MOUSE_CLICKED handler in an extension)
  */
-public class ChartZoomManager {
+public class PlotZoomManager {
 	/**
-	 * The default mouse filter for the {@link ChartZoomManager} filters events unless only primary
+	 * The default mouse filter for the {@link PlotZoomManager} filters events unless only primary
 	 * mouse button (usually left) is depressed.
 	 */
 	public static final EventHandler<MouseEvent> DEFAULT_FILTER = new EventHandler<MouseEvent>() {
@@ -138,13 +148,13 @@ public class ChartZoomManager {
 	private final Timeline zoomAnimation = new Timeline();
 
 	/**
-	 * Construct a new ChartZoomManager. See {@link ChartZoomManager} documentation for normal usage.
+	 * Construct a new ChartZoomManager. See {@link PlotZoomManager} documentation for normal usage.
 	 *
 	 * @param chartPane  A Pane which is the ancestor of all arguments
 	 * @param selectRect A Rectangle whose layoutX/Y makes it line up with the chart
 	 * @param chart      Chart to manage, where both X and Y axis are a {@link ValueAxis}.
 	 */
-	public <X,Y> ChartZoomManager( Pane chartPane, Rectangle selectRect, XYChart<X,Y> chart ) {
+	public <X,Y> PlotZoomManager( Pane chartPane, Rectangle selectRect, XYChart<X,Y> chart ) {
 		this.selectRect = selectRect;
 		this.xAxis = chart.getXAxis();
 		this.xAxisLowerBoundProperty = getLowerBoundProperty(xAxis);
@@ -199,7 +209,7 @@ public class ChartZoomManager {
 		handlerManager.addEventHandler( false, ScrollEvent.ANY, new MouseWheelZoomHandler() );
 
 
-		// Schorsch
+		// Schorsch addition
 		handlerManager.addEventHandler( false, MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle( MouseEvent mouseEvent ) {
@@ -643,13 +653,13 @@ public class ChartZoomManager {
 	private static <T> DoubleProperty getLowerBoundProperty( Axis<T> axis ) {
 		return axis instanceof ValueAxis ?
 				((ValueAxis<?>) axis).lowerBoundProperty() :
-					toDoubleProperty(axis, ChartZoomManager.<T>getProperty(axis, "lowerBoundProperty") );
+					toDoubleProperty(axis, PlotZoomManager.<T>getProperty(axis, "lowerBoundProperty") );
 	}
 
 	private static <T> DoubleProperty getUpperBoundProperty( Axis<T> axis ) {
 		return axis instanceof ValueAxis ?
 				((ValueAxis<?>) axis).upperBoundProperty() :
-					toDoubleProperty(axis, ChartZoomManager.<T>getProperty(axis, "upperBoundProperty") );
+					toDoubleProperty(axis, PlotZoomManager.<T>getProperty(axis, "upperBoundProperty") );
 	}
 
 	private static <T> DoubleProperty toDoubleProperty( final Axis<T> axis, final Property<T> property ) {

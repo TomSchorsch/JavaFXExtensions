@@ -126,7 +126,7 @@ public class TestMain extends Application {
 		mapClass2Text.put(new TestLineProperties(),"- Line Properties");
 		mapClass2Text.put(new TestMovingCallOuts(),"- Move Callout by Dragging Line");
 		mapClass2Text.put(new TestRotateCallOutsDrag(),"- Rotate / Extend CallOut by Dragging Text");
-		mapClass2Text.put(new TestEditCallOuts(),"- Edit");
+		mapClass2Text.put(new TestEditCallOuts(),"- Edit CallOuts");
 		mapClass2Text.put(new TestAllCallOuts(),"- Move, Rotate, Extend, Edit Test");
 		mapClass2Text.put(new TestCallOutSeriesEditor(),"- Test Editing individual CallOut Series");
 		

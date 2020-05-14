@@ -2,7 +2,6 @@ package javaFX.plots.overlay;
 
 import java.io.File;
 
-import org.gillius.jfxutils.chart.ChartZoomManager;
 
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.FontWeight;
@@ -14,6 +13,7 @@ import javaFX.plots.callouts.CallOut;
 import javaFX.plots.callouts.CallOutSettingsSeriesEditor;
 import javaFX.plots.legend.Legend;
 import javaFX.plots.title.Title;
+import javaFX.plots.zoommanager.PlotZoomManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -230,7 +230,7 @@ public class SceneOverlay {
 		sp.getChildren().add(selectRect);
 
 		LineChart<?, ?> lineChart = getLineChart(scene);
-		ChartZoomManager zoomManager = new ChartZoomManager( sp, selectRect, lineChart );
+		PlotZoomManager zoomManager = new PlotZoomManager( sp, selectRect, lineChart );
 		zoomManager.start();
 	}	
 

@@ -1,4 +1,4 @@
-package javaFX.plots;
+package javaFX.plots.timessmaxis;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

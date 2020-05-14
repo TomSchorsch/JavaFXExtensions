@@ -33,7 +33,6 @@ public class SaveAsPng {
 	// "Save"ing a Scene
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static File save(Scene scene, File file) {
-		file.mkdirs();
 		file = addParentDirectory(file);
 		file = addPng(file);
 		WritableImage image = scene.snapshot(null);
@@ -83,7 +82,6 @@ public class SaveAsPng {
 		return saveAs(scene, new File(FileName));
 	}
 	public static File saveAs(Scene scene, File file) {
-		file.mkdirs();
 		file = addParentDirectory(file);
 		file = addPng(file);
 		FileChooser fileChooser = new FileChooser();
@@ -157,8 +155,9 @@ public class SaveAsPng {
 	
 	private static File addPng(File file) {
 		if (!file.getAbsolutePath().endsWith(".png")) {
-			return new File(file.getAbsoluteFile()+".png");
+			file = new File(file.getAbsoluteFile()+".png");
 		}
+		file.mkdirs();
 		return file;
 	}
 	

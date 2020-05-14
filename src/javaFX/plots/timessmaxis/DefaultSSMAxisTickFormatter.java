@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.gillius.jfxutils.chart;
+package javaFX.plots.timessmaxis;
+
+import org.gillius.jfxutils.chart.AxisTickFormatter;
 
 /**5
  * DefaultAxisTickFormatter formats labels using a default number instance.

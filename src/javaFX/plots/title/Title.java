@@ -82,6 +82,9 @@ public class Title {
 	}
 	public static String getTitle(Scene scene) {
 		Label label = getTitleLabel(scene);
+		if (label.getText() == null) {
+			return "No Title Set";
+		}
 		return label.getText();
 	}
 	
