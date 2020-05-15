@@ -18,7 +18,6 @@ The default JavaFX LineChart had some limitations and some of those limitations 
      - filled, 
      - transparent, and 
      - white-filled
-  Note: Legend item for a series matches the Symbol and color of the data series
   - Chart title now includes an optional sub-title
   - Plots can have additional plot info saved in the lower left corner
   - CallOuts (Annotations)
@@ -72,26 +71,32 @@ Pop-up editors are invoked by right-clicking on:
   - The Zooming and Panning
   - A foundation for SSM axis
 
-<b>To download and use (in eclipse):</b>
-Current project does not use gradle or maven or any other such system.
-
-You will need to download this project and https://github.com/gillius/jfxutils as separate projects in eclipse.
-
-This project expects a user Library (called JavaFX) 
-  - Download JavaFX 11 (download the SDK not the Jmods): https://gluonhq.com/products/javafx/.
-
-Setup a user library in eclipse and point it to the JavaFX /lib folder (where there is about 8 Javafx....jar files).
-  - Add  a new user library in eclipse via Windows | Preferences | Java | Build Path | User Libraries (Call it JavaFX do not make it a System library)
-  - Add jars so select "Add External Jars" and browse to the JavaFX /lib directory and select the .jar files
-
-Set up a VMargument that will include the needed JavaFX jars
-  - Modify the following vm argument line below so that it points to the JavaFX lib folder (and version) you downloaded above
-  
+<b>To download and use (in eclipse):</b><br>
+<b>Current project does not use gradle or maven or any other such system.</b>
+  - Clone this project (https://github.com/TomSchorsch/JavaFXExtensions) to a local git repoisitory
+      - In Eclipse select Git Repository | Clone a git repository | use the above url as the location to clone
+      - JavaFXExtensions imported easily into git with Next | Next | Finish
+  - Import the JavaFXExtensions in the git repository as an eclipse project
+    - In Eclipse select File | import... | Git | Projects from Git | Next
+    - Then select Existing local repository | Next | JavaFXExtensions | Next | Next (make sure "Import existing Git projects" is selected) | Finish
+  - Create a JavaFX user Library
+    - Download JavaFX 11 (download the SDK not the Jmods): https://gluonhq.com/products/javafx/ and extract the contents
+    - Add  a new user library in eclipse via Windows | Preferences | Java | Build Path | User Libraries (Call it JavaFX do not make it a System library)
+    - Select "Add External Jars" and browse to the JavaFX /lib directory and select the .jar files in that directory
+    - Open up the JavaFXExtensions Build Path and add the JavaFX User Library you created
+  - Set up a VMargument that will include the needed JavaFX jars
+    - Modify the following vm argument line below so that it points to the JavaFX lib folder (and version) you downloaded above
 --module-path C:\Users\...\JAVA_INSTALL\javafx-sdk-11.0.2\lib --add-modules=javafx.controls,javafx.fxml,javafx.web,javafx.graphics,javafx.media
-
-  - Basically replace the C:\....\lib text above with your path to the lib directory of the version of JavaFX that you downloaded.
-
-  - In eclispe go  to: windows | preferences | java | installed JREs 
-  - Highlight your installed JRE and click edit.
-  - Paste the modified argument in the "default VM arguments" field.
+    - Basically replace the C:\....\lib text above with your path to the lib directory of the version of JavaFX that you downloaded.
+    - In eclispe go  to: windows | preferences | java | installed JREs 
+    - Highlight your installed JRE and click edit.
+    - Paste the modified argument you created above into the "default VM arguments" field. 
+ 
+  - Every way I tried to import https://github.com/gillius/jfxutils resulted in a badly messed up Maven project but he following instructions worked well for me
+    - Browse to the above link | download it as a .zip | extract all
+    - In Eclipse, create a new Java Project called jfxutils
+    - In Eclipse, browse to the src directory of fxutils, then select File | import... | File System | browse to the extracted directory \jfxutils-master\jfxutils\src\main\java and select java to import
+    - You should now see three packages under src - org.gillius.jfxutils, org.gillius.jfxutils.chart, and org.gillius.jfxutils.tab
+    - Open up the jfxutils Build Path and add the JavaFX User Library you created
+    - Also,open up the JavaFXExtensions Build Path and add the jfxutils project to the Classpath
   
