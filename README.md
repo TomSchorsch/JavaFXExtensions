@@ -65,7 +65,7 @@ Pop-up editors are invoked by right-clicking on:
 - A Seconds Since Midnight (SSM) axis which turns a double axis value into a HH:MM:SS.sss value (How much of HH:MM:SS.sss that is displayed depends on the zoomlevel).
 - A Hover capability for data items that will display additional info when the mouse hovers over a data item.
 
-<b>Requirements:<b/>  Java 11+ and and JavaFX 11+
+<b>Requirements:</b>  Java 11+ and and JavaFX 11+
 
 <b>Dependencies:</b>  This project depends of GitHub project https://github.com/gillius/jfxutils for several features
   - The Zooming and Panning
