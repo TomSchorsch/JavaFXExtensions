@@ -59,7 +59,7 @@ public class TestSSMAxis implements FXTester {
 		Stage stage = FXTester.displayResults(scene);
 		
 		Instructions txt = new Instructions(stage.getScene());
-		txt.addCenter("Tests the Seconds SInce Midnight (SSM) Axis");
+		txt.addCenter("Tests the Seconds Since Midnight (SSM) Axis");
 		txt.add("Use the zooming capability to verify that the SSM Axis works at various levels of zooming");
 		txt.display();
 	}
