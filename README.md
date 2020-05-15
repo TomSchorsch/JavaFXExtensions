@@ -18,7 +18,7 @@ The default JavaFX LineChart had some limitations in terms of available Symbols 
      - filled, 
      - transparent, and 
      - white-filled
-     <img src="images/Symbols.PNG" width = 400> 
+     <img src="images/Symbols.PNG" width = 360> 
 
   - Chart title now includes an optional sub-title
   - Plots can have additional plot info saved in the lower left corner
@@ -26,7 +26,8 @@ The default JavaFX LineChart had some limitations in terms of available Symbols 
     - A CallOut consists of a line starting at a datapoint value and extending in some direction for some length with some text at the end that can either be horizontal or in-line with the CallOut line angle.
     - A plot can have several different "series" of CallOuts each with unique settings for the CallOuts.
     - CallOuts can also be directly manipulated (moved, rotated)by the user
-  <img src="images/CallOutFontProperties.PNG" width = 500>  <img src="images/CallOutLineProperties.PNG" width = 500>  
+    
+<img src="images/CallOutFontProperties.PNG" width = 430>  <img src="images/CallOutLineProperties.PNG" width = 430>  
         
 ### LineChart editing Features:
 After the LineChart is created and displayed a user can modify all of the following features using pop-up editors.<br>
