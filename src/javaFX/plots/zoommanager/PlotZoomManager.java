@@ -145,6 +145,8 @@ public class PlotZoomManager {
 	private final DoubleProperty yAxisLowerBoundProperty;
 	private final DoubleProperty yAxisUpperBoundProperty;
 	private final XYChartInfo chartInfo;
+	private double xPress = 0.0;
+	private double yPress = 0.0;
 
 	private final Timeline zoomAnimation = new Timeline();
 
@@ -388,12 +390,14 @@ public class PlotZoomManager {
 			rectY.set( y );
 
 		} else if ( zoomMode == AxisConstraint.Horizontal ) {
+			xPress = x;
 			selectRect.setTranslateX( x );
 			selectRect.setTranslateY( plotArea.getMinY() );
 			rectX.set( x );
 			rectY.set( plotArea.getMaxY() );
 
 		} else if ( zoomMode == AxisConstraint.Vertical ) {
+			yPress = y;
 			selectRect.setTranslateX( plotArea.getMinX() );
 			selectRect.setTranslateY( y );
 			rectX.set( plotArea.getMaxX() );
@@ -414,23 +418,59 @@ public class PlotZoomManager {
 
 		Rectangle2D plotArea = chartInfo.getPlotArea();
 
-		if ( zoomMode == AxisConstraint.Both || zoomMode == AxisConstraint.Horizontal ) {
+		// Schorsch
+		// Changed so that only AxisConstraint.Both clamps to the selection start and the rectangle can only grow to the lower left direction
+		// If dragging on an Axis then the rectangle can grow in either direction
+		if ( zoomMode == AxisConstraint.Both) {
+			System.out.println("Both");
+
 			double x = mouseEvent.getX();
 			//Clamp to the selection start
 			x = Math.max( x, selectRect.getTranslateX() );
 			//Clamp to plot area
 			x = Math.min( x, plotArea.getMaxX() );
 			rectX.set( x );
-		}
-
-		if ( zoomMode == AxisConstraint.Both || zoomMode == AxisConstraint.Vertical ) {
+			
 			double y = mouseEvent.getY();
 			//Clamp to the selection start
 			y = Math.max( y, selectRect.getTranslateY() );
 			//Clamp to plot area
 			y = Math.min( y, plotArea.getMaxY() );
 			rectY.set( y );
+
 		}
+		else if ( zoomMode == AxisConstraint.Horizontal ) {
+			double x = mouseEvent.getX();
+			// the mouse is on the X axis and either either left or right of the original xPress
+			// set the rectangle accordingly 
+			if (x < xPress) {				
+				x = Math.max(x, plotArea.getMinX());
+				selectRect.setTranslateX(x);
+				rectX.set(xPress);
+			}
+			else if (x > xPress){
+				selectRect.setTranslateX(xPress);
+				x = Math.min( x, plotArea.getMaxX() );
+				rectX.set( x );
+			}
+		}
+
+		else if ( zoomMode == AxisConstraint.Vertical ) {
+			double y = mouseEvent.getY();
+			// the mouse is on the Y axis and either either above or below the original yPress
+			// set the rectangle accordingly 
+			if (y < yPress) {				
+				y = Math.max(y, plotArea.getMinY());
+				selectRect.setTranslateY(y);
+				rectY.set(yPress);
+			}
+			else if (y > yPress){
+				selectRect.setTranslateY(yPress);
+				y = Math.min( y, plotArea.getMaxY() );
+				rectY.set( y );
+			}
+		}
+
 	}
 
 	private void onMouseReleased() {
@@ -441,6 +481,7 @@ public class PlotZoomManager {
 		if ( selectRect.getWidth() == 0.0 ||
 				selectRect.getHeight() == 0.0 ) {
 			selecting.set( false );
+			// Schorsch a reverse drag (from lower right to upper left) restores the chart
 			restoreChart();
 			return;
 		}
@@ -490,7 +531,7 @@ public class PlotZoomManager {
 	}
 	// Schorsch
 	// Double click zooms out like the Mouse Wheel
-	// Double click sets autorange back no and restores the original plot dimensions
+	// Double click sets autorange back and restores the original plot dimensions
 	private void onMouseClick(MouseEvent mouseEvent) { 
 		if (mouseEvent.getClickCount() == 2) {
 			if (mouseEvent.isControlDown() || mouseEvent.isShiftDown() || mouseEvent.isAltDown()) {

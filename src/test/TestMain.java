@@ -22,6 +22,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import test.callouts.TestAllCallOuts;
 import test.callouts.TestCallOutSeriesEditor;
 import test.callouts.TestEditCallOuts;
@@ -37,6 +38,7 @@ import test.plotEditMenu.TestSaveAsPngTitle;
 import test.plots.TestCDFPlot;
 import test.plots.TestPlotAndSeriesEditor;
 import test.plots.TestPlotEditor;
+import test.plots.TestSSMAxis;
 import test.plots.TestSeriesEditor;
 import test.plots.TestSymbolsIndividualSizes;
 import test.plots.TestXAndYAxisEditors;
@@ -120,6 +122,7 @@ public class TestMain extends Application {
 		
 		mapClass2Text.put(plotsSpecific,"Test Plot variants:");
 		mapClass2Text.put(new TestCDFPlot(),"- Test CDF");
+		mapClass2Text.put(new TestSSMAxis(),"- Test Seconds Since Midnight Axis");
 		
 		mapClass2Text.put(callOuts, "Test CallOuts:");
 		mapClass2Text.put(new TestFontProperties(),"- Font Properties");

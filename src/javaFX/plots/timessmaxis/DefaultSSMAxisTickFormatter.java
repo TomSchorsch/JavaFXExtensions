@@ -73,7 +73,7 @@ public class DefaultSSMAxisTickFormatter implements AxisTickFormatter {
 		if (low+tickSpacing > value.doubleValue()) {
 //			System.out.println(low+", "+tickSpacing+", "+value.doubleValue());
 			txt = String.format("%dh %2dm %2.3fs", h.intValue(),m.intValue(),s);
-			txt = txt.replace(".000s", "s").replace("00s", "").replace("  0s", " ");
+			txt = txt.replace(".000s", "s").replace("00s", "").replace(" 0s", " ");
 			txt = txt.replace("00m","").replace("  0m", " ");
 		}
 		// otherwise only put the hour, minute, or seconds value

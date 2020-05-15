@@ -94,7 +94,7 @@ public class CallOutSettingsSeriesEditor  {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
 				gridPane.add(new Text("Angle"), 1, row); // col, row
-				ChoiceBox<Double> angleChoiceBox = Editor.getDoubleChoiceBox(CallOutSettings.Angle, callOut.defaultCallOutSettings.getAngle());
+				ComboBox<Double> angleChoiceBox = Editor.getDoubleComboBox(CallOutSettings.Angle, callOut.defaultCallOutSettings.getAngle());
 				angleChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 
 				ChangeListener<? super Double> angleListener = (observable, oldValue, newValue) -> {

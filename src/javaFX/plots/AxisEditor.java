@@ -16,6 +16,7 @@ import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -167,27 +168,27 @@ public class AxisEditor {
 		// Tick Label
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		ChoiceBox<Double> fontSizeChoiceBox = Editor.getDoubleChoiceBox(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
+		ComboBox<Double> fontSizeComboBox = Editor.getDoubleComboBox(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
 		{
 			gridPane.add(new Text("Tick Label Font : "),1, row);
-			fontSizeChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			fontSizeChoiceBox.setOnAction(event -> { 
-				axis.setTickLabelFont(new Font(fontSizeChoiceBox.getValue()));
+			fontSizeComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			fontSizeComboBox.setOnAction(event -> { 
+				axis.setTickLabelFont(new Font(fontSizeComboBox.getValue()));
 			});
-			gridPane.add(fontSizeChoiceBox,3,row++);
+			gridPane.add(fontSizeComboBox,3,row++);
 		}
 		
 		{
 			
 			gridPane.add(new Text("Tick Label rotation : "),1, row);
 			Double d = -axis.getTickLabelRotation();
-			ChoiceBox<Double> choiceBox = Editor.getDoubleChoiceBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.setOnAction(event -> { 
-				axis.setTickLabelRotation(-choiceBox.getValue());
-				axis.setTickLabelFont(new Font(fontSizeChoiceBox.getValue()));  // This was needed to force an update when auto ranging was off
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
+			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			comboBox.setOnAction(event -> { 
+				axis.setTickLabelRotation(-comboBox.getValue());
+				axis.setTickLabelFont(new Font(fontSizeComboBox.getValue()));  // This was needed to force an update when auto ranging was off
 			});
-			gridPane.add(choiceBox,3,row++);
+			gridPane.add(comboBox,3,row++);
 		}
 		
 	

@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -263,13 +264,13 @@ public class PlotEditor {
 		
 		{
 			gridPane.add(new Text("Symbol Size"), 1, row); // col, row
-			ChoiceBox<Double> choiceBox = Editor.getDoubleChoiceBox(CSS.symbolSizeArray, css.getSymbolSize());
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.setOnAction(event -> {
-				css.setSymbolSize(choiceBox.getValue());
-				SeriesEditor.setEditorsSymbolSize(choiceBox.getValue());
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.symbolSizeArray, css.getSymbolSize());
+			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			comboBox.setOnAction(event -> {
+				css.setSymbolSize(comboBox.getValue());
+				SeriesEditor.setEditorsSymbolSize(comboBox.getValue());
 			});
-			gridPane.add(choiceBox,3,row++);
+			gridPane.add(comboBox,3,row++);
 		}
 		
 		{
@@ -314,13 +315,13 @@ public class PlotEditor {
 
 		{
 			gridPane.add(new Text("Line Width"), 1, row); // col, row
-			ChoiceBox<Double> choiceBox = Editor.getDoubleChoiceBox(CSS.lineWidthArray, css.getLineWidth());
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.setOnAction(event -> { 
-				css.setLineWidth(choiceBox.getValue());
-				SeriesEditor.setEditorsLineWidth(choiceBox.getValue());
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.lineWidthArray, css.getLineWidth());
+			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			comboBox.setOnAction(event -> { 
+				css.setLineWidth(comboBox.getValue());
+				SeriesEditor.setEditorsLineWidth(comboBox.getValue());
 				});
-			gridPane.add(choiceBox,3,row++);
+			gridPane.add(comboBox,3,row++);
 		}
 		
 		addSeparator(gridPane, row++);

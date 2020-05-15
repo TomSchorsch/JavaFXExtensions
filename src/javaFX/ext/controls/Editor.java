@@ -196,22 +196,22 @@ public class Editor {
 		cb.setValue(value);
 		cb.setOnAction(eh);
 	}
-	public static ChoiceBox<Double> getDoubleChoiceBox(Double[] values, Double value) {
-		// get list of enumerations
-		ObservableList<Double> list = FXCollections.observableArrayList();
-		list.addAll(values);
-		// create a ChoiceBox with those values, set the default value, set the size, etc.
-		var choiceBox = new ChoiceBox<Double>(list);
-		GridPane.setFillWidth(choiceBox, true);
-		choiceBox.setValue(value);
-		return choiceBox;
-	}
-	public static void setDoubleChoiceBox(ChoiceBox<Double> cb, Double value) {
-		EventHandler<ActionEvent> eh = cb.getOnAction();
-		cb.setOnAction(null);
-		cb.setValue(value);
-		cb.setOnAction(eh);
-	}
+//	public static ChoiceBox<Double> getDoubleChoiceBox(Double[] values, Double value) {
+//		// get list of enumerations
+//		ObservableList<Double> list = FXCollections.observableArrayList();
+//		list.addAll(values);
+//		// create a ChoiceBox with those values, set the default value, set the size, etc.
+//		var choiceBox = new ChoiceBox<Double>(list);
+//		GridPane.setFillWidth(choiceBox, true);
+//		choiceBox.setValue(value);
+//		return choiceBox;
+//	}
+//	public static void setDoubleChoiceBox(ChoiceBox<Double> cb, Double value) {
+//		EventHandler<ActionEvent> eh = cb.getOnAction();
+//		cb.setOnAction(null);
+//		cb.setValue(value);
+//		cb.setOnAction(eh);
+//	}
 	
 	public static ComboBox<Double> getDoubleComboBox(Double[] values, Double value) {
 		// get list of enumerations

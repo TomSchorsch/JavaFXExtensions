@@ -17,6 +17,7 @@ import javafx.geometry.VPos;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
@@ -32,9 +33,9 @@ public class SeriesEditor {
 	static Map<Series<?,?>,ColorPicker> mapSeries2SeriesColorPicker = new HashMap<Series<?,?>,ColorPicker>();
 	static Map<Series<?,?>,SymbolPicker> mapSeries2SymbolPicker = new HashMap<Series<?,?>,SymbolPicker>();
 	static Map<Series<?,?>,ColorPicker> mapSeries2SymbolColorPicker = new HashMap<Series<?,?>,ColorPicker>();
-	static Map<Series<?,?>,ChoiceBox<Double>> mapSeries2SymbolSizePicker = new HashMap<Series<?,?>,ChoiceBox<Double>>();
+	static Map<Series<?,?>,ComboBox<Double>> mapSeries2SymbolSizePicker = new HashMap<Series<?,?>,ComboBox<Double>>();
 	static Map<Series<?,?>,ColorPicker> mapSeries2LineColorPicker = new HashMap<Series<?,?>,ColorPicker>();
-	static Map<Series<?,?>,ChoiceBox<Double>> mapSeries2LineWidthPicker = new HashMap<Series<?,?>,ChoiceBox<Double>>();
+	static Map<Series<?,?>,ComboBox<Double>> mapSeries2LineWidthPicker = new HashMap<Series<?,?>,ComboBox<Double>>();
 
 	static Map<Series<?,?>,Boolean> mapSeries2SeriesRemoved = new HashMap<Series<?,?>,Boolean>();
 	
@@ -65,7 +66,7 @@ public class SeriesEditor {
 	}
 	public static void setEditorsSymbolSize(Double size) {
 		for(Series<?,?> series : mapSeries2Editor.keySet()) {
-			Editor.setDoubleChoiceBox(mapSeries2SymbolSizePicker.get(series), size);
+			Editor.setDoubleComboBox(mapSeries2SymbolSizePicker.get(series), size);
 		}
 	}
 	public static void setEditorsSymbolColor(Color color, CSS css) {
@@ -82,7 +83,7 @@ public class SeriesEditor {
 	}
 	public static void setEditorsLineWidth(Double width) {
 		for(Series<?,?> series : mapSeries2Editor.keySet()) {
-			Editor.setDoubleChoiceBox(mapSeries2LineWidthPicker.get(series), width);
+			Editor.setDoubleComboBox(mapSeries2LineWidthPicker.get(series), width);
 		}
 	}
 
@@ -119,10 +120,10 @@ public class SeriesEditor {
 		ColorPicker seriesColorPicker = Editor.getColorPicker(css.getSymbolColor(series));		
 		SymbolPicker symbolPicker = Editor.getSymbolPicker(css.getSymbol(series), css.getSymbolColor(series));
 		ColorPicker symbolColorPicker = Editor.getColorPicker(css.getSymbolColor(series));
-		ChoiceBox<Double> symbolSizePicker = Editor.getDoubleChoiceBox(CSS.symbolSizeArray, css.getSymbolSize(series));
+		ComboBox<Double> symbolSizePicker = Editor.getDoubleComboBox(CSS.symbolSizeArray, css.getSymbolSize(series));
 		ChoiceBox<SymbolStyle> symbolStyleChoiceBox = Editor.getEnumChoiceBox(css.getSymbolStyle(series));
 		ColorPicker lineColorPicker = Editor.getColorPicker(css.getLineColor(series));
-		ChoiceBox<Double> lineWidthPicker = Editor.getDoubleChoiceBox(CSS.lineWidthArray, css.getLineWidth(series));
+		ComboBox<Double> lineWidthPicker = Editor.getDoubleComboBox(CSS.lineWidthArray, css.getLineWidth(series));
 		
 		mapSeries2SeriesColorPicker.put(series,seriesColorPicker);
 		mapSeries2SymbolPicker.put(series,symbolPicker);
