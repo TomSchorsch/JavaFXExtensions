@@ -101,7 +101,7 @@ public class TestFontProperties implements FXTester {
 		yAxis.setLabel("Y");
 		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
 		lineChart.getData().addAll(plotData.getJavaFXSeries());
-		lineChart.setTitle("Test Font Properties");
+		lineChart.setTitle("CallOut Font Properties");
 		callOut.addToChart(lineChart);
 		
 		CSS css = new CSS(lineChart,SymbolStyle.unfilled);

@@ -77,7 +77,7 @@ public class TestLineProperties implements FXTester {
 		xAxis.setLabel("X");
 		yAxis.setLabel("Y");
 		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
-		lineChart.setTitle("Test Setting Line Properties");
+		lineChart.setTitle("CallOut Line Properties");
 		lineChart.getData().addAll(plotData.getJavaFXSeries());
 
 
