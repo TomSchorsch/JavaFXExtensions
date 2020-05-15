@@ -422,8 +422,6 @@ public class PlotZoomManager {
 		// Changed so that only AxisConstraint.Both clamps to the selection start and the rectangle can only grow to the lower left direction
 		// If dragging on an Axis then the rectangle can grow in either direction
 		if ( zoomMode == AxisConstraint.Both) {
-			System.out.println("Both");
-
 			double x = mouseEvent.getX();
 			//Clamp to the selection start
 			x = Math.max( x, selectRect.getTranslateX() );

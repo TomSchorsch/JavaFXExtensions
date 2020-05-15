@@ -2,6 +2,8 @@ package test.plots;
 
 import java.util.Random;
 
+import org.gillius.jfxutils.chart.StableTicksAxis;
+
 import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
@@ -13,7 +15,6 @@ import javaFX.plots.overlay.SceneOverlay.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
@@ -40,8 +41,8 @@ public class TestSymbolsIndividualSizes implements FXTester {
 		}
 
 		// Create Plot
-		final NumberAxis xAxis = new NumberAxis();
-		final NumberAxis yAxis = new NumberAxis();
+		final StableTicksAxis xAxis = new StableTicksAxis();
+		final StableTicksAxis yAxis = new StableTicksAxis();
 		xAxis.setLabel("X");
 		yAxis.setLabel("Y");
 		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
@@ -63,7 +64,7 @@ public class TestSymbolsIndividualSizes implements FXTester {
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu);	
+		SceneOverlay.addOverlays(scene, logger, SceneOption.All);	
 		
 		Stage stage = FXTester.displayResults(scene);
 		
