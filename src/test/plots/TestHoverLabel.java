@@ -7,14 +7,17 @@ import org.gillius.jfxutils.chart.StableTicksAxis;
 import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
-import javaFX.ext.utility.ListIterator;
 import javaFX.ext.utility.Logger;
+import javaFX.plots.HoverLabel;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;
+import javaFX.plots.timessmaxis.StableTicksSSMAxis;
+import javaFX.plots.timessmaxis.TimeSSMAxis;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
@@ -22,7 +25,7 @@ import javafx.stage.Stage;
 import test.FXTester;
 
 
-public class TestSymbolsIndividualSizes implements FXTester {
+public class TestHoverLabel implements FXTester {
 
 	Random random = new Random();
 	@Override
@@ -31,48 +34,55 @@ public class TestSymbolsIndividualSizes implements FXTester {
 		NumberPlotData plotData = new NumberPlotData();
 
 		// Generate data
-		for (double d = 1.0; d <=14.0; d = d+1.0) {
+		for (double d = 1.0; d <= 32; d = d+1.0) {
 			double factor = 1 + 1.0/d;
 			double val = d;
-			XYChart.Series<Number,Number> series = FXTester.getSeriesData("series"+String.format("%02.0f",d), 12, 1.0,  d,  
-					(xx -> xx.doubleValue()+Math.random()*factor), 
+			XYChart.Series<Number,Number> series = FXTester.getSeriesData("series"+String.format("%02.0f",d), 5, 1.0,  d,  
+					(xx -> xx.doubleValue()+Math.random()*3600.0), 
 					(yy -> val+random.nextGaussian()*factor));
 			plotData.addAll(series);
 		}
 
 		// Create Plot
-		final StableTicksAxis xAxis = new StableTicksAxis();
+		final StableTicksSSMAxis xAxis = new StableTicksSSMAxis();
 		final StableTicksAxis yAxis = new StableTicksAxis();
-		xAxis.setLabel("X");
+		xAxis.setLabel("Time (SSM)");
 		yAxis.setLabel("Y");
 		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
-		lineChart.setTitle("Test Symbols of different sizes on the same series");
-		lineChart.setAxisSortingPolicy(SortingPolicy.NONE); 
+		lineChart.setTitle("Test SSM Axis Editor");
+		lineChart.setAxisSortingPolicy(SortingPolicy.NONE);
 		lineChart.getData().addAll(plotData.getJavaFXSeries());
-
-		// change plot style
-		CSS css = new CSS(lineChart, SymbolStyle.filled);
+			
+		new CSS(lineChart, SymbolStyle.whitefilled);
 		
-		ListIterator<Double> listSizes = new ListIterator<Double>(CSS.symbolSizeArray);
-		for (Series<Number, Number> series : css.getSeriesFromChart()) {
-			css.setSymbol(series, css.defaultSymbols.getNext());
-			listSizes.reset();
-			for (Data<Number, Number> data : series.getData()) {
-				css.setSymbolSize(data, listSizes.getNext());
+		HoverLabel hl = new HoverLabel();
+		for (Series series : lineChart.getData()) {
+			for (Object d : series.getData()) {
+				Data data = (Data)d; 
+				hl.create(data, getXY(data));
 			}
 		}
-		
+	
 		Scene scene = new Scene(lineChart,1200,600);
+		
 		
 		SceneOverlay.addOverlays(scene, logger, SceneOption.All);	
 		
 		Stage stage = FXTester.displayResults(scene);
 		
+		hl.addLabelsToChart();
+		
 		Instructions txt = new Instructions(stage.getScene());
-		txt.addCenter("Tests Individual Symbol Sizes");
-		txt.add("Programmatically, the individual data values of a datga series were given different sizes");
-		txt.add("These sizes can be set by the Plot and Series Editors as a whole but cannot be individually changed / edited");
-		txt.add("<b>I.e. there is no data point editor at this time</b>");
+		txt.addCenter("Tests Hover Labels");
+		txt.add("Hover over any data point and a pop-up with the points X and Y value will appear");
+		txt.add("-- Note, any data could be displayed for any point");
+		txt.add("Use the zooming capability to verify that the SSM Axis works at various levels of zooming");
 		txt.display();
+	}
+	
+	private String getXY(Data data) {
+		String ans = "x:"+data.getXValue().toString()+
+				"\ny:"+data.getYValue().toString();
+		return ans;
 	}
 }

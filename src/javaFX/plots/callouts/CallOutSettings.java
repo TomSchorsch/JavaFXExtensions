@@ -225,7 +225,8 @@ public class CallOutSettings {
 
 			xTextField.setOnKeyReleased(event -> {
 				if (event.getCode() == KeyCode.ENTER){
-					Object x = (Number)Double.parseDouble(xTextField.getText());
+					Object x = getNumber(xTextField.getText(),originalX);
+					xTextField.setText(x.toString());
 					data.setXValue(x);
 					co.setCalloutTextProperties(text,this);
 					co.setCallOutLineAndPositioningProperties(text, this);
@@ -242,7 +243,8 @@ public class CallOutSettings {
 			});
 			yTextField.setOnKeyReleased(event -> {
 				if (event.getCode() == KeyCode.ENTER){
-					Number y = (Number)Double.parseDouble(yTextField.getText());
+					Number y = getNumber(yTextField.getText(),originalY);
+					yTextField.setText(y.toString());
 					data.setYValue(y);
 					co.setCalloutTextProperties(text,this);
 					co.setCallOutLineAndPositioningProperties(text, this);
@@ -458,6 +460,15 @@ public class CallOutSettings {
 	}
 
 
+	private static Double getNumber(String s, Double def) {
+		try {
+			Double ans = Double.parseDouble(s);
+			return ans;
+		}
+		catch (Exception e) {
+			return def;
+		}
+	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	// The following method sets the editor values when the CallOut has been moved by the Mouse
 	////////////////////////////////////////////////////////////////////////////////////////////////////

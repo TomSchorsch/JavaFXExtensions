@@ -95,7 +95,7 @@ import javafx.scene.text.Font;
 @SuppressWarnings("rawtypes")
 public class CSS  {
 
-	// Reads in the CSSfile but only attaches it to a chart if you are NOT useing the JavaFX_original option
+	// Reads in the CSSfile but only attaches it to a chart if you are NOT using the JavaFX_original option
 	public static final String ResourceFile = "ChartSymbols.css";
 	public static String cssFile;
 	static {

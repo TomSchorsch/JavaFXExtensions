@@ -36,6 +36,7 @@ import test.controls.MappedRadioButtonsTest;
 import test.plotEditMenu.TestSaveAsPngGiven;
 import test.plotEditMenu.TestSaveAsPngTitle;
 import test.plots.TestCDFPlot;
+import test.plots.TestHoverLabel;
 import test.plots.TestPlotAndSeriesEditor;
 import test.plots.TestPlotEditor;
 import test.plots.TestSSMAxis;
@@ -123,6 +124,7 @@ public class TestMain extends Application {
 		mapClass2Text.put(plotsSpecific,"Test Plot variants:");
 		mapClass2Text.put(new TestCDFPlot(),"- Test CDF");
 		mapClass2Text.put(new TestSSMAxis(),"- Test Seconds Since Midnight Axis");
+		mapClass2Text.put(new TestHoverLabel(),"- Test Hover Labels");
 		
 		mapClass2Text.put(callOuts, "Test CallOuts:");
 		mapClass2Text.put(new TestFontProperties(),"- Font Properties");
