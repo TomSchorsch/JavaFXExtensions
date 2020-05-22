@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
@@ -28,40 +27,63 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class AxisEditor {
-	
-	
-	static Map<Axis,Editor> mapAxis2Editor = new HashMap<Axis,Editor>();
-	
+
+
+	static Map<Axis<?>,Editor> mapAxis2Editor = new HashMap<Axis<?> ,Editor>();
+	static Map<Axis<?>,TextField> mapAxis2LowerRange = new HashMap<Axis<?> ,TextField>();
+	static Map<Axis<?>,TextField> mapAxis2UpperRange = new HashMap<Axis<?> ,TextField>();
+	static Map<Axis<?>,RadioButton> mapAxis2RadioButton = new HashMap<Axis<?> ,RadioButton>();
+
 	// This routine sets up the Editable window
 	public static void open(Axis<?> axis, CSS css, double screenX, double screenY) {
-		
+
 		if (mapAxis2Editor.containsKey(axis)) {
 			System.out.println("Editor already open");
 		}
 		else {
 			Editor editor = new Editor(screenX, screenY, axis.getScene());
 			mapAxis2Editor.put(axis, editor);
+
 			String label = "X Axis Settings";
 			Scene scene = axis.getScene();
 			LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
 			if (lineChart.getYAxis().equals(axis)) label = "Y Axis Settings";
-			editor.show(label, getEditItems(axis, css), () -> {mapAxis2Editor.remove(axis); return true;});
+			editor.show(label, getEditItems(axis, css), () -> {mapAxis2Editor.remove(axis); mapAxis2LowerRange.remove(axis); mapAxis2UpperRange.remove(axis); mapAxis2RadioButton.remove(axis); return true;});
 		}
 	}
 
 	static final double MAX_CHOICEBOX_SIZE = 140.0;  // set a universal max size for the Choice Boxes that are created below 
 
+	public static void setBounds (Axis<?> axis) {
+		TextField lowerRangeTextField = mapAxis2LowerRange.get(axis);
+		TextField upperRangeTextField = mapAxis2UpperRange.get(axis);
+		RadioButton autoRangeButton = mapAxis2RadioButton.get(axis);
+		if (lowerRangeTextField!= null) lowerRangeTextField.setText(Double.valueOf(((ValueAxis<?>)axis).getLowerBound()).toString());
+		if (upperRangeTextField!= null) upperRangeTextField.setText(Double.valueOf(((ValueAxis<?>)axis).getUpperBound()).toString());
+		if (autoRangeButton!= null) autoRangeButton.setSelected(((ValueAxis<?>)axis).isAutoRanging());
+	}
+
 	private static GridPane getEditItems(Axis<?> axis, CSS css) {
 
-	// set up GridPane for Editor labels and entries, set up spacing between entries and between other elements in the editor
+		// set up GridPane for Editor labels and entries, set up spacing between entries and between other elements in the editor
 		GridPane gridPane = new GridPane();
 		gridPane.setVgap(6);
 		gridPane.setHgap(2);
 		CSS.setBorderWidth(gridPane, 0,10,10,10);
 		CSS.setBorderColor(gridPane, Color.TRANSPARENT);		// needed or the border will have no size despite setting it below
 		int row = 1;
-		
+
 		String originalLabel = axis.getLabel();
+		Double lowerBound = ((ValueAxis<?>)axis).getLowerBound();			
+		Double upperBound = ((ValueAxis<?>)axis).getUpperBound();	
+		TextField lowerRangeTextField = new TextField();
+		TextField upperRangeTextField = new TextField();
+		mapAxis2LowerRange.put(axis, lowerRangeTextField);
+		mapAxis2UpperRange.put(axis, upperRangeTextField);
+
+		RadioButton axisAutoRangeButton = new RadioButton("Axis AutoRange");
+		mapAxis2RadioButton.put(axis, axisAutoRangeButton);	
+
 
 		addSeparator(gridPane, row++);
 
@@ -70,7 +92,7 @@ public class AxisEditor {
 		// Title Settings
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		
+
 
 		{
 			final TextField titleTextField = new TextField(originalLabel);
@@ -95,33 +117,33 @@ public class AxisEditor {
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Axis Range
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-		TextField lowerRangeTextField = new TextField();
-		TextField upperRangeTextField = new TextField();
-		RadioButton axisAutoRangeButton = new RadioButton("Axis AutoRange");
-		{
-			axisAutoRangeButton.setSelected(axis.isAutoRanging());
-			axisAutoRangeButton.setMinSize(FXUtil.getWidth(axisAutoRangeButton)+30, FXUtil.getHeight(axisAutoRangeButton));
-			gridPane.add(axisAutoRangeButton, 1, row++, 3, 1); // col, row
-			axisAutoRangeButton.setOnAction((ActionEvent event) -> { 
-				axis.setAutoRanging(axisAutoRangeButton.isSelected());
-				if (!axisAutoRangeButton.isSelected()) {
-					if (axis instanceof ValueAxis) {
-						Double lower = Double.parseDouble(lowerRangeTextField.getText());
-						((ValueAxis<?>)axis).setLowerBound(lower);	
-						Double upper = Double.parseDouble(upperRangeTextField.getText());
-						((ValueAxis<?>)axis).setUpperBound(upper);
-					}
-				}
-				
-			});
-		}
 
-		
-		// Get the current X and Y values, label them as such and add the two fields to the GridPane 
 		{
 			if (axis instanceof ValueAxis) {
-				Double lowerBound = ((ValueAxis<?>)axis).getLowerBound();			
-				Double upperBound = ((ValueAxis<?>)axis).getUpperBound();			
+				axisAutoRangeButton.setSelected(axis.isAutoRanging());
+				axisAutoRangeButton.setMinSize(FXUtil.getWidth(axisAutoRangeButton)+30, FXUtil.getHeight(axisAutoRangeButton));
+				gridPane.add(axisAutoRangeButton, 1, row++, 3, 1); // col, row
+				axisAutoRangeButton.setOnAction((ActionEvent event) -> { 
+					axis.setAutoRanging(axisAutoRangeButton.isSelected());
+					if (axis instanceof ValueAxis) {
+						if (axisAutoRangeButton.isSelected()) {
+								// do nothing
+							}
+						else {
+							Double lower = getNumber(lowerRangeTextField.getText(),lowerBound.doubleValue());
+							((ValueAxis<?>)axis).setLowerBound(lower);	
+							Double upper = getNumber(upperRangeTextField.getText(),upperBound.doubleValue());
+							((ValueAxis<?>)axis).setUpperBound(upper);
+						}
+					}
+				});
+			}
+		}
+
+
+		// Get the current X and Y values, label them as such and add the two fields to the GridPane 
+		{
+			if (axis instanceof ValueAxis) {		
 
 				gridPane.add(new Text("Range"), 1, row); // col, row
 				lowerRangeTextField.setText(lowerBound.toString());
@@ -137,7 +159,8 @@ public class AxisEditor {
 					if (event.getCode() == KeyCode.ENTER){
 						axisAutoRangeButton.setSelected(false);
 						axis.setAutoRanging(false);
-						Double lower = Double.parseDouble(lowerRangeTextField.getText());
+						Double lower = getNumber(lowerRangeTextField.getText(),lowerBound.doubleValue());
+						lowerRangeTextField.setText(lower.toString());
 						((ValueAxis<?>)axis).setLowerBound(lower);	
 						upperRangeTextField.requestFocus();
 					}
@@ -150,7 +173,8 @@ public class AxisEditor {
 					if (event.getCode() == KeyCode.ENTER){
 						axisAutoRangeButton.setSelected(false);
 						axis.setAutoRanging(false);
-						Double upper = Double.parseDouble(upperRangeTextField.getText());
+						Double upper = getNumber(upperRangeTextField.getText(),upperBound.doubleValue());
+						upperRangeTextField.setText(upper.toString());
 						((ValueAxis<?>)axis).setUpperBound(upper);
 						lowerRangeTextField.requestFocus();
 					}
@@ -167,7 +191,7 @@ public class AxisEditor {
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Tick Label
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+
 		ComboBox<Double> fontSizeComboBox = Editor.getDoubleComboBox(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
 		{
 			gridPane.add(new Text("Tick Label Font : "),1, row);
@@ -177,9 +201,9 @@ public class AxisEditor {
 			});
 			gridPane.add(fontSizeComboBox,3,row++);
 		}
-		
+
 		{
-			
+
 			gridPane.add(new Text("Tick Label rotation : "),1, row);
 			Double d = -axis.getTickLabelRotation();
 			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
@@ -190,12 +214,22 @@ public class AxisEditor {
 			});
 			gridPane.add(comboBox,3,row++);
 		}
-		
-	
+
+
 		return gridPane;		
-		
+
 	}
-	
+
+	private static Double getNumber(String s, Double def) {
+		try {
+			Double ans = Double.parseDouble(s);
+			return ans;
+		}
+		catch (Exception e) {
+			return def;
+		}
+	}
+
 	private static void addSeparator(GridPane gridPane, int row) {
 		Separator separator = new Separator(Orientation.HORIZONTAL);
 		gridPane.add(separator, 1, row++, GridPane.REMAINING, 1);

@@ -46,7 +46,7 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 	 * Schorsch additions
 	 * Possible tick spacing at the 'ticMultiple'^1 level. These numbers must be >= 1 and < ticMultiple
 	 * 
-	 * The individual values indicate where divisions sill be made to split the range into major tics
+	 * The individual values indicate where divisions will be made to split the range into major tics
 	 * Since we are dealing with seconds, the divisions below make sense in terms of splits of 1, 2, 5, 10, 15, and 30 seconds
 	 * And because the ticMultiple is set to 60, minutes (and hours) of 1, 2, 5, 10, 15 and 30 as well
 	 */

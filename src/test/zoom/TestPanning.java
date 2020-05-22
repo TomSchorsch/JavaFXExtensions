@@ -12,12 +12,13 @@ import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import test.FXTester;
 
 
-public class TestZoom implements FXTester {
+public class TestPanning implements FXTester {
 
 	Random random = new Random();
 	@Override
@@ -31,6 +32,8 @@ public class TestZoom implements FXTester {
 				(xx -> xx.doubleValue()+Math.random()*3.8), 
 				(yy -> 6+random.nextGaussian()*6));
 
+//		final NumberAxis xAxis = new NumberAxis();
+//		final NumberAxis yAxis = new NumberAxis();
 		final StableTicksAxis xAxis = new StableTicksAxis();
 		final StableTicksAxis yAxis = new StableTicksAxis();
 		xAxis.setLabel("X");
@@ -49,21 +52,18 @@ public class TestZoom implements FXTester {
 		
 		SceneOverlay.setPlotInfoText(scene, "Plot Info - FileName, etc.");
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager);	
+		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager2);	
 
 		Stage stage = FXTester.displayResults(scene);
 		
 		Instructions txt = new Instructions(stage.getScene());
-		txt.addCenter("Test Original Zooming Implementation");
-		txt.add("The Zoom controls are as follows:");
-		txt.add("Zoom controls in the Chart area:");
-		txt.add("-- Drag from upper left to lower right to Zoom in");
-		txt.add("-- Drag in the opposite directio to return to the original plot");
-		txt.add("-- Double Clicking on the screen zooms out ~10%.  Where you double click effects the 'direction' you zoom out");
-		txt.add("-- The Scroll wheel enables you to zoom in and out. Where the mouse is when scrolling affects the 'direction' you zoom in and out");
-		txt.add("Zoom controls in the Axis area:");		
-		txt.add("-- Dragging in the axis area selects an area to zoom into");
-		txt.add("-- The Scroll Wheel in the axis area also allows you to zoom in and out. Where the mouse is on the axis effects where you will be scrolling in/out");
+		txt.addCenter("Test Plot panning (and zooming)");
+		txt.add("The panning controls are as follows:");
+		txt.add("Panning controls in the Chart area:");
+		txt.add("-- Drag using Key pressed at initiation (Shift,CTRL,or Alt). Where you drag is where the chart moves");
+		txt.add("Panning controls in the Axis area:");		
+		txt.add("-- Drag using Key pressed at initiation (Shift,Ctrl,or Alt). Only the single axis you dragged in moves");
+		txt.add("Panning is integrated with the Axis Editors");
 		txt.display();
 	}
 
