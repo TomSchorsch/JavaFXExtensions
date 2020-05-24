@@ -40,12 +40,12 @@ import test.plots.TestPlotAndSeriesEditor;
 import test.plots.TestPlotEditor;
 import test.plots.TestSSMAxis;
 import test.plots.TestSeriesEditor;
+import test.plots.TestStableNumberAxis;
 import test.plots.TestSymbolsIndividualSizes;
 import test.plots.TestTrackNumberAxis;
 import test.plots.TestXAndYAxisEditors;
 import test.zoom.TestPanning;
 import test.zoom.TestZoom;
-import test.zoom.TestZoom2;
 import test.zoom.TestZoomWithMoveableCallOuts;
 
 public class TestMain extends Application {
@@ -128,6 +128,7 @@ public class TestMain extends Application {
 		mapClass2Text.put(new TestSSMAxis(),"- Test Seconds Since Midnight Axis");
 		mapClass2Text.put(new TestHoverLabel(),"- Test Hover Labels");
 		mapClass2Text.put(new TestTrackNumberAxis(),"- Test Track Number Axis");
+		mapClass2Text.put(new TestStableNumberAxis(),"- Test Stable Number Axis");
 
 		mapClass2Text.put(callOuts, "Test CallOuts:");
 		mapClass2Text.put(new TestFontProperties(),"- Font Properties");
@@ -144,9 +145,8 @@ public class TestMain extends Application {
 
 
 		mapClass2Text.put(zoom, "Test Plot Zoom:");
-		mapClass2Text.put(new TestZoom(), "- Zoom Controls");
+		mapClass2Text.put(new TestZoom(), "- Zoom Controls -Rewritten");
 		mapClass2Text.put(new TestZoomWithMoveableCallOuts(), "- Zoom With moveable annotations");
-		mapClass2Text.put(new TestZoom2(), "- Test Zoom Controls Rewrite");
 		mapClass2Text.put(new TestPanning(), "- Test Panning (with Zooming)");
 		
 		rbs = new MappedRadioButtons<FXTester>(mapClass2Text, MappedRadioButtons.PAGE_AXIS);

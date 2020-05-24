@@ -2,23 +2,21 @@ package test.zoom;
 
 import java.util.Random;
 
-import org.gillius.jfxutils.chart.StableTicksAxis;
-
 import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
+import javaFX.plots.axis.StableTicksAxis;
 import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import test.FXTester;
 
 
-public class TestZoom2 implements FXTester {
+public class TestZoom implements FXTester {
 
 	Random random = new Random();
 	@Override
@@ -52,7 +50,7 @@ public class TestZoom2 implements FXTester {
 		
 		SceneOverlay.setPlotInfoText(scene, "Plot Info - FileName, etc.");
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager2);	
+		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager);	
 
 		Stage stage = FXTester.displayResults(scene);
 		

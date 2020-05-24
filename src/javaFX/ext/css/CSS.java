@@ -24,7 +24,6 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -209,7 +208,7 @@ public class CSS  {
 		private Color defaultLineColor = Color.BLACK;
 
 		// These record the latest color and symbol assigned to a series
-		// THey are used to create a Legend (I hope)
+		// They are used to create a Legend (I hope)
 		// They are used to set appropriate color features of the no_fill, hollow, and fill symbols
 		//	-fx-border-color for standard (no_fill) and hollow options
 		//	-fx-background-fill for fill option
@@ -252,7 +251,7 @@ public class CSS  {
 		public static Label getTitleLabel(LineChart chart)	{ return (Label)chart.lookup(".chart-title");}
 		public static Label getXAxisLabel(LineChart chart)	{ return (Label)chart.getXAxis().lookup(".axis-label");}
 		public static Label getYAxisLabel(LineChart chart)	{ return (Label)chart.getYAxis().lookup(".axis-label");}
-		public static TilePane getLegend(LineChart chart)	{ return (TilePane) chart.lookup(".chart-legend");}
+//		public static TilePane getLegend(LineChart chart)	{ return (TilePane) chart.lookup(".chart-legend");}
 
 		public static CSS retrieveCSS(LineChart lineChart)	{ return mapLineChart2CSS.get(lineChart);}
 

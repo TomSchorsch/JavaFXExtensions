@@ -2,22 +2,19 @@ package test.plots;
 
 import java.util.Random;
 
-import org.gillius.jfxutils.chart.StableTicksAxis;
-
 import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.HoverLabel;
 import javaFX.plots.NumberPlotData;
+import javaFX.plots.axis.StableTicksAxis;
+import javaFX.plots.axis.StableTicksSSMAxis;
 import javaFX.plots.overlay.SceneOverlay;
 import javaFX.plots.overlay.SceneOverlay.SceneOption;
-import javaFX.plots.timessmaxis.StableTicksSSMAxis;
-import javaFX.plots.timessmaxis.TimeSSMAxis;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;

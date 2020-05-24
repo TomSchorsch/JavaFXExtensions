@@ -3,25 +3,18 @@ package javaFX.plots;
 import java.util.HashMap;
 //import java.util.Map;
 
-import org.gillius.jfxutils.JFXUtil;
-
 import javaFX.ext.css.CSS;
 import javaFX.ext.utility.FXUtil;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 
 public class HoverLabel {

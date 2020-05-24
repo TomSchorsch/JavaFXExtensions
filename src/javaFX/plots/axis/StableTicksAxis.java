@@ -1,6 +1,5 @@
 /*
  * Copyright 2013 Jason Winnebeck
- * Copyright 2020 Tom Schorsch  -- changed tic marks from seconds since midnight to HH:MM:SS.sss format (or variations of that format)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,18 +37,13 @@ import javafx.util.Duration;
  *
  * @author Jason Winnebeck
  */
-public class StableTicksSSMAxis extends ValueAxis<Number> {
+public class StableTicksAxis extends ValueAxis<Number> {
 
 	/**
-	 * Schorsch additions
-	 * Possible tick spacing at the 'ticMultiple'^1 level. These numbers must be >= 1 and < ticMultiple
-	 * 
-	 * The individual values indicate where divisions will be made to split the range into major tics
-	 * Since we are dealing with seconds, the divisions below make sense in terms of splits of 1, 2, 5, 10, 15, and 30 seconds
-	 * And because the ticMultiple is set to 60, minutes (and hours) of 1, 2, 5, 10, 15 and 30 as well
+	 * Possible tick spacing at the 10^1 level. These numbers must be &gt;= 1 and &lt; 10.
 	 */
-	private static final double[] dividers = new double[] { 1.0, 2.0, 5.0, 10.0, 15.0, 30.0 };
-	private static final int ticMultiple = 60;
+	private static final double[] dividers = new double[] { 1.0, 2.5, 5.0 };
+
 	private static final int numMinorTicks = 3;
 
 	private final Timeline animationTimeline = new Timeline();
@@ -65,8 +59,7 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 		}
 	};
 
-	// changed to SSM axis formatter - Schorsch
-	private AxisTickFormatter axisTickFormatter = new DefaultSSMAxisTickFormatter();
+	private AxisTickFormatter axisTickFormatter = new DefaultAxisTickFormatter();
 
 	private List<Number> minorTicks;
 
@@ -80,10 +73,10 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 	 */
 	private BooleanProperty forceZeroInRange = new SimpleBooleanProperty( true );
 
-	public StableTicksSSMAxis() {
+	public StableTicksAxis() {
 	}
 
-	public StableTicksSSMAxis( double lowerBound, double upperBound ) {
+	public StableTicksAxis( double lowerBound, double upperBound ) {
 		super( lowerBound, upperBound );
 	}
 
@@ -192,10 +185,6 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 
 		Range ret;
 		ret = new Range( minValue, maxValue, calculateTickSpacing( delta, maxTicks ), scale );
-		
-		// Schorsch
-		axisTickFormatter.setRange( ret.low, ret.high, ret.tickSpacing );
-		
 		return ret;
 	}
 
@@ -210,7 +199,7 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 		//The factor will be close to the log10, this just optimizes the search
 		int factor = (int) Math.log10( delta );
 		int divider = 0;
-		double numTicks = delta / ( dividers[divider] * Math.pow( ticMultiple, factor ) );
+		double numTicks = delta / ( dividers[divider] * Math.pow( 10, factor ) );
 
 		//We don't have enough ticks, so increase ticks until we're over the limit, then back off once.
 		if ( numTicks < maxTicks ) {
@@ -222,7 +211,7 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 					divider = dividers.length - 1;
 				}
 
-				numTicks = delta / ( dividers[divider] * Math.pow( ticMultiple, factor ) );
+				numTicks = delta / ( dividers[divider] * Math.pow( 10, factor ) );
 			}
 
 			//Now back off once unless we hit exactly
@@ -243,14 +232,14 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 					divider = 0;
 				}
 
-				numTicks = delta / ( dividers[divider] * Math.pow( ticMultiple, factor ) );
+				numTicks = delta / ( dividers[divider] * Math.pow( 10, factor ) );
 			}
 		}
 
 //		System.out.printf( "calculateTickSpacing( %f, %d ) = %f%n",
 //		                   delta, maxTicks, dividers[divider] * Math.pow( 10, factor ) );
 
-		return dividers[divider] * Math.pow( ticMultiple, factor );
+		return dividers[divider] * Math.pow( 10, factor );
 	}
 
 	@Override

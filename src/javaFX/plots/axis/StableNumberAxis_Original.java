@@ -1,13 +1,6 @@
 package javaFX.plots.axis;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-
 /*
- * 
- * Since NumberAxis was FINAL, I copied the code and create a TimeSSM axis
- * i.e. given a time in SSM (Seconds Since Midnight) produce an appropriate 
- * hh:mm:ss.sss tick value 
  * Copyright (c) 2010, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +25,7 @@ import java.math.MathContext;
  * questions.
  */
 
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -52,7 +46,9 @@ import javafx.css.StyleableProperty;
 import javafx.css.converter.SizeConverter;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
+import javafx.scene.chart.XYChart;
 import javafx.util.StringConverter;
 
 /**
@@ -60,10 +56,9 @@ import javafx.util.StringConverter;
  * You can use any Number type with this axis.
  * @since JavaFX 2.0
  */
-public final class TimeSSMAxis extends ValueAxis<Number> {
+public final class StableNumberAxis_Original extends ValueAxis<Number> {
 
 	private Object currentAnimationID;
-//	private final ChartLayoutAnimator animator = new ChartLayoutAnimator(this);
 	private final StringProperty currentFormatterProperty = new SimpleStringProperty(this, "currentFormatter", "");
 	private final DefaultFormatter defaultFormatter = new DefaultFormatter(this);
 
@@ -81,7 +76,7 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 
 		@Override
 		public Object getBean() {
-			return TimeSSMAxis.this;
+			return StableNumberAxis_Original.this;
 		}
 
 		@Override
@@ -103,13 +98,13 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 		}
 
 		@Override
-		public CssMetaData<TimeSSMAxis,Number> getCssMetaData() {
+		public CssMetaData<StableNumberAxis_Original,Number> getCssMetaData() {
 			return StyleableProperties.TICK_UNIT;
 		}
 
 		@Override
 		public Object getBean() {
-			return TimeSSMAxis.this;
+			return StableNumberAxis_Original.this;
 		}
 
 		@Override
@@ -124,31 +119,31 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 	// -------------- CONSTRUCTORS -------------------------------------------------------------------------------------
 
 	/**
-	 * Creates an auto-ranging TimeSSMAxis.
+	 * Creates an auto-ranging NumberAxis.
 	 */
-	public TimeSSMAxis() {}
+	public StableNumberAxis_Original() {}
 
 	/**
-	 * Creates a non-auto-ranging TimeSSMAxis with the given upper bound, lower bound and tick unit.
+	 * Creates a non-auto-ranging NumberAxis with the given upper bound, lower bound and tick unit.
 	 *
 	 * @param lowerBound The lower bound for this axis, i.e. min plottable value
 	 * @param upperBound The upper bound for this axis, i.e. max plottable value
 	 * @param tickUnit The tick unit, i.e. space between tickmarks
 	 */
-	public TimeSSMAxis(double lowerBound, double upperBound, double tickUnit) {
+	public StableNumberAxis_Original(double lowerBound, double upperBound, double tickUnit) {
 		super(lowerBound, upperBound);
 		setTickUnit(tickUnit);
 	}
 
 	/**
-	 * Creates a non-auto-ranging TimeSSMAxis with the given lower bound, upper bound and tick unit.
+	 * Creates a non-auto-ranging NumberAxis with the given lower bound, upper bound and tick unit.
 	 *
 	 * @param axisLabel The name to display for this axis
 	 * @param lowerBound The lower bound for this axis, i.e. min plottable value
 	 * @param upperBound The upper bound for this axis, i.e. max plottable value
 	 * @param tickUnit The tick unit, i.e. space between tickmarks
 	 */
-	public TimeSSMAxis(String axisLabel, double lowerBound, double upperBound, double tickUnit) {
+	public StableNumberAxis_Original(String axisLabel, double lowerBound, double upperBound, double tickUnit) {
 		super(lowerBound, upperBound);
 		setTickUnit(tickUnit);
 		setLabel(axisLabel);
@@ -202,22 +197,12 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 		setLowerBound(lowerBound);
 		setUpperBound(upperBound);
 		setTickUnit(tickUnit);
-//		if(animate) {
-//			animator.stop(currentAnimationID);
-//			currentAnimationID = animator.animate(
-//					new KeyFrame(Duration.ZERO,
-//							new KeyValue(currentLowerBound, oldLowerBound),
-//							new KeyValue(scalePropertyImpl(), getScale())
-//							),
-//					new KeyFrame(Duration.millis(700),
-//							new KeyValue(currentLowerBound, lowerBound),
-//							new KeyValue(scalePropertyImpl(), scale)
-//							)
-//					);
-//		} else {
+		if(animate) {
+			
+		} else {
 			currentLowerBound.set(lowerBound);
 			setScale(scale);
-//		}
+		}
 	}
 
 	/**
@@ -242,7 +227,7 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 			tickValues.add(lowerBound);
 			if (((upperBound - lowerBound) / tickUnit) > 2000) {
 				// This is a ridiculous amount of major tick marks, something has probably gone wrong
-				System.err.println("Warning we tried to create more than 2000 major tick marks on a TimeSSMAxis. " +
+				System.err.println("Warning we tried to create more than 2000 major tick marks on a NumberAxis. " +
 						"Lower Bound=" + lowerBound + ", Upper Bound=" + upperBound + ", Tick Unit=" + tickUnit);
 			} else {
 				if (lowerBound + tickUnit < upperBound) {
@@ -275,7 +260,7 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 		if (tickUnit > 0) {
 			if(((upperBound - lowerBound) / minorUnit) > 10000) {
 				// This is a ridiculous amount of major tick marks, something has probably gone wrong
-				System.err.println("Warning we tried to create more than 10000 minor tick marks on a TimeSSMAxis. " +
+				System.err.println("Warning we tried to create more than 10000 minor tick marks on a NumberAxis. " +
 						"Lower Bound=" + getLowerBound() + ", Upper Bound=" + getUpperBound() + ", Tick Unit=" + tickUnit);
 				return minorTickMarks;
 			}
@@ -346,8 +331,17 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 	 * @return The calculated range
 	 */
 	@Override protected Object autoRange(double minValue, double maxValue, double length, double labelSize) {
-//		final Side side = getEffectiveSide();
-		final Side side = getSide();
+		XYChart<?,?> chart = null;
+		Node node = this;
+		while (!(node instanceof XYChart)) {
+			node = node.getParent();
+		}
+		chart = (XYChart<?, ?>)node;
+		final Side side = this == chart.getXAxis()?Side.BOTTOM:Side.LEFT;
+		
+		// THe above replaces the functionality of the next line which cannot be executed because "getEffectiveSide" is not visible
+        //final Side side = getEffectiveSide();
+		
 		// check if we need to force zero into range
 		if (isForceZeroInRange()) {
 			if (maxValue < 0) {
@@ -458,17 +452,17 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 	// -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
 
 	private static class StyleableProperties {
-		private static final CssMetaData<TimeSSMAxis,Number> TICK_UNIT =
-				new CssMetaData<TimeSSMAxis,Number>("-fx-tick-unit",
+		private static final CssMetaData<StableNumberAxis_Original,Number> TICK_UNIT =
+				new CssMetaData<StableNumberAxis_Original,Number>("-fx-tick-unit",
 						SizeConverter.getInstance(), 5.0) {
 
 			@Override
-			public boolean isSettable(TimeSSMAxis n) {
+			public boolean isSettable(StableNumberAxis_Original n) {
 				return n.tickUnit == null || !n.tickUnit.isBound();
 			}
 
 			@Override
-			public StyleableProperty<Number> getStyleableProperty(TimeSSMAxis n) {
+			public StyleableProperty<Number> getStyleableProperty(StableNumberAxis_Original n) {
 				return (StyleableProperty<Number>)(WritableValue<Number>)n.tickUnitProperty();
 			}
 		};
@@ -503,7 +497,7 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 	// -------------- INNER CLASSES ------------------------------------------------------------------------------------
 
 	/**
-	 * Default number formatter for TimeSSMAxis, this stays in sync with auto-ranging and formats values appropriately.
+	 * Default number formatter for NumberAxis, this stays in sync with auto-ranging and formats values appropriately.
 	 * You can wrap this formatter to add prefixes or suffixes;
 	 * @since JavaFX 2.0
 	 */
@@ -513,11 +507,11 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 		private String suffix = null;
 
 		/**
-		 * Construct a DefaultFormatter for the given TimeSSMAxis
+		 * Construct a DefaultFormatter for the given NumberAxis
 		 *
 		 * @param axis The axis to format tick marks for
 		 */
-		public DefaultFormatter(final TimeSSMAxis axis) {
+		public DefaultFormatter(final StableNumberAxis_Original axis) {
 			formatter = axis.isAutoRanging()? new DecimalFormat(axis.currentFormatterProperty.get()) : new DecimalFormat();
 			final ChangeListener<Object> axisListener = (observable, oldValue, newValue) -> {
 				formatter = axis.isAutoRanging()? new DecimalFormat(axis.currentFormatterProperty.get()) : new DecimalFormat();
@@ -527,13 +521,13 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 		}
 
 		/**
-		 * Construct a DefaultFormatter for the given TimeSSMAxis with a prefix and/or suffix.
+		 * Construct a DefaultFormatter for the given NumberAxis with a prefix and/or suffix.
 		 *
 		 * @param axis The axis to format tick marks for
 		 * @param prefix The prefix to append to the start of formatted number, can be null if not needed
 		 * @param suffix The suffix to append to the end of formatted number, can be null if not needed
 		 */
-		public DefaultFormatter(TimeSSMAxis axis, String prefix, String suffix) {
+		public DefaultFormatter(StableNumberAxis_Original axis, String prefix, String suffix) {
 			this(axis);
 			this.prefix = prefix;
 			this.suffix = suffix;
@@ -586,9 +580,9 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 		}
 	}
 
+}
 
-
-
+/*
 	  // Code to generate tick unit defaults
 
 	  public static void main(String[] args) {
@@ -656,5 +650,4 @@ public final class TimeSSMAxis extends ValueAxis<Number> {
 	        for(String format: formats) System.out.print("\""+format+"\", ");
 	        System.out.println(" };");
 	    }
- 
-}
+ */

@@ -12,7 +12,6 @@ import javaFX.plots.callouts.CallOut;
 import javaFX.plots.callouts.CallOutSettingsSeriesEditor;
 import javaFX.plots.legend.Legend;
 import javaFX.plots.title.Title;
-import javaFX.plots.zoommanager.PlotZoomManager;
 import javaFX.plots.zoommanager.ZoomManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,7 +31,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 public class SceneOverlay {
@@ -59,7 +57,7 @@ public class SceneOverlay {
 	 * (3) inside of a Legend BorderPane (at the Center) attached to the OverlayStackPane 
 	 * 
 	 */
-	public enum SceneOption {All, Classification, EditMenu, Legend, ZoomManager, ZoomManager2 };
+	public enum SceneOption {All, Classification, EditMenu, Legend, ZoomManager};
 	
 	public static void addOverlays(Scene scene, Logger logger, SceneOption... sceneOptions) {
 		if (getLineChart(scene) == null) {
@@ -72,10 +70,9 @@ public class SceneOverlay {
 		for (SceneOption sceneOption : sceneOptions) {
 			switch (sceneOption) {
 			case Classification: 	{	addClassification(scene);	break;}
-			case EditMenu: 			{	addEditMenu(scene, logger); break;}
-			case Legend: 			{	Legend.addLegend(scene); 	break;}
-			case ZoomManager: 		{	addZoomManager(scene); 		break;}
-			case ZoomManager2: 		{	addZoomManager2(scene); 		break;}
+			case EditMenu: 			{	addEditMenu(scene, logger);	break;}
+			case Legend: 			{	Legend.addLegend(scene);	break;}
+			case ZoomManager: 		{	addZoomManager(scene);		break;}
 			case All: 
 				addClassification(scene);
 				addEditMenu(scene, logger);
@@ -198,21 +195,13 @@ public class SceneOverlay {
 		return contextMenu;
 	}
 
-	
-	private static String currentStyle(MenuItem node) {
-		String style = node.getStyle();
-		if (style == null) return "";
-		if (style.contentEquals("")) return style;
-		return style+"; ";
-	}
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Zoom Manager
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// The Zoom Manger is mostly handled outside of this class by the Zoom Manager class
 	// it does have a mouse transparent blue rectangle that it uses which is added to the OverlayStackPane
-	public static void addZoomManager2(Scene scene) {
+	public static void addZoomManager(Scene scene) {
 
 		Rectangle rect = getZoomManager(scene);
 		if (rect!= null) {
@@ -232,10 +221,10 @@ public class SceneOverlay {
 	
 	// returns the Rectangle associated with the Zoom Manager (if it exists) or null if it does not
 	// The ZoomManager is a rectangle attached to the OverlayStackPane
-	public static  Rectangle getZoomManager2(Scene scene) {
+	public static  Rectangle getZoomManager(Scene scene) {
 		StackPane sp = getStackPaneOverlay(scene);
 		for (Node node : sp.getChildren()) {
-			if (node instanceof Pane) {
+			if (node instanceof Pane && !(node instanceof LineChart<?,?> || node instanceof BorderPane)) {
 				Rectangle rect = (Rectangle)((Pane)node).getChildren().get(0);
 				return rect;
 			}
@@ -244,48 +233,48 @@ public class SceneOverlay {
 	}
 
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Zoom Manager
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// The Zoom Manger is mostly handled outside of this class by the Zoom Manager class
-	// it does have a mouse transparent blue rectangle that it uses which is added to the OverlayStackPane
-	public static void addZoomManager(Scene scene) {
-		Rectangle rect = getZoomManager(scene);
-		if (rect!= null) {
-			System.out.println("Programming Error: Cannot add ZoomManager as it is already added");
-			System.exit(-1);
-		}
-
-		Rectangle selectRect = new Rectangle( 0, 0, 0, 0 );
-		selectRect.setFill( Color.DODGERBLUE );
-		selectRect.setMouseTransparent( true );
-		selectRect.setOpacity( 0.3 );
-		selectRect.setStroke( Color.rgb( 0, 0x29, 0x66 ) );
-		selectRect.setStrokeType( StrokeType.INSIDE );
-		selectRect.setStrokeWidth( 2.0 );
-		StackPane.setAlignment( selectRect, Pos.TOP_LEFT );
-
-		StackPane sp = getStackPaneOverlay(scene);
-		sp.getChildren().add(selectRect);
-
-		LineChart<?, ?> lineChart = getLineChart(scene);
-		PlotZoomManager zoomManager = new PlotZoomManager( sp, selectRect, lineChart );
-		zoomManager.start();
-	}	
-
-	// returns the Rectangle associated with the Zoom Manager (if it exists) or null if it does not
-	// The ZoomManager is a rectangle attached to the OverlayStackPane
-	public static  Rectangle getZoomManager(Scene scene) {
-		StackPane sp = getStackPaneOverlay(scene);
-		for (Node node : sp.getChildren()) {
-			if (node instanceof Rectangle) {
-				Rectangle rect = (Rectangle) node;
-				return rect;
-			}
-		}
-		return null;
-	}	
+//	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	// Zoom Manager
+//	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	// The Zoom Manger is mostly handled outside of this class by the Zoom Manager class
+//	// it does have a mouse transparent blue rectangle that it uses which is added to the OverlayStackPane
+//	public static void addZoomManager(Scene scene) {
+//		Rectangle rect = getZoomManager(scene);
+//		if (rect!= null) {
+//			System.out.println("Programming Error: Cannot add ZoomManager as it is already added");
+//			System.exit(-1);
+//		}
+//
+//		Rectangle selectRect = new Rectangle( 0, 0, 0, 0 );
+//		selectRect.setFill( Color.DODGERBLUE );
+//		selectRect.setMouseTransparent( true );
+//		selectRect.setOpacity( 0.3 );
+//		selectRect.setStroke( Color.rgb( 0, 0x29, 0x66 ) );
+//		selectRect.setStrokeType( StrokeType.INSIDE );
+//		selectRect.setStrokeWidth( 2.0 );
+//		StackPane.setAlignment( selectRect, Pos.TOP_LEFT );
+//
+//		StackPane sp = getStackPaneOverlay(scene);
+//		sp.getChildren().add(selectRect);
+//
+//		LineChart<?, ?> lineChart = getLineChart(scene);
+//		PlotZoomManager zoomManager = new PlotZoomManager( sp, selectRect, lineChart );
+//		zoomManager.start();
+//	}	
+//
+//	// returns the Rectangle associated with the Zoom Manager (if it exists) or null if it does not
+//	// The ZoomManager is a rectangle attached to the OverlayStackPane
+//	public static  Rectangle getZoomManager(Scene scene) {
+//		StackPane sp = getStackPaneOverlay(scene);
+//		for (Node node : sp.getChildren()) {
+//			if (node instanceof Rectangle) {
+//				Rectangle rect = (Rectangle) node;
+//				return rect;
+//			}
+//		}
+//		return null;
+//	}	
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Classification Markings routines
