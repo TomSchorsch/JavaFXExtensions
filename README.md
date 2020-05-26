@@ -77,8 +77,8 @@ Pop-up editors are invoked by right-clicking on:
 
 ## Dependencies:
   - This project depends of GitHub project https://github.com/gillius/jfxutils for several features
-    - The Zooming and Panning
-    - A foundation for SSM axis
+    - A foundation for SSM (Seconds Since Midnight) axis
+    - The Zooming and Panning code was derived from ideas in jfxutils as well as from the StackOverFlow question at https://stackoverflow.com/questions/11087988/javafx-2-x-zoom-in-xychart-with-category-axys by Alberto acepsut
 
 ## To download and use (in eclipse):
 <b>Note:Current project does not use gradle or maven or any other such system.</b>
@@ -100,15 +100,8 @@ Pop-up editors are invoked by right-clicking on:
     - In eclispe go  to: windows | preferences | java | installed JREs 
     - Highlight your installed JRE and click edit.
     - Paste the modified argument you created above into the "default VM arguments" field. 
- 
-  - Import the https://github.com/gillius/jfxutils project into Eclipse as a Java Project
-    - <b><i>Every approach to import the jfxutils project using an Eclipse import wizard resulted in a badly messed up Maven project so I recommend the following instructions instead</b></i>
-    - Browse to the above link | download it as a .zip | extract all
-    - In Eclipse, create a new Java Project called jfxutils
-    - In Eclipse, browse to the src directory of the fxutils project | Right-Click on source and select import... | File System | then browse to the extracted directory \jfxutils-master\jfxutils\src\main\java and select java to import
-    - You should now see three packages under src - org.gillius.jfxutils, org.gillius.jfxutils.chart, and org.gillius.jfxutils.tab
-    - Open up the jfxutils Build Path and add the JavaFX User Library you created to the Classpath
-    - Also, open up the JavaFXExtensions Build Path and add the jfxutils project to the Classpath
+    
+Note: 3 files from jfxutils (https://github.com/gillius/jfxutils) were incorporated into this project: StableTicksAxis.java, DefaultAxisTickFormatter.java, and AxisTickFormatter.java.  The files are in package javaFX.plots.axis in this project
     
 ## To run the tests associated with the project:
   - Go to the JavaFXExtensions Project to src/test/TestMain.java and execute it. 
