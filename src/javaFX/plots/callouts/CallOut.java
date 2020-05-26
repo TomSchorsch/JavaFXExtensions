@@ -10,7 +10,7 @@ import java.util.Set;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
-import javaFX.plots.overlay.SceneOverlay;
+import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -203,7 +203,7 @@ public class CallOut {
 	@SuppressWarnings("unchecked")
 	public static void configureCallOuts(Stage stage) {
 		Scene scene = stage.getScene();
-		LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		if (lineChart == null) {
 			System.out.println("Must call 'callOut.addToChart(lineChart);' (or equivalent) to add the CallOuts (as a data series) to the Line Chart");
 			return;

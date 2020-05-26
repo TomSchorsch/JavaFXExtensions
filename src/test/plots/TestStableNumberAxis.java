@@ -7,8 +7,9 @@ import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.axis.StableNumberAxis;
-import javaFX.plots.overlay.SceneOverlay;
-import javaFX.plots.overlay.SceneOverlay.SceneOption;
+import javaFX.plots.overlay.PlotInfo;
+import javaFX.plots.overlay.SceneOverlayManager;
+import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -50,9 +51,9 @@ public class TestStableNumberAxis implements FXTester {
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		
-		SceneOverlay.setPlotInfoText(scene, "Plot Info - FileName, etc.");
+		PlotInfo.setText(scene, "Plot Info - FileName, etc.");
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager);	
+		SceneOverlayManager.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager);	
 
 		Stage stage = FXTester.displayResults(scene);
 		

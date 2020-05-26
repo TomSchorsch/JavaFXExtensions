@@ -10,8 +10,8 @@ import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.callouts.CallOutSettings;
-import javaFX.plots.overlay.SceneOverlay;
-import javaFX.plots.overlay.SceneOverlay.SceneOption;
+import javaFX.plots.overlay.SceneOverlayManager;
+import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
@@ -90,7 +90,7 @@ public class TestMovingCallOuts implements FXTester {
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend);	
+		SceneOverlayManager.addOverlays(scene, logger, SceneOption.Legend);	
 
 		Stage stage = FXTester.displayResults(scene);
 

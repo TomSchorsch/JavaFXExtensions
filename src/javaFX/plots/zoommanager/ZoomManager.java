@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import javaFX.plots.AxisEditor;
+import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -16,8 +17,10 @@ import javafx.scene.chart.ValueAxis;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
@@ -41,7 +44,10 @@ public class ZoomManager {
 	boolean dragging = false;
 	boolean panning = false;
 
-	double initXLowerBound = 0, initXUpperBound = 0, initYLowerBound = 0, initYUpperBound = 0;
+	double initXLowerBound = 0;
+	double initXUpperBound = 0;
+	double initYLowerBound = 0;
+	double initYUpperBound = 0;
 
 	public <X,Y> ZoomManager(LineChart<X,Y> lineChart) {
 		this.scene = lineChart.getScene();
@@ -546,6 +552,39 @@ public class ZoomManager {
 		} while (node != null);
 		return shift;
 	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Zoom Manager
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// The ZoomManager has a mouse transparent blue rectangle that it uses which is added to the OverlayStackPane
+	public static void add(Scene scene) {
+		Rectangle rect = getRectangle(scene);
+		if (rect!= null) {
+			System.out.println("Programming Error: Cannot add ZoomManager as it is already added");
+			System.exit(-1);
+		}
+
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
+		ZoomManager zoomManager = new ZoomManager(lineChart);
+		StackPane sp = SceneOverlayManager.getStackPaneOverlay(scene);
+		sp.getChildren().add(zoomManager.getZoomRectangle());
+	}	
+	
+	// returns the Rectangle associated with the Zoom Manager (if it exists) or null if it does not
+	// The ZoomManager is a rectangle attached to the OverlayStackPane
+	public static  Rectangle getRectangle(Scene scene) {
+		StackPane sp = SceneOverlayManager.getStackPaneOverlay(scene);
+		for (Node node : sp.getChildren()) {
+			if (node instanceof Pane && !(node instanceof LineChart<?,?> || node instanceof BorderPane)) {
+				Rectangle rect = (Rectangle)((Pane)node).getChildren().get(0);
+				return rect;
+			}
+		}
+		return null;
+	}
+
+
 
 
 }

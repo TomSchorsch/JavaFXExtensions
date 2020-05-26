@@ -10,8 +10,8 @@ import javaFX.plots.HoverLabel;
 import javaFX.plots.NumberPlotData;
 import javaFX.plots.axis.StableTicksAxis;
 import javaFX.plots.axis.StableTicksSSMAxis;
-import javaFX.plots.overlay.SceneOverlay;
-import javaFX.plots.overlay.SceneOverlay.SceneOption;
+import javaFX.plots.overlay.SceneOverlayManager;
+import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
@@ -63,7 +63,7 @@ public class TestHoverLabel implements FXTester {
 		Scene scene = new Scene(lineChart,1200,600);
 		
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.All);	
+		SceneOverlayManager.addOverlays(scene, logger, SceneOption.All);	
 		
 		Stage stage = FXTester.displayResults(scene);
 		

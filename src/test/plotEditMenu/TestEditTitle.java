@@ -7,8 +7,8 @@ import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
-import javaFX.plots.overlay.SceneOverlay;
-import javaFX.plots.overlay.SceneOverlay.SceneOption;
+import javaFX.plots.overlay.SceneOverlayManager;
+import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -47,7 +47,7 @@ public class TestEditTitle implements FXTester {
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu);	
+		SceneOverlayManager.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu);	
 
 		Stage stage = FXTester.displayResults(scene);
 		

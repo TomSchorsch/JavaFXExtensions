@@ -10,7 +10,9 @@ import javaFX.ext.css.CSS.FontWeight;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
 import javaFX.plots.legend.Legend;
-import javaFX.plots.overlay.SceneOverlay;
+import javaFX.plots.overlay.Classification;
+import javaFX.plots.overlay.PlotInfo;
+import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.title.Title;
 import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
@@ -59,7 +61,7 @@ public class PlotEditor {
 		CSS.setBorderWidth(gridPane, 0,10,10,10);
 		CSS.setBorderColor(gridPane, Color.TRANSPARENT);		// needed or the border will have no size despite setting it below
 		int row = 1;
-		LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		
 		String originalTitle = Title.getTitle(scene);
 		String originalSubTitle = Title.getSubTitle(scene);
@@ -71,15 +73,15 @@ public class PlotEditor {
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		{
 			RadioButton classificationsVisibleButton = new RadioButton("Classification Visible");
-			classificationsVisibleButton.setSelected(SceneOverlay.isClassificationMarkingsPresent(scene));
+			classificationsVisibleButton.setSelected(Classification.isPresent(scene));
 			classificationsVisibleButton.setMinSize(FXUtil.getWidth(classificationsVisibleButton)+30, FXUtil.getHeight(classificationsVisibleButton));
 			gridPane.add(classificationsVisibleButton, 1, row++, 3, 1); // col, row
 			classificationsVisibleButton.setOnAction((ActionEvent event) -> { 
 				if (classificationsVisibleButton.isSelected()) {
-					SceneOverlay.addClassification(scene);
+					Classification.add(scene);
 				}
 				else {
-					SceneOverlay.removeClassification(scene);		
+					Classification.remove(scene);		
 				}
 			});
 
@@ -184,18 +186,18 @@ public class PlotEditor {
 		
 		{
 			gridPane.add(new Text("Edit Plot Info"),1, row);
-			String originalText = SceneOverlay.getPlotInfoText(scene);
+			String originalText = PlotInfo.getText(scene);
 			TextField textField = new TextField(originalText);
 			textField.end();
 
 			textField.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			gridPane.add(textField,3,row++);
 			textField.textProperty().addListener((observable, oldValue, newValue) -> {
-				SceneOverlay.setPlotInfoText(scene, newValue);
+				PlotInfo.setText(scene, newValue);
 			});
 			textField.setOnKeyReleased(event -> {
 				  if (event.getCode() == KeyCode.ESCAPE){
-					  SceneOverlay.setPlotInfoText(scene, originalText);
+					  PlotInfo.setText(scene, originalText);
 					  textField.setText(originalText);
 					  textField.end();
 				  }

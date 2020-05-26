@@ -9,8 +9,8 @@ import javaFX.ext.utility.Logger;
 import javaFX.plots.HoverLabel;
 import javaFX.plots.PlotData;
 import javaFX.plots.axis.StableTicksSSMAxis;
-import javaFX.plots.overlay.SceneOverlay;
-import javaFX.plots.overlay.SceneOverlay.SceneOption;
+import javaFX.plots.overlay.SceneOverlayManager;
+import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -66,7 +66,7 @@ public class TestTrackNumberAxis implements FXTester {
 		Scene scene = new Scene(lineChart,1200,600);
 		
 		
-		SceneOverlay.addOverlays(scene, logger, SceneOption.EditMenu, SceneOption.Legend, SceneOption.ZoomManager);	
+		SceneOverlayManager.addOverlays(scene, logger, SceneOption.EditMenu, SceneOption.Legend, SceneOption.ZoomManager);	
 		
 		Stage stage = FXTester.displayResults(scene);
 		

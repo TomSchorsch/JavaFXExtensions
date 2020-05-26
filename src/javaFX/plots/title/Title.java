@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javaFX.ext.css.CSS;
-import javaFX.plots.overlay.SceneOverlay;
+import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -34,8 +34,8 @@ public class Title {
 	// It is the same as the Legend Border
 	public static  BorderPane getTitleBorderPane(Scene scene) {
 		if (mapScene2BorderPane.containsKey(scene)) return mapScene2BorderPane.get(scene);
-		StackPane sp = SceneOverlay.getStackPaneOverlay(scene);
-		LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+		StackPane sp = SceneOverlayManager.getStackPaneOverlay(scene);
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		for (Node node : sp.getChildren()) {
 			if (node instanceof BorderPane) {
 				BorderPane bp = (BorderPane) node;
@@ -55,7 +55,7 @@ public class Title {
 			setTitlePosition(scene);		
 		}
 		else {
-			LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+			LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 			VBox titlePane = new VBox();
 			titlePane.setPadding(new Insets(0,10,0,0));
 			titlePane.setSpacing(4);

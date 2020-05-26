@@ -10,7 +10,7 @@ import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.Symbol;
 import javaFX.ext.utility.FXUtil;
 import javaFX.plots.SeriesEditor;
-import javaFX.plots.overlay.SceneOverlay;
+import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -49,8 +49,8 @@ public class Legend {
 	// The LegendBorder Pane is (1) a Border Pane and (2) has a chart as its Center node
 	public static  BorderPane getLegendBorderPane(Scene scene) {
 		if (MapScene2BorderPane.containsKey(scene)) return MapScene2BorderPane.get(scene);
-		StackPane sp = SceneOverlay.getStackPaneOverlay(scene);
-		LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+		StackPane sp = SceneOverlayManager.getStackPaneOverlay(scene);
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		for (Node node : sp.getChildren()) {
 			if (node instanceof BorderPane) {
 				BorderPane bp = (BorderPane) node;
@@ -75,9 +75,9 @@ public class Legend {
 			refreshLegendItems(scene);
 		}
 		else {
-			LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+			LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 			lineChart.setLegendVisible(false);
-			CSS css = CSS.retrieveCSS(SceneOverlay.getLineChart(scene));
+			CSS css = CSS.retrieveCSS(SceneOverlayManager.getLineChart(scene));
 			mapScene2ListLegendItems.put(scene, new ArrayList<Label>());
 			for (Series<?,?> series : css.getSeriesFromChart()) {
 				Label label = createLegendItem(series, css, new Label());
@@ -98,9 +98,9 @@ public class Legend {
 	}
 	
 	private static void setLegendSizeAndOrientation(Scene scene) {
-		Side side = SceneOverlay.getLineChart(scene).getLegendSide();
+		Side side = SceneOverlayManager.getLineChart(scene).getLegendSide();
 		FlowPane legendPane = MapScene2Legend.get(scene);
-		LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		if (side.equals(Side.TOP) || side.equals(Side.BOTTOM)) {
 			HBox pane = new HBox();
 			pane.getChildren().addAll(transferKids(legendPane));
@@ -137,7 +137,7 @@ public class Legend {
 	private static void setLegendPosition(Scene scene) {
 		FlowPane legend = MapScene2Legend.get(scene);
 		StackPane padding = (StackPane)legend.getParent();
-		Side side = SceneOverlay.getLineChart(scene).getLegendSide();
+		Side side = SceneOverlayManager.getLineChart(scene).getLegendSide();
 		if (side.equals(Side.BOTTOM)) padding.setPadding(new Insets(0,60,22,60));
 		else if (side.equals(Side.LEFT)) padding.setPadding(new Insets(40,0,40,10));
 		else if (side.equals(Side.TOP)) padding.setPadding(new Insets(22,60,0,60));
@@ -156,7 +156,7 @@ public class Legend {
 	}
 	
 	public static void repositionLegend(Scene scene, Side side) {
-		LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		lineChart.setLegendSide(side);
 		if (isLegendVisible(scene)) {
 			addLegend(scene);
@@ -245,7 +245,7 @@ public class Legend {
 	}
 	
 	private static void refreshLegendItems(Scene scene) {
-		CSS css = CSS.retrieveCSS(SceneOverlay.getLineChart(scene));
+		CSS css = CSS.retrieveCSS(SceneOverlayManager.getLineChart(scene));
 		for (Series<?,?> series : css.getSeriesFromChart()) {
 			createLegendItem(series, css, MapSeries2LegendItem.get(series));
 		}

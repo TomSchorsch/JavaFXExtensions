@@ -6,7 +6,7 @@ import java.util.Map;
 import javaFX.ext.controls.Editor;
 import javaFX.ext.css.CSS;
 import javaFX.ext.utility.FXUtil;
-import javaFX.plots.overlay.SceneOverlay;
+import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -46,7 +46,7 @@ public class AxisEditor {
 
 			String label = "X Axis Settings";
 			Scene scene = axis.getScene();
-			LineChart<?,?> lineChart = SceneOverlay.getLineChart(scene);
+			LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 			if (lineChart.getYAxis().equals(axis)) label = "Y Axis Settings";
 			editor.show(label, getEditItems(axis, css), () -> {mapAxis2Editor.remove(axis); mapAxis2LowerRange.remove(axis); mapAxis2UpperRange.remove(axis); mapAxis2RadioButton.remove(axis); return true;});
 		}
