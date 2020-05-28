@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.function.Function;
 
 import javaFX.ext.utility.Logger;
+import javaFX.plots.PlotData;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.Region;
@@ -62,6 +63,17 @@ public interface FXTester {
 		return stage;		
 	}
 	
+	static <XTYPE,YTYPE> void setPlotData(PlotData<XTYPE,YTYPE> plotData, String name, int count, XTYPE startX, YTYPE startY, Function<XTYPE,XTYPE> xFunc, Function<YTYPE,YTYPE> yFunc) {
+		XTYPE x= startX;
+		YTYPE y= startY;
+		plotData.add(name, x, y);
+		for (int i = 1; i < count; i++) {
+			x = xFunc.apply(x); // ex. x+Math.random();
+			y = yFunc.apply(y); // ex. y+(Math.random()-0.3)*10;
+			plotData.add(name,x, y);
+		} 
+	}
+
 	static XYChart.Series<Number,Number> getSeriesData(String name, int count, double startX, double startY, Function<Number,Number> xFunc, Function<Number,Number> yFunc) {
 		XYChart.Series<Number,Number> series = new XYChart.Series<Number,Number>();
 		series.setName(name);

@@ -10,6 +10,7 @@ import java.util.Set;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
+import javaFX.plots.PlotData;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -30,9 +31,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import javafx.stage.Stage;
 
-public class CallOut {
+public class CallOut <XTYPE,YTYPE> {
 	/*
 	 * An example of a CallOut at angle 0 from a given point:    ---- my CallOut
 	 * 
@@ -97,7 +97,7 @@ public class CallOut {
 
 	static Map<Scene,List<CallOut>> mapScene2CallOuts = new HashMap<Scene,List<CallOut>>();
 	static Map<LineChart<?,?>,List<CallOut>> mapLineChart2CallOuts = new HashMap<LineChart<?,?>,List<CallOut>>();
-	public static Set<Series<?,?>> setCallOutSeries = new HashSet<Series<?,?>>();
+	public static Set<String> setCallOutSeries = new HashSet<String>();
 
 	public static List<CallOut> getCallOuts(Scene scene) {
 		if (mapScene2CallOuts.containsKey(scene)) return mapScene2CallOuts.get(scene);
@@ -121,17 +121,25 @@ public class CallOut {
 	boolean rotateCallOutbyDragging = true;
 	boolean editCallOutByRightClicking = true;
 	
+	PlotData<XTYPE,YTYPE> plotData;
+	
 	@SuppressWarnings("rawtypes")
-	protected Series callOutSeries = new Series();
+	protected Series callOutSeries;
+	protected String callOutName;
 
 	// The default constructor
-	public CallOut(String name) { 
-		callOutSeries.setName(name);
-		setCallOutSeries.add(callOutSeries);
+	public CallOut(String name, PlotData<XTYPE,YTYPE> plotData) { 
+		if (plotData.getSeriesNames().contains(name)) {
+			System.out.println("Invalid callout Name '"+name+"'. It already exists in PlotData");
+			return;
+		}
+		setCallOutSeries.add(name);
+		this.callOutName = name;
+		this.plotData = plotData;
 	}
 
 	public String getName() {
-		return callOutSeries.getName();
+		return callOutName;
 	}
 	
 	public CallOutSettings copyDefaultSettings() {
@@ -157,52 +165,41 @@ public class CallOut {
 	public void setRotateCallOutByDragging(boolean rotateCallOutbyDragging) 			{this.rotateCallOutbyDragging = rotateCallOutbyDragging;}
 	public boolean getEditCallOutByRightClicking() 		{return editCallOutByRightClicking;}
 	public void setEditCallOutByRightClicking(boolean editCallOutByRightClicking)		{this.editCallOutByRightClicking = editCallOutByRightClicking;}
+	
+	
+	List<CallOutSettings> callOutList = new ArrayList<CallOutSettings>();
+
 
 	// Uses Default CallOut Settings
-	public CallOutSettings create(Object x, Object y, String text) {
-		CallOutSettings cos = this.copyDefaultSettings();
-		return create(x,y,text, cos);
+	public void create(XTYPE x, YTYPE y, String text) {
+		create(x,y,text, this.defaultCallOutSettings);
 	}
-	// Uses Default CallOut Settings
-//	public CallOutSettings create(Object x, Object y, String text, Angle angle) {
-//		CallOutSettings cos = this.copyDefaultSettings();
-//		cos.setAngle(angle);
-//		return create(x,y,text,angle,cos);
-//	}
-
-//	// Uses Default CallOut Settings
-//	public CallOutSettings create(Object x, Object y, String text, Angle angle, CallOutSettings cos) {
-//		CallOutSettings cos2 = this.copyDefaultSettings();
-//		cos2.setAngle(angle);
-//		return create(x,y,text,cos2);
-//	}
 
 	// Uses provided CallOut Settings
 	@SuppressWarnings("unchecked")
-	public CallOutSettings create(Object x, Object y, String text, CallOutSettings cos) {
-		var data = new Data<Object,Object>(x,y);
-		callOutSeries.getData().add(data);
-		var data2 = new Data<Object,Object>(x,y);
-		callOutSeries.getData().add(data2);
-		var cos2 = new CallOutSettings(cos,text,data,data2);
-		mapData2CallOutSettings.put(data, cos2);
-		return cos2;
+	public void create(XTYPE x, YTYPE y, String text, CallOutSettings cos) {
+		CallOutSettings cosDup = new CallOutSettings();
+		CallOutSettings.duplicateSettingsFromTo(cos, cosDup);
+		plotData.add(callOutName, x, y);
+		plotData.add(callOutName, x, y);
+		cosDup.setText(text);
+		callOutList.add(cosDup);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addToChart(LineChart chart) {
-		this.lineChart = chart;
-		chart.getData().add(callOutSeries);;
-		if (!mapLineChart2CallOuts.containsKey(lineChart)) {
-			mapLineChart2CallOuts.put(chart, new ArrayList<CallOut>());
-		}
-		mapLineChart2CallOuts.get(chart).add(this);
-	}
+//	@SuppressWarnings({"rawtypes" })
+//	public void addToChart(LineChart chart) {
+//		this.lineChart = chart;
+////		chart.getData().add(callOutSeries);
+//		if (!mapLineChart2CallOuts.containsKey(lineChart)) {
+//			mapLineChart2CallOuts.put(chart, new ArrayList<CallOut>());
+//		}
+//		mapLineChart2CallOuts.get(chart).add(this);
+//	}
 
 	// creates and configures the CallOuts given the individual CallOut Settings
 	@SuppressWarnings("unchecked")
-	public static void configureCallOuts(Stage stage) {
-		Scene scene = stage.getScene();
+	public static void configure(Scene scene, CallOut... callOuts) {
+//		Scene scene = stage.getScene();
 		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		if (lineChart == null) {
 			System.out.println("Must call 'callOut.addToChart(lineChart);' (or equivalent) to add the CallOuts (as a data series) to the Line Chart");
@@ -212,55 +209,78 @@ public class CallOut {
 			System.out.println("Must call 'CallOut.configureCallOuts' AFTER the LineChart is attached to a Scene which is attached to a Stage");
 			return;
 		}
-		if (mapScene2CallOuts.containsKey(scene)) {
-			System.out.println("Cannot call 'CallOut.configureCallOuts' more than once for a Scene");
-			return;
-		}
-		else {
+		if (!mapScene2CallOuts.containsKey(scene)) {
 			mapScene2CallOuts.put(scene, new ArrayList<CallOut>());
 		}
-		for (CallOut callOut : mapLineChart2CallOuts.get(lineChart)) {		
-
-			mapScene2CallOuts.get(scene).add(callOut);
-
-			ObservableList<Data<Object,Object>> listData = callOut.callOutSeries.getData();
-
-
-			CSS css = CSS.retrieveCSS(lineChart);
-			if (css == null) css = new CSS(lineChart, SymbolStyle.whitefilled);
-			css.setSymbolColor(callOut.callOutSeries, Color.TRANSPARENT);
-			css.setSymbolFillColor(callOut.callOutSeries, Color.TRANSPARENT);
-			css.setSymbolOutlineColor(callOut.callOutSeries, Color.TRANSPARENT);
-			css.setLineColor(callOut.callOutSeries, Color.TRANSPARENT);
-			callOut.replaceStackPaneDataNodeWithLineAndTextGroup(listData);
-			for (Data<Object,Object> data : listData) {
-
-				// Construct the CallOut line and text
-				var cos = callOut.mapData2CallOutSettings.get(data);
-				if (cos != null) {  // skip over the data2 elements
-
-					// Create the text and set all the properties
-					Text text = callOut.setCalloutTextProperties(new Text(),cos);
-					callOut.mapText2Data.put(text, data);	
-
-					// Create the line
-					Line line = callOut.createLineAndSetLineProperties(cos);
-
-					//				Group group = new Group();
-					Group group = (Group) data.getNode();
-					group.getChildren().addAll(line,text);
-
-					// Set the CallOut location (translate it from point based on the CallOut size and the selected angle)
-					callOut.setCallOutDataLocation(group, cos);
-					callOut.setCallOutData2Location(group,cos);
-
-					// Add the CallOut group to the data location
-					//				Pane sp = (Pane)data.getNode();
-					//				sp.getChildren().add(group);
-
-					// Set mouse handlers to the text
-					callOut.setMouseTextEventHandlers(data,text,cos);
+		
+		for (CallOut callOut : callOuts) {
+			callOut.lineChart = lineChart;
+			for (Series series : lineChart.getData()) {
+				if (series.getName().equals(callOut.callOutName)) {
+					List<Data> listData = series.getData();
+					callOut.callOutSeries = series;
+					for(int i = 0; i < callOut.callOutList.size(); i++) {
+						CallOutSettings cos = (CallOutSettings) callOut.callOutList.get(i);
+						Data data = listData.get(i*2);
+						Data data2 = listData.get(i*2+1);
+						cos.setData(data);
+						cos.setData2(data2);		
+						callOut.mapData2CallOutSettings.put(data,cos);
+					}
+					mapScene2CallOuts.get(scene).add(callOut);
+					callOut.configure();
 				}
+			}
+		}
+		
+	
+		
+		
+//		for (CallOut2 callOut : mapLineChart2CallOuts.get(lineChart)) {		
+		
+	
+	}
+	
+	private void configure() {
+		
+
+		ObservableList<Data<Object,Object>> listData = callOutSeries.getData();
+
+
+		CSS css = CSS.retrieveCSS(lineChart);
+		if (css == null) css = new CSS(lineChart, SymbolStyle.whitefilled);
+		css.setSymbolColor(callOutSeries, Color.TRANSPARENT);
+		css.setSymbolFillColor(callOutSeries, Color.TRANSPARENT);
+		css.setSymbolOutlineColor(callOutSeries, Color.TRANSPARENT);
+		css.setLineColor(callOutSeries, Color.TRANSPARENT);
+		replaceStackPaneDataNodeWithLineAndTextGroup(listData);
+		for (Data<Object,Object> data : listData) {
+
+			// Construct the CallOut line and text
+			CallOutSettings cos = mapData2CallOutSettings.get(data);
+			if (cos != null) {  // skip over the data2 elements
+
+				// Create the text and set all the properties
+				Text text = setCalloutTextProperties(new Text(),cos);
+				mapText2Data.put(text, data);	
+
+				// Create the line
+				Line line = createLineAndSetLineProperties(cos);
+
+				//				Group group = new Group();
+				Group group = (Group) data.getNode();
+				group.getChildren().addAll(line,text);
+
+				// Set the CallOut location (translate it from point based on the CallOut size and the selected angle)
+				setCallOutDataLocation(group, cos);
+				setCallOutData2Location(group,cos);
+
+				// Add the CallOut group to the data location
+				//				Pane sp = (Pane)data.getNode();
+				//				sp.getChildren().add(group);
+
+				// Set mouse handlers to the text
+				setMouseTextEventHandlers(data,text,cos);
 			}
 		}
 	}
@@ -284,10 +304,10 @@ public class CallOut {
 	protected Text setCalloutTextProperties(Text text, CallOutSettings cos) {
 		text.setText(cos.getText());
 		text.setFont(new Font(cos.getFontSize()));
-		text.setFill(cos.getFontColor());
+		text.setFill(cos.getColor());
 		CSS.setFontStyle(text, cos.getFontStyle());
 		CSS.setFontWeight(text, cos.getFontWeight());
-		CSS.setFontFamily(text, cos.getFontFamily());
+//		CSS.setFontFamily(text, cos.getFontFamily());
 		setCallOutTextLocation( text, cos);
 		return text;
 	}
@@ -368,8 +388,13 @@ public class CallOut {
 		double endY = lineLengthY(cos);
 		Line line = new Line(0,0,endX, endY);
 		line.setStrokeWidth(cos.getLineWidth());
-		line.setStroke(cos.getLineColor());
-		line.setPickOnBounds(true);
+		line.setStroke(cos.getColor());
+		if (cos.getLineLength() < 20) {
+			line.setPickOnBounds(true);  // makes short lines easier to select						
+		}
+		else {
+			line.setPickOnBounds(true);			
+		}
 		// Mouse Handler set in here as new line is created any time any of the line properties are changed
 		setMouseLineEventHandlers(cos.getData(),line);
 		return line;
@@ -504,30 +529,35 @@ public class CallOut {
 		double ang = cos.getAngle();
 		double xPixels = lineChart.getXAxis().getDisplayPosition(cos.getData().getXValue());
 		double yPixels = lineChart.getYAxis().getDisplayPosition(cos.getData().getYValue());
-		Object x2 = null;
-		Object y2 = null;
+		Double x2 = null;
+		Double y2 = null;
 		if (ang >= 270 || ang <= 90.0) {
 			double x2Scene = xPixels + width*widthFactor;	// Shift to Right
-			x2 = lineChart.getXAxis().getValueForDisplay(x2Scene);
+			x2 = (Double)lineChart.getXAxis().getValueForDisplay(x2Scene);
 		}
 		else {
 			double xS2cene = xPixels - width*widthFactor;	// Shift to Left
-			x2 = lineChart.getXAxis().getValueForDisplay(xS2cene);
+			x2 = (Double)lineChart.getXAxis().getValueForDisplay(xS2cene);
 		}
 		if (ang >= 0 && ang < 180) {
 			double y2Scene = yPixels - height*heightFactor;  // Shift Up
-			y2 = lineChart.getYAxis().getValueForDisplay(y2Scene);
+			y2 = (Double)lineChart.getYAxis().getValueForDisplay(y2Scene);
 		}
 		else {
 			double y2Scene = yPixels + height*heightFactor;  // Shift Down
-			y2 = lineChart.getYAxis().getValueForDisplay(y2Scene);
+			y2 = (Double)lineChart.getYAxis().getValueForDisplay(y2Scene);
 		}
 
 		// Set the location of data 2 to be the opposite side of the group from the translated settings
 		// basically the data X plus the translation plus the width/height of the group
 		var data2 = cos.getData2();
-		data2.setXValue(x2);
-		data2.setYValue(y2);
+		if (x2 == Double.POSITIVE_INFINITY || y2 == Double.POSITIVE_INFINITY || x2 == Double.NEGATIVE_INFINITY || y2 == Double.NEGATIVE_INFINITY ) {
+			// do nothing
+		}
+		else {
+			data2.setXValue(x2);
+			data2.setYValue(y2);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

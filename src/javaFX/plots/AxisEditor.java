@@ -35,7 +35,7 @@ public class AxisEditor {
 	static Map<Axis<?>,RadioButton> mapAxis2RadioButton = new HashMap<Axis<?> ,RadioButton>();
 
 	// This routine sets up the Editable window
-	public static void open(Axis<?> axis, CSS css, double screenX, double screenY) {
+	public static void open(ValueAxis<?> axis, CSS css, double screenX, double screenY) {
 
 		if (mapAxis2Editor.containsKey(axis)) {
 			System.out.println("Editor already open");
@@ -63,7 +63,7 @@ public class AxisEditor {
 		if (autoRangeButton!= null) autoRangeButton.setSelected(((ValueAxis<?>)axis).isAutoRanging());
 	}
 
-	private static GridPane getEditItems(Axis<?> axis, CSS css) {
+	private static GridPane getEditItems(ValueAxis<?> axis, CSS css) {
 
 		// set up GridPane for Editor labels and entries, set up spacing between entries and between other elements in the editor
 		GridPane gridPane = new GridPane();
@@ -203,7 +203,6 @@ public class AxisEditor {
 		}
 
 		{
-
 			gridPane.add(new Text("Tick Label rotation : "),1, row);
 			Double d = -axis.getTickLabelRotation();
 			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
@@ -214,7 +213,15 @@ public class AxisEditor {
 			});
 			gridPane.add(comboBox,3,row++);
 		}
-
+		{
+			RadioButton minorTickMarksVisible = new RadioButton("Minor Tick Marks Visible");
+			minorTickMarksVisible.setSelected(axis.isMinorTickVisible());
+			minorTickMarksVisible.setMinSize(FXUtil.getWidth(minorTickMarksVisible)+30, FXUtil.getHeight(minorTickMarksVisible));
+			gridPane.add(minorTickMarksVisible, 1, row++, 3, 1); // col, row
+			minorTickMarksVisible.setOnAction((ActionEvent event) -> { 
+				axis.setMinorTickVisible(minorTickMarksVisible.isSelected());
+			});
+		}
 
 		return gridPane;		
 

@@ -5,6 +5,7 @@ import java.io.File;
 import javaFX.ext.css.CSS;
 import javaFX.ext.utility.Logger;
 import javaFX.ext.utility.SaveAsPng;
+import javaFX.plots.AllSeriesEditor;
 import javaFX.plots.AxisEditor;
 import javaFX.plots.PlotEditor;
 import javaFX.plots.callouts.CallOut;
@@ -17,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -146,28 +148,39 @@ public class SceneOverlayManager {
 		plotEditItem.setOnAction((event) -> {
 			PlotEditor.open(lineChart, css, mouseX, mouseY);
 		});
-		contextMenu.getItems().addAll(plotEditItem, new SeparatorMenuItem());
-		
+		contextMenu.getItems().addAll(plotEditItem);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////
 		// Axis Settings Editor
 		//////////////////////////////////////////////////////////////////////////////////////////////
 		final MenuItem xAxisEditor = new MenuItem("X Axis Settings Editor");
 		xAxisEditor.setOnAction((event) -> {
-			AxisEditor.open(lineChart.getXAxis(), css, mouseX, mouseY);
+			AxisEditor.open((ValueAxis<?>)lineChart.getXAxis(), css, mouseX, mouseY);
 		});
 		final MenuItem yAxisEditor = new MenuItem("Y Axis Settings Editor");
 		yAxisEditor.setOnAction((event) -> {
-			AxisEditor.open(lineChart.getYAxis(), css, mouseX, mouseY);
+			AxisEditor.open((ValueAxis<?>)lineChart.getYAxis(), css, mouseX, mouseY);
 		});
 		
-		contextMenu.getItems().addAll(xAxisEditor, yAxisEditor);
+		contextMenu.getItems().addAll(xAxisEditor, yAxisEditor, new SeparatorMenuItem());
 		
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		// Series Settings Editor
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		final MenuItem seriesEditItem = new MenuItem("Series Settings Editor");
+		seriesEditItem.setOnAction((event) -> {
+			AllSeriesEditor.open(lineChart, css, mouseX, mouseY);
+		});
+		contextMenu.getItems().addAll(seriesEditItem);
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		// CallOut Editors
+		//////////////////////////////////////////////////////////////////////////////////////////////
 		if (CallOut.getCallOuts(scene).size() > 0 ) {
 			contextMenu.getItems().addAll(new SeparatorMenuItem());
 			final MenuItem callOutEditorLabel = new MenuItem("CallOut Settings Editor:");
 			contextMenu.getItems().addAll(callOutEditorLabel); {
-				for (CallOut callOut : CallOut.getCallOuts(scene)) {
+				for (CallOut<?, ?> callOut : CallOut.getCallOuts(scene)) {
 					final MenuItem callOutEditor = new MenuItem("-- "+callOut.getName());
 					callOutEditor.setOnAction((event) -> { 
 						CallOutSettingsSeriesEditor.open(scene, callOut, css, mouseX, mouseY);

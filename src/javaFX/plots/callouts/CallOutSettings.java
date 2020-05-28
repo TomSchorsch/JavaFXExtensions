@@ -2,7 +2,6 @@ package javaFX.plots.callouts;
 
 import javaFX.ext.controls.Editor;
 import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.FontFamily;
 import javaFX.ext.css.CSS.FontStyle;
 import javaFX.ext.css.CSS.FontWeight;
 import javaFX.ext.utility.FXUtil;
@@ -13,7 +12,6 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.chart.XYChart.Data;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
@@ -54,18 +52,20 @@ public class CallOutSettings {
 	public void   setLineLength(double lineLength) {this.lineLength = lineLength;}
 	public double getLineWidth() {return lineWidth;}
 	public void   setLineWidth(double lineWidth) {this.lineWidth = lineWidth;}
-	public Color getLineColor() {return lineColor;}
-	public void  setLineColor(Color lineColor) {this.lineColor = lineColor;}
+	public Color getColor() {return color;}
+	public void  setColor(Color color) {this.color = color;}
+//	public Color getLineColor() {return lineColor;}
+//	public void  setLineColor(Color lineColor) {this.lineColor = lineColor;}
 	public double getFontSize() {return fontSize;}
 	public void   setFontSize(double fontSize) {this.fontSize = fontSize;}
-	public Color getFontColor() {return fontColor;}
-	public void  setFontColor(Color fontColor) {this.fontColor = fontColor;}
+//	public Color getFontColor() {return fontColor;}
+//	public void  setFontColor(Color fontColor) {this.fontColor = fontColor;}
 	public FontStyle getFontStyle() {return fontStyle;}
 	public void      setFontStyle(FontStyle fontStyle) {this.fontStyle = fontStyle;}
 	public FontWeight getFontWeight() {return fontWeight;}
 	public void       setFontWeight(FontWeight fontWeight) {this.fontWeight = fontWeight;}
-	public FontFamily getFontFamily() {return fontFamily;}
-	public void       setFontFamily(FontFamily fontFamily) {this.fontFamily = fontFamily;}
+//	public FontFamily getFontFamily() {return fontFamily;}
+//	public void       setFontFamily(FontFamily fontFamily) {this.fontFamily = fontFamily;}
 
 	// returns the angle in radians
 	public double getAngleRadians() {
@@ -99,12 +99,13 @@ public class CallOutSettings {
 	private Double angle = 30.0;
 	private double lineLength = 20;
 	private double lineWidth = 1.5;
-	private Color lineColor = Color.BLACK;
+//	private Color lineColor = Color.BLACK;
+	private Color color = Color.BLACK;
 	private double fontSize = 12;
-	private Color fontColor = Color.BLACK;
+//	private Color fontColor = Color.BLACK;
 	private FontStyle fontStyle = FontStyle.normal;
 	private FontWeight fontWeight = FontWeight.bold;
-	private FontFamily fontFamily = FontFamily.arial;
+//	private FontFamily fontFamily = FontFamily.arial;
 
 	// gives you a CallOut settings w/out the text and data point
 	// this can be modified and then supplied as a template when creating the CallOuts themselves
@@ -127,12 +128,13 @@ public class CallOutSettings {
 		to.angle 		= from.angle;
 		to.lineLength 	= from.lineLength;
 		to.lineWidth	= from.lineWidth;
-		to.lineColor	= from.lineColor;
+		to.color		= from.color;
+//		to.lineColor	= from.lineColor;
 		to.fontSize		= from.fontSize;
-		to.fontColor	= from.fontColor;
+//		to.fontColor	= from.fontColor;
 		to.fontStyle	= from.fontStyle;
 		to.fontWeight	= from.fontWeight;
-		to.fontFamily	= from.fontFamily;
+//		to.fontFamily	= from.fontFamily;
 		return to;
 	}
 
@@ -358,22 +360,22 @@ public class CallOutSettings {
 			gridPane.add(comboBox,3,row++);
 		}	
 
+		addSeparator(gridPane, row++);
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		// lineColor
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		{
-			gridPane.add(new Text("Line Color"), 1, row); // col, row
-			ColorPicker colorPicker = Editor.getColorPicker(this.lineColor);
+			gridPane.add(new Text("Color"), 1, row); // col, row
+			ColorPicker colorPicker = Editor.getColorPicker(this.color);
 			colorPicker.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			colorPicker.setOnAction(event -> {
-				this.lineColor = colorPicker.getValue();
+				this.color = colorPicker.getValue();
 				co.setCalloutTextProperties(text,this);
 				co.setCallOutLineAndPositioningProperties(text, this);
 			});
 			gridPane.add(colorPicker,3,row++);
 		}
-
-		addSeparator(gridPane, row++);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		// fontSize
@@ -392,66 +394,37 @@ public class CallOutSettings {
 		}			
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-		// FontColor
+		// fontStyle (Italics)
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		{
-			gridPane.add(new Text("Font Color"), 1, row); // col, row
-			ColorPicker colorPicker = Editor.getColorPicker(this.fontColor);
-			colorPicker.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			colorPicker.setOnAction(event -> {
-				this.fontColor = colorPicker.getValue();
+			RadioButton italicsButton = new RadioButton("Italic           ");
+			italicsButton.setSelected(this.fontStyle.equals(FontStyle.italic));
+			italicsButton.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
+			italicsButton.setMinSize(FXUtil.getWidth(italicsButton)+30, FXUtil.getHeight(italicsButton));
+			italicsButton.setOnAction((ActionEvent event) -> { 
+				this.fontStyle = FontStyle.normal;
+				if (italicsButton.isSelected()) { this.fontStyle = FontStyle.italic; }
 				co.setCalloutTextProperties(text,this);
 				co.setCallOutLineAndPositioningProperties(text, this);
 			});
-			gridPane.add(colorPicker,3,row++);
+			gridPane.add(italicsButton,1,row);
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-		// fontStyle
+		// fontWeight (bold)
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		{
-			gridPane.add(new Text("Font Style"), 1, row); // col, row
-			ChoiceBox<FontStyle> choiceBox = Editor.getEnumChoiceBox(this.fontStyle);
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.getSelectionModel().selectedItemProperty().addListener(
-					(observable, oldValue, newValue) -> {
-						this.fontStyle = newValue;
-						co.setCalloutTextProperties(text,this);
-						co.setCallOutLineAndPositioningProperties(text, this);
-					});
-			gridPane.add(choiceBox,3,row++);
-		}
-
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		// fontWeight
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		{
-			gridPane.add(new Text("Font Weight"), 1, row); // col, row
-			ChoiceBox<FontWeight> choiceBox = Editor.getEnumChoiceBox(this.fontWeight);
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.getSelectionModel().selectedItemProperty().addListener(
-					(observable, oldValue, newValue) -> {
-						this.fontWeight = newValue;
-						co.setCalloutTextProperties(text,this);
-						co.setCallOutLineAndPositioningProperties(text, this);
-					});
-			gridPane.add(choiceBox,3,row++);
-		}
-
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		// fontFamily
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		{
-			gridPane.add(new Text("Font Family"), 1, row); // col, row
-			ChoiceBox<FontFamily> choiceBox = Editor.getEnumChoiceBox(this.fontFamily);
-			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			choiceBox.getSelectionModel().selectedItemProperty().addListener(
-					(observable, oldValue, newValue) -> {
-						this.fontFamily = newValue;
-						co.setCalloutTextProperties(text,this);
-						co.setCallOutLineAndPositioningProperties(text, this);
-					});
-			gridPane.add(choiceBox,3,row++);
+			RadioButton boldButton = new RadioButton("Bold           ");
+			boldButton.setSelected(this.fontWeight.equals(FontWeight.bold));
+			boldButton.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
+			boldButton.setMinSize(FXUtil.getWidth(boldButton)+30, FXUtil.getHeight(boldButton));
+			boldButton.setOnAction((ActionEvent event) -> { 
+				this.fontWeight = FontWeight.normal;
+				if (boldButton.isSelected()) { this.fontWeight = FontWeight.bold; }
+				co.setCalloutTextProperties(text,this);
+				co.setCallOutLineAndPositioningProperties(text, this);
+			});
+			gridPane.add(boldButton,3,row++);
 		}
 
 		addSeparator(gridPane, row++);

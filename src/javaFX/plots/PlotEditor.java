@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javaFX.ext.controls.Editor;
-import javaFX.ext.controls.SymbolPicker;
 import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.FontWeight;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
 import javaFX.plots.legend.Legend;
 import javaFX.plots.overlay.Classification;
@@ -22,8 +19,6 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -184,6 +179,10 @@ public class PlotEditor {
 		
 		addSeparator(gridPane, row++);
 		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Plot InfoSettings
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		{
 			gridPane.add(new Text("Edit Plot Info"),1, row);
 			String originalText = PlotInfo.getText(scene);
@@ -204,130 +203,31 @@ public class PlotEditor {
 				});
 
 		}
-		
-		addSeparator(gridPane, row++);
-		addSeparator(gridPane, row++);
-
-
-		{
-			Text text = new Text("Changes below effect ALL series, ALL data");
-			CSS.setFontWeight(text, FontWeight.bold);
-			gridPane.add(text, 1, row++, 3, 1); // col, row
-		}
-		
-		addSeparator(gridPane, row++);
-
-
-		{
-			RadioButton symbolsVisibleButton = new RadioButton("Symbols Visible");
-			symbolsVisibleButton.setSelected(css.getSymbolsVisible());
-			symbolsVisibleButton.setMinSize(FXUtil.getWidth(symbolsVisibleButton)+30, FXUtil.getHeight(symbolsVisibleButton));
-			gridPane.add(symbolsVisibleButton, 1, row++, 3, 1); // col, row
-			symbolsVisibleButton.setOnAction((ActionEvent event) -> { 
-				css.setSymbolsVisible(symbolsVisibleButton.isSelected());
-				if (Legend.isLegendVisible(lineChart.getScene())) {
-					Legend.addLegend(lineChart.getScene());;
-				}
-			});
-		}
-		
-		SymbolPicker symbolPicker = Editor.getSymbolPicker(css.getSymbol(), css.getSymbolColor());
-		ChoiceBox<SymbolStyle> symbolStyleChoiceBox = Editor.getEnumChoiceBox(css.getSymbolStyle());
-
-		{
-//			symbolPicker.setAvailableSymbols(css.defaultSymbols);
-			gridPane.add(new Text("Symbol :"), 1, row); // col, row
-			symbolPicker.setOnSymbolSelection(event -> {
-				css.setSymbol(symbolPicker.getValue());
-				if (Legend.isLegendVisible(scene)) {
-					Legend.addLegend(scene);
-				}
-				SymbolStyle ss = CSS.getSymbolStyle(symbolPicker.getValue());
-				symbolStyleChoiceBox.setValue(ss);
-				SeriesEditor.setEditorsSymbol(symbolPicker.getValue(),css);
-			});
-			gridPane.add(symbolPicker,3,row++);
-
-		}
-		
-		{
-			gridPane.add(new Text("Symbol Color"), 1, row); // col, row
-			ColorPicker colorPicker = Editor.getColorPicker(css.getSymbolColor());
-			colorPicker.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			colorPicker.setOnAction(event -> {
-				css.setSymbolColor(colorPicker.getValue());
-				SeriesEditor.setEditorsSymbolColor(colorPicker.getValue(), css);
-				Editor.setSymbolPicker(symbolPicker, css.getSymbol(), colorPicker.getValue());
-				
-			});
-			gridPane.add(colorPicker,3,row++);
-		}
-
-		
-		{
-			gridPane.add(new Text("Symbol Size"), 1, row); // col, row
-			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.symbolSizeArray, css.getSymbolSize());
-			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			comboBox.setOnAction(event -> {
-				css.setSymbolSize(comboBox.getValue());
-				SeriesEditor.setEditorsSymbolSize(comboBox.getValue());
-			});
-			gridPane.add(comboBox,3,row++);
-		}
-		
-		{
-			gridPane.add(new Text("Symbol Style"), 1, row); // col, row
-			symbolStyleChoiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			symbolStyleChoiceBox.setOnAction(event -> {
-				css.changeSymbolStyle(symbolStyleChoiceBox.getValue());
-				SeriesEditor.setEditorsSymbol(css);
-				symbolPicker.setValue(css.getSymbol(), css.getSymbolColor());
-				if (Legend.isLegendVisible(lineChart.getScene())) {
-					Legend.addLegend(lineChart.getScene());;
-				}
-			});
-			gridPane.add(symbolStyleChoiceBox,3,row++);
-		}
 
 		addSeparator(gridPane, row++);
-
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Grid Lines and tick marks Settings
+		////////////////////////////////////////////////////////////////////////////////////////////////////
 		{
-			RadioButton linesVisibleButton = new RadioButton("Lines Visible");
-			linesVisibleButton.setSelected(css.getLinesVisible());
-			linesVisibleButton.setMinSize(FXUtil.getWidth(linesVisibleButton)+30, FXUtil.getHeight(linesVisibleButton));
-			gridPane.add(linesVisibleButton, 1, row++, 3, 1); // col, row
-			linesVisibleButton.setOnAction((ActionEvent event) -> { 
-				css.setLinesVisible(linesVisibleButton.isSelected());
-				if (Legend.isLegendVisible(lineChart.getScene())) {
-					Legend.addLegend(lineChart.getScene());;
-				}
+			RadioButton verticalGridLinesVisible = new RadioButton("Vertical GridLines Visible");
+			verticalGridLinesVisible.setSelected(lineChart.getVerticalGridLinesVisible());
+			verticalGridLinesVisible.setMinSize(FXUtil.getWidth(verticalGridLinesVisible)+30, FXUtil.getHeight(verticalGridLinesVisible));
+			gridPane.add(verticalGridLinesVisible, 1, row++, 3, 1); // col, row
+			verticalGridLinesVisible.setOnAction((ActionEvent event) -> { 
+				lineChart.setVerticalGridLinesVisible(verticalGridLinesVisible.isSelected());
 			});
 		}
-		
 		{
-			gridPane.add(new Text("Line Color"), 1, row); // col, row
-			ColorPicker colorPicker = Editor.getColorPicker(css.getSymbolColor());
-			colorPicker.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			colorPicker.setOnAction(event -> {
-				css.setLineColor(colorPicker.getValue());
-				SeriesEditor.setEditorsLineColor(colorPicker.getValue());
+			RadioButton horizontalGridLinesVisible = new RadioButton("Horizontal GridLines Visible");
+			horizontalGridLinesVisible.setSelected(lineChart.isHorizontalGridLinesVisible());
+			horizontalGridLinesVisible.setMinSize(FXUtil.getWidth(horizontalGridLinesVisible)+30, FXUtil.getHeight(horizontalGridLinesVisible));
+			gridPane.add(horizontalGridLinesVisible, 1, row++, 3, 1); // col, row
+			horizontalGridLinesVisible.setOnAction((ActionEvent event) -> { 
+				lineChart.setHorizontalGridLinesVisible(horizontalGridLinesVisible.isSelected());
 			});
-			gridPane.add(colorPicker,3,row++);
 		}
 
-		{
-			gridPane.add(new Text("Line Width"), 1, row); // col, row
-			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.lineWidthArray, css.getLineWidth());
-			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			comboBox.setOnAction(event -> { 
-				css.setLineWidth(comboBox.getValue());
-				SeriesEditor.setEditorsLineWidth(comboBox.getValue());
-				});
-			gridPane.add(comboBox,3,row++);
-		}
-		
-		addSeparator(gridPane, row++);
-		
 		return gridPane;		
 		
 	}

@@ -6,6 +6,8 @@ import javaFX.ext.controls.Instructions;
 import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
+import javaFX.plots.Pair;
+import javaFX.plots.PlotData;
 import javaFX.plots.axis.StableTicksAxis;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.overlay.PlotInfo;
@@ -26,11 +28,12 @@ public class TestZoomWithMoveableCallOuts implements FXTester {
 	@Override
 	public void execute(Logger logger) {
 
-		XYChart.Series<Number,Number> series1 = FXTester.getSeriesData("series1", 20, 1.0,  0.0,  
+		PlotData<Number,Number> plotData = new PlotData<Number,Number>();
+		FXTester.setPlotData(plotData, "series1", 20, 1.0,  0.0,  
 				(xx -> xx.doubleValue()+Math.random()*4), 
 				(yy -> -6+random.nextGaussian()*4));
 
-		XYChart.Series<Number,Number> series2 = FXTester.getSeriesData("series2", 30, 0.0,  0.0,  
+		FXTester.setPlotData(plotData, "series2", 30, 0.0,  0.0,  
 				(xx -> xx.doubleValue()+Math.random()*3.8), 
 				(yy -> 6+random.nextGaussian()*6));
 
@@ -41,14 +44,12 @@ public class TestZoomWithMoveableCallOuts implements FXTester {
 
 		var lineChart = new LineChart<Number,Number>(xAxis,yAxis);  
 		lineChart.setTitle("Random Data");
-		lineChart.getData().add(series1);
-		lineChart.getData().add(series2);
-		var callOut = new CallOut("singleton");
-		ObservableList<Data<Number, Number>> data = series1.getData();
-		callOut.create(data.get(5).getXValue().doubleValue(), data.get(5).getYValue().doubleValue(), "Sample CallOut Info");
-		callOut.addToChart(lineChart);
+		var callOut = new CallOut("singleton", plotData);
+		Pair<Number,Number> data = plotData.getSeriesData("series1").get(5);
+		callOut.create(data.x, data.y, "Sample CallOut Info");
 
-		
+		lineChart.getData().addAll(plotData.getJavaFXSeries());
+
 		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
 		
 		Scene scene = new Scene(lineChart,1200,600);
@@ -57,9 +58,10 @@ public class TestZoomWithMoveableCallOuts implements FXTester {
 		
 		SceneOverlayManager.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu, SceneOption.ZoomManager);	
 
+		CallOut.configure(scene, callOut);
+
 		Stage stage = FXTester.displayResults(scene);
 		
-		CallOut.configureCallOuts(stage);
 		
 		Instructions txt = new Instructions(stage.getScene());
 		txt.addCenter("Test Zooming with a CallOut");

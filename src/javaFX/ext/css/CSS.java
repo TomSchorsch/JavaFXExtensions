@@ -683,7 +683,7 @@ public class CSS  {
 			ObservableList<Series> list = lineChart.getData();
 			List<Series> newList = new ArrayList<Series>(list.size());
 			for (Series series :list) {  // no routines need to deal with the callOut data series so it is removed here.
-				if (!CallOut.setCallOutSeries.contains(series)) {
+				if (!CallOut.setCallOutSeries.contains(series.getName())) {
 					newList.add(series);
 				}
 			}

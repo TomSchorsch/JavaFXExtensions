@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javaFX.ext.controls.Editor;
 import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.FontFamily;
 import javaFX.ext.css.CSS.FontStyle;
 import javaFX.ext.css.CSS.FontWeight;
 import javaFX.ext.utility.FXUtil;
@@ -15,6 +14,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -81,7 +81,7 @@ public class CallOutSettingsSeriesEditor  {
 				gridPane.add(textRotatedButton, 1, row++, 3, 1); // col, row
 				textRotatedButton.setOnAction((ActionEvent event) -> { 
 					callOut.defaultCallOutSettings.setTextRotated(textRotatedButton.isSelected());
-					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setTextRotated(textRotatedButton.isSelected()));
+					callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setTextRotated(textRotatedButton.isSelected()));
 					resetLineAndText(callOut);
 					resetCallOutLocation(callOut);
 				});
@@ -99,7 +99,7 @@ public class CallOutSettingsSeriesEditor  {
 
 				ChangeListener<? super Double> angleListener = (observable, oldValue, newValue) -> {
 					callOut.defaultCallOutSettings.setAngle(newValue);
-					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setAngle(newValue));
+					callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setAngle(newValue));
 					resetText(callOut);
 					resetLineAndText(callOut);
 					resetCallOutLocation(callOut);
@@ -117,7 +117,7 @@ public class CallOutSettingsSeriesEditor  {
 				lineLengthComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 				ChangeListener<? super Double> lineLengthListener = (observable, oldValue, newValue) -> {
 					callOut.defaultCallOutSettings.setLineLength((Double)newValue);
-					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setLineLength((Double)newValue));
+					callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setLineLength((Double)newValue));
 					resetLineAndText(callOut);
 					resetCallOutLocation(callOut);
 				};
@@ -135,28 +135,29 @@ public class CallOutSettingsSeriesEditor  {
 				choicelineWidthComboBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
 							callOut.defaultCallOutSettings.setLineWidth((Double)newValue);
-							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setLineWidth((Double)newValue));
+							callOut.getData().stream().forEach(data -> ((CSS) callOut.mapData2CallOutSettings.get(data)).setLineWidth((Double)newValue));
 							resetLineAndText(callOut);
 						});
 				gridPane.add(choicelineWidthComboBox,3,row++);
 			}	
 
+			addSeparator(gridPane, row++);
+
 			////////////////////////////////////////////////////////////////////////////////////////////////////
-			// lineColor
+			// Color
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
-				gridPane.add(new Text("Line Color"), 1, row); // col, row
-				ColorPicker colorPicker = Editor.getColorPicker(callOut.defaultCallOutSettings.getLineColor());
+				gridPane.add(new Text("Color"), 1, row); // col, row
+				ColorPicker colorPicker = Editor.getColorPicker(callOut.defaultCallOutSettings.getColor());
 				colorPicker.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 				colorPicker.setOnAction(event -> {
-					callOut.defaultCallOutSettings.setLineColor(colorPicker.getValue());
-					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setLineColor(colorPicker.getValue()));
+					callOut.defaultCallOutSettings.setColor(colorPicker.getValue());
+					callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setColor(colorPicker.getValue()));
+					resetText(callOut);
 					resetLineAndText(callOut);
 				});
 				gridPane.add(colorPicker,3,row++);
-			}
-			
-			addSeparator(gridPane, row++);
+			}			
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			// fontSize
@@ -168,74 +169,50 @@ public class CallOutSettingsSeriesEditor  {
 				fontSizeComboBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
 							callOut.defaultCallOutSettings.setFontSize((Double)newValue);
-							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setFontSize((Double)newValue));
+							callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setFontSize((Double)newValue));
 							resetText(callOut);
 							resetCallOutLocation(callOut);
 						});
 				gridPane.add(fontSizeComboBox,3,row++);
 			}			
 
+
 			////////////////////////////////////////////////////////////////////////////////////////////////////
-			// FontColor
+			// fontStyle (Italics)
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
-				gridPane.add(new Text("Font Color"), 1, row); // col, row
-				ColorPicker colorPicker = Editor.getColorPicker(callOut.defaultCallOutSettings.getFontColor());
-				colorPicker.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-				colorPicker.setOnAction(event -> {
-					callOut.defaultCallOutSettings.setFontColor(colorPicker.getValue());
-					callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setFontColor(colorPicker.getValue()));
+				RadioButton italicsButton = new RadioButton("Italic           ");
+				italicsButton.setSelected(callOut.defaultCallOutSettings.getFontStyle().equals(FontStyle.italic));
+				italicsButton.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
+				italicsButton.setMinSize(FXUtil.getWidth(italicsButton)+30, FXUtil.getHeight(italicsButton));
+				italicsButton.setOnAction((ActionEvent event) -> { 
+					FontStyle tempFontStyle = FontStyle.normal;
+					if (italicsButton.isSelected()) { tempFontStyle = FontStyle.italic; }
+					final FontStyle fontStyle = tempFontStyle;
+					callOut.defaultCallOutSettings.setFontStyle(fontStyle);
+					callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setFontStyle(fontStyle));
 					resetText(callOut);
 				});
-				gridPane.add(colorPicker,3,row++);
+				gridPane.add(italicsButton,1,row);
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////
-			// fontStyle
+			// fontWeight (Bold)
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			{
-				gridPane.add(new Text("Font Style"), 1, row); // col, row
-				ChoiceBox<FontStyle> choiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getFontStyle());
-				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-				choiceBox.getSelectionModel().selectedItemProperty().addListener(
-						(observable, oldValue, newValue) -> {
-							callOut.defaultCallOutSettings.setFontStyle((FontStyle)newValue);
-							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setFontStyle((FontStyle)newValue));
-							resetText(callOut);
-						});
-				gridPane.add(choiceBox,3,row++);
-			}
-
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			// fontWeight
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			{
-				gridPane.add(new Text("Font Weight"), 1, row); // col, row
-				ChoiceBox<FontWeight> choiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getFontWeight());
-				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-				choiceBox.getSelectionModel().selectedItemProperty().addListener(
-						(observable, oldValue, newValue) -> {
-							callOut.defaultCallOutSettings.setFontWeight((FontWeight)newValue);
-							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setFontWeight((FontWeight)newValue));
-							resetText(callOut);
-						});
-				gridPane.add(choiceBox,3,row++);
-			}
-
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			// fontFamily
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			{
-				gridPane.add(new Text("Font Family"), 1, row); // col, row
-				ChoiceBox<FontFamily> choiceBox = Editor.getEnumChoiceBox(callOut.defaultCallOutSettings.getFontFamily());
-				choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-				choiceBox.getSelectionModel().selectedItemProperty().addListener(
-						(observable, oldValue, newValue) -> {
-							callOut.defaultCallOutSettings.setFontFamily((FontFamily)newValue);
-							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setFontFamily((FontFamily)newValue));
-							resetText(callOut);
-						});
-				gridPane.add(choiceBox,3,row++);
+				RadioButton boldButton = new RadioButton("Bold           ");
+				boldButton.setSelected(callOut.defaultCallOutSettings.getFontWeight().equals(FontWeight.bold));
+				boldButton.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
+				boldButton.setMinSize(FXUtil.getWidth(boldButton)+30, FXUtil.getHeight(boldButton));
+				boldButton.setOnAction((ActionEvent event) -> { 
+					FontWeight tempFontWeight = FontWeight.normal;
+					if (boldButton.isSelected()) { tempFontWeight = FontWeight.bold; }
+					final FontWeight fontweight = tempFontWeight;
+					callOut.defaultCallOutSettings.setFontWeight(fontweight);
+					callOut.getData().stream().forEach(data -> ((CallOutSettings) callOut.mapData2CallOutSettings.get(data)).setFontWeight(fontweight));
+					resetText(callOut);
+				});
+				gridPane.add(boldButton,3,row++);
 			}
 			
 			addSeparator(gridPane, row++);
@@ -244,15 +221,15 @@ public class CallOutSettingsSeriesEditor  {
 		}
 		
 		private static void resetText(CallOut callOut) {
-			callOut.getData().stream().forEach(data -> callOut.setCalloutTextProperties(CallOut.getText(data),callOut.mapData2CallOutSettings.get(data)));
+			callOut.getData().stream().forEach(data -> callOut.setCalloutTextProperties(CallOut.getText((Data<Object, Object>) data),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));
 		}
 		
 		private static void resetLineAndText(CallOut callOut) {
-			callOut.getData().stream().forEach(data -> callOut.setCallOutLineAndPositioningProperties(CallOut.getText(data),callOut.mapData2CallOutSettings.get(data)));				
+			callOut.getData().stream().forEach(data -> callOut.setCallOutLineAndPositioningProperties(CallOut.getText((Data<Object, Object>) data),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));				
 		}
 
 		private static void resetCallOutLocation(CallOut callOut) {
-			callOut.getData().stream().forEach(data -> callOut.setCallOutDataLocation((Group)data.getNode(),callOut.mapData2CallOutSettings.get(data)));
+			callOut.getData().stream().forEach(data -> callOut.setCallOutDataLocation((Group)((Data<Object, Object>) data).getNode(),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));
 			callOut.callOutSeries.getNode().getParent().getParent().getParent().requestLayout();   // needed because it won't relayout otherwise
 		}
 		

@@ -24,11 +24,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import test.callouts.TestAllCallOuts;
 import test.callouts.TestCallOutSeriesEditor;
-import test.callouts.TestEditCallOuts;
 import test.callouts.TestFontProperties;
 import test.callouts.TestLineProperties;
-import test.callouts.TestMovingCallOuts;
-import test.callouts.TestRotateCallOutsDrag;
+import test.callouts.TestCallOutSeriesEditor;
 import test.controls.FileChoiceBoxTest;
 import test.controls.LabelerTest;
 import test.controls.MappedRadioButtonsTest;
@@ -42,7 +40,9 @@ import test.plots.TestSSMAxis;
 import test.plots.TestSeriesEditor;
 import test.plots.TestStableNumberAxis;
 import test.plots.TestSymbolsIndividualSizes;
-import test.plots.TestTrackNumberAxis;
+import test.plots.TestTrackNumberAxisNoSort;
+import test.plots.TestTrackNumberAxisReverseSort;
+import test.plots.TestTrackNumberAxisSort;
 import test.plots.TestXAndYAxisEditors;
 import test.zoom.TestPanning;
 import test.zoom.TestZoom;
@@ -100,6 +100,7 @@ public class TestMain extends Application {
 		FXTester plots = (l) -> {;};		
 		FXTester plotsExtra = (l) -> {;};
 		FXTester plotsSpecific = (l) -> {;};
+		FXTester plotsString = (l) -> {;};
 		FXTester callOuts = (l) -> {;};
 		FXTester saves = (l) -> {;};
 		FXTester zoom = (l) -> {;};
@@ -123,19 +124,20 @@ public class TestMain extends Application {
 		mapClass2Text.put(plotsExtra,"Test Additional Plot capabilities:");
 		mapClass2Text.put(new TestSymbolsIndividualSizes(),"- Test Individual Symbol Sizes");
 
+		mapClass2Text.put(plotsString,"Test Plot with String Axis:");
+		mapClass2Text.put(new TestTrackNumberAxisNoSort(),"- Test Y String Axis - No Sort");
+		mapClass2Text.put(new TestTrackNumberAxisSort(),"- Test Y String Axis - Sort");
+		mapClass2Text.put(new TestTrackNumberAxisReverseSort(),"- Test X String Axis - Reverse Sort");
+
 		mapClass2Text.put(plotsSpecific,"Test Plot variants:");
 		mapClass2Text.put(new TestCDFPlot(),"- Test CDF");
 		mapClass2Text.put(new TestSSMAxis(),"- Test Seconds Since Midnight Axis");
 		mapClass2Text.put(new TestHoverLabel(),"- Test Hover Labels");
-		mapClass2Text.put(new TestTrackNumberAxis(),"- Test Track Number Axis");
-		mapClass2Text.put(new TestStableNumberAxis(),"- Test Stable Number Axis");
-
+		mapClass2Text.put(new TestStableNumberAxis(),"- Test Stable Axis rewrite (under construction)");
 		mapClass2Text.put(callOuts, "Test CallOuts:");
+		
 		mapClass2Text.put(new TestFontProperties(),"- Font Properties");
 		mapClass2Text.put(new TestLineProperties(),"- Line Properties");
-		mapClass2Text.put(new TestMovingCallOuts(),"- Move Callout by Dragging Line");
-		mapClass2Text.put(new TestRotateCallOutsDrag(),"- Rotate / Extend CallOut by Dragging Text");
-		mapClass2Text.put(new TestEditCallOuts(),"- Edit CallOuts");
 		mapClass2Text.put(new TestAllCallOuts(),"- Move, Rotate, Extend, Edit Test");
 		mapClass2Text.put(new TestCallOutSeriesEditor(),"- Test Editing individual CallOut Series");
 
@@ -152,7 +154,7 @@ public class TestMain extends Application {
 		rbs = new MappedRadioButtons<FXTester>(mapClass2Text, MappedRadioButtons.PAGE_AXIS);
 		rbs.addNewRank(controls);
 		rbs.addNewRank(plots);
-		rbs.addNewRank(plotsSpecific);
+		rbs.addNewRank(plotsString);
 		rbs.addNewRank(callOuts);
 		rbs.addNewRank(saves);
 

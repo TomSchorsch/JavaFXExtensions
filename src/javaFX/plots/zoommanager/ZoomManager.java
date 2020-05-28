@@ -41,6 +41,8 @@ public class ZoomManager {
 	SimpleDoubleProperty rectY = new SimpleDoubleProperty();
 	private double xOrigin;
 	private double yOrigin;
+	private double mouseX;
+	private double mouseY;
 	boolean dragging = false;
 	boolean panning = false;
 
@@ -261,7 +263,7 @@ public class ZoomManager {
 		@SuppressWarnings("unchecked")
 		ValueAxis<Number> axis = (ValueAxis<Number>)mouseEvent.getSource();
 		if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			panning= true;		
+//			panning= true;		
 			((Node)mouseEvent.getSource()).setCursor(Cursor.HAND);
 			xOrigin = mouseEvent.getX();
 			yOrigin = mouseEvent.getY();
@@ -297,7 +299,7 @@ public class ZoomManager {
 			@SuppressWarnings("unchecked")
 			ValueAxis<Number> axis = (ValueAxis<Number>)mouseEvent.getSource();
 			if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
-				dragging= true;						
+//				dragging= true;						
 				if (axis.equals(xAxis)) {
 					double xShift = getSceneShiftX(chartRegion);  
 					double mouseX = mouseEvent.getX()+xShift;
@@ -327,7 +329,7 @@ public class ZoomManager {
 				dragging= true;						
 				if (axis.equals(xAxis)) {
 					double xShift = getSceneShiftX(chartRegion);  
-					double mouseX = mouseEvent.getX()+xShift;
+					mouseX = mouseEvent.getX()+xShift;
 					rectX.set(mouseX);
 
 
@@ -346,7 +348,7 @@ public class ZoomManager {
 				}
 				else {
 					double yShift = getSceneShiftY(chartRegion);  
-					double mouseY = mouseEvent.getY()+yShift;
+					mouseY = mouseEvent.getY()+yShift;
 					rectY.set(mouseY);
 				}
 
@@ -355,6 +357,7 @@ public class ZoomManager {
 				if (dragging) {
 					dragging = false;
 					if (axis.equals(xAxis)) {
+						if (Math.abs(mouseX-xOrigin)<2) return;
 						double pixelsPerAxisUnit = xAxis.getWidth()/(xAxis.getUpperBound() - xAxis.getLowerBound());            
 						double axisShift = getSceneShiftX(xAxis);                        
 						double newLowerBound = xAxis.getLowerBound() + ((rectinitX.get() - axisShift) / pixelsPerAxisUnit);
@@ -363,12 +366,15 @@ public class ZoomManager {
 						xAxis.setAutoRanging(false);
 
 						Double[] o = adjustBounds(newLowerBound,newUpperBound,2);
-						xAxis.setLowerBound( o[0] );
-						xAxis.setUpperBound( o[1] ); 
-						AxisEditor.setBounds(xAxis);
+						if (o[0] < o[1]) {
+							xAxis.setLowerBound( o[0] );
+							xAxis.setUpperBound( o[1] ); 
+							AxisEditor.setBounds(xAxis);
+						}
 					}
 
 					if (axis.equals(yAxis)) {
+						if (Math.abs(mouseY-yOrigin)<2) return;
 						double pixelsPerAxisUnit = yAxis.getHeight()/(yAxis.getUpperBound() - yAxis.getLowerBound());
 						double axisShift = getSceneShiftY(yAxis);
 
@@ -378,9 +384,12 @@ public class ZoomManager {
 
 						yAxis.setAutoRanging(false);
 						Double[] o = adjustBounds(newLowerBound,newUpperBound,2);
-						yAxis.setLowerBound( o[0] );
-						yAxis.setUpperBound( o[1] );  
-						AxisEditor.setBounds(yAxis);
+
+						if (o[0] < o[1]) {
+							yAxis.setLowerBound( o[0] );
+							yAxis.setUpperBound( o[1] );  
+							AxisEditor.setBounds(yAxis);
+						}
 
 					}
 				}
