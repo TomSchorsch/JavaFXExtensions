@@ -1,6 +1,7 @@
 package javaFX.plots;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javaFX.ext.controls.Editor;
@@ -8,14 +9,17 @@ import javaFX.ext.css.CSS;
 import javaFX.ext.utility.FXUtil;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -27,6 +31,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class AxisEditor {
+
+	static double defaultFontSize = 14.0;
+	static Double[] FontSize = new Double[] {8.0,9.0,10.0,10.5,11.0,12.0,14.0,16.0,18.0,20.0,22.0,24.0,26.0,28.0,30.0};
 
 
 	static Map<Axis<?>,Editor> mapAxis2Editor = new HashMap<Axis<?> ,Editor>();
@@ -89,7 +96,7 @@ public class AxisEditor {
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Title Settings
+		// Axis Label Settings
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -97,7 +104,15 @@ public class AxisEditor {
 		{
 			final TextField titleTextField = new TextField(originalLabel);
 			titleTextField.end();
-			gridPane.add(new Text("Axis Label"), 1, row); // col, row
+			gridPane.add(new Text("Label"), 1, row); // col, row
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(FontSize, AxisEditor.getAxisFontSize(axis));
+			comboBox.setMaxWidth(60);
+			gridPane.add(comboBox, 2, row); // col, row
+			comboBox.getSelectionModel().selectedItemProperty().addListener(
+					(observable, oldValue, newValue) -> {
+						AxisEditor.setAxisFontSize(axis,newValue);
+					});
+			GridPane.setHalignment(comboBox, HPos.RIGHT);
 			// Get and set the initial String value, Center the text and add it to the Grid Pane
 			titleTextField.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
 			titleTextField.setAlignment(Pos.CENTER);
@@ -113,7 +128,7 @@ public class AxisEditor {
 				}
 			});
 		}
-
+		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Axis Range
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +160,7 @@ public class AxisEditor {
 		{
 			if (axis instanceof ValueAxis) {		
 
-				gridPane.add(new Text("Range"), 1, row); // col, row
+				gridPane.add(new Text("Range"), 1, row,2,1); // col, row
 				lowerRangeTextField.setText(lowerBound.toString());
 				lowerRangeTextField.setMaxWidth(MAX_CHOICEBOX_SIZE*0.8);
 				lowerRangeTextField.setAlignment(Pos.CENTER);
@@ -154,14 +169,19 @@ public class AxisEditor {
 				upperRangeTextField.setAlignment(Pos.CENTER);
 				HBox hbox = new HBox(lowerRangeTextField,new Text(" - "),upperRangeTextField);
 				hbox.setAlignment(Pos.BASELINE_CENTER);
-
+				lowerRangeTextField.focusedProperty().addListener(
+						(obs, oldVal, focused) -> {
+							if (!focused)
+								setLowerBound(axis, axisAutoRangeButton, lowerRangeTextField, lowerBound.doubleValue());}
+						);
 				lowerRangeTextField.setOnKeyReleased(event -> {
 					if (event.getCode() == KeyCode.ENTER){
-						axisAutoRangeButton.setSelected(false);
-						axis.setAutoRanging(false);
-						Double lower = getNumber(lowerRangeTextField.getText(),lowerBound.doubleValue());
-						lowerRangeTextField.setText(lower.toString());
-						((ValueAxis<?>)axis).setLowerBound(lower);	
+						setLowerBound(axis, axisAutoRangeButton, lowerRangeTextField, lowerBound.doubleValue());
+//						axisAutoRangeButton.setSelected(false);
+//						axis.setAutoRanging(false);
+//						Double lower = getNumber(lowerRangeTextField.getText(),lowerBound.doubleValue());
+//						lowerRangeTextField.setText(lower.toString());
+//						((ValueAxis<?>)axis).setLowerBound(lower);	
 						upperRangeTextField.requestFocus();
 					}
 					else if (event.getCode() == KeyCode.ESCAPE){
@@ -169,13 +189,19 @@ public class AxisEditor {
 						lowerRangeTextField.end();
 					}
 				});
+				upperRangeTextField.focusedProperty().addListener(
+						(obs, oldVal, focused) -> {
+							if (!focused)
+								setUpperBound(axis, axisAutoRangeButton, upperRangeTextField, upperBound.doubleValue());}
+						);
 				upperRangeTextField.setOnKeyReleased(event -> {
 					if (event.getCode() == KeyCode.ENTER){
-						axisAutoRangeButton.setSelected(false);
-						axis.setAutoRanging(false);
-						Double upper = getNumber(upperRangeTextField.getText(),upperBound.doubleValue());
-						upperRangeTextField.setText(upper.toString());
-						((ValueAxis<?>)axis).setUpperBound(upper);
+						setUpperBound(axis, axisAutoRangeButton, upperRangeTextField, upperBound.doubleValue());
+//						axisAutoRangeButton.setSelected(false);
+//						axis.setAutoRanging(false);
+//						Double upper = getNumber(upperRangeTextField.getText(),upperBound.doubleValue());
+//						upperRangeTextField.setText(upper.toString());
+//						((ValueAxis<?>)axis).setUpperBound(upper);
 						lowerRangeTextField.requestFocus();
 					}
 					else if (event.getCode() == KeyCode.ESCAPE){
@@ -192,24 +218,23 @@ public class AxisEditor {
 		// Tick Label
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		ComboBox<Double> fontSizeComboBox = Editor.getDoubleComboBox(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
+		ComboBox<Double> ticFontSizeComboBox = Editor.getDoubleComboBox(CSS.FontSizeArray, axis.getTickLabelFont().getSize());
 		{
-			gridPane.add(new Text("Tick Label Font : "),1, row);
-			fontSizeComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
-			fontSizeComboBox.setOnAction(event -> { 
-				axis.setTickLabelFont(new Font(fontSizeComboBox.getValue()));
+			gridPane.add(new Text("Tick Label Size : "),1, row,2,1);
+			ticFontSizeComboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
+			ticFontSizeComboBox.setOnAction(event -> { 
+				axis.setTickLabelFont(new Font(ticFontSizeComboBox.getValue()));
 			});
-			gridPane.add(fontSizeComboBox,3,row++);
+			gridPane.add(ticFontSizeComboBox,3,row++);
 		}
 
 		{
-			gridPane.add(new Text("Tick Label rotation : "),1, row);
-			Double d = -axis.getTickLabelRotation();
+			gridPane.add(new Text("Tick Label rotation : "),1, row,2,1);
 			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
 			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			comboBox.setOnAction(event -> { 
 				axis.setTickLabelRotation(-comboBox.getValue());
-				axis.setTickLabelFont(new Font(fontSizeComboBox.getValue()));  // This was needed to force an update when auto ranging was off
+				axis.setTickLabelFont(new Font(ticFontSizeComboBox.getValue()));  // This was needed to force an update when auto ranging was off
 			});
 			gridPane.add(comboBox,3,row++);
 		}
@@ -225,6 +250,22 @@ public class AxisEditor {
 
 		return gridPane;		
 
+	}
+	
+	private static void setLowerBound (Axis axis, RadioButton axisAutoRangeButton, TextField lowerRangeTextField, double lowBound) {
+		axisAutoRangeButton.setSelected(false);
+		axis.setAutoRanging(false);
+		Double lower = getNumber(lowerRangeTextField.getText(),lowBound);
+		lowerRangeTextField.setText(lower.toString());
+		((ValueAxis<?>)axis).setLowerBound(lower);	
+	}
+
+	private static void setUpperBound (Axis axis, RadioButton axisAutoRangeButton, TextField upperRangeTextField, double upperBound) {
+		axisAutoRangeButton.setSelected(false);
+		axis.setAutoRanging(false);
+		Double upper = getNumber(upperRangeTextField.getText(),upperBound);
+		upperRangeTextField.setText(upper.toString());
+		((ValueAxis<?>)axis).setUpperBound(upper);
 	}
 
 	private static Double getNumber(String s, Double def) {
@@ -242,5 +283,27 @@ public class AxisEditor {
 		gridPane.add(separator, 1, row++, GridPane.REMAINING, 1);
 		GridPane.setValignment(separator, VPos.CENTER);
 	}
-
+	
+	public static Label getAxisLabel(Axis<?> axis) {
+		List<Node> list =axis.getChildrenUnmodifiable();
+		for (Node n : list) {
+			if (n instanceof Label) return (Label)n;
+		}
+		return null;
+	}
+	
+	public static void setAxisFontSize(Axis<?> axis, Double fontSize) {
+		Label label = getAxisLabel(axis);
+		if (label != null) CSS.setFontSize(label, fontSize);
+		axis.setUserData(fontSize);
+	}
+	
+	public static Double getAxisFontSize(Axis<?> axis) {
+		Double size  = (Double)axis.getUserData();
+		if (size == null) {
+			axis.setUserData(defaultFontSize);
+			size = defaultFontSize;
+		}
+		return size;
+	}
 }

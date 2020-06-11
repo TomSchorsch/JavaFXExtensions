@@ -3,19 +3,16 @@ package test.callouts;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.ListIterator;
 import javaFX.ext.utility.Logger;
+import javaFX.plots.Plot;
 import javaFX.plots.PlotData;
-import javaFX.plots.axis.StableTicksAxis;
+import javaFX.plots.axis.NumberAxis;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.callouts.CallOutSettings;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.stage.Stage;
 import test.FXTester;
 
@@ -50,7 +47,7 @@ public class TestAllCallOuts implements FXTester {
 				(yy -> "Angles 270 - 360"));
 
 
-		var callOutAngles = new CallOut("line angles",plotData);
+		var callOutAngles = new CallOut<Number,String>("line angles",plotData);
 		{
 			var cos = callOutAngles.copyDefaultSettings();
 			cos.setTextRotated(false);
@@ -76,17 +73,15 @@ public class TestAllCallOuts implements FXTester {
 		callOutAngles.setRotateCallOutByDragging(true);
 		callOutAngles.setEditCallOutByRightClicking(true);
 		
-		final StableTicksAxis xAxis = new StableTicksAxis();
-		final StableTicksAxis yAxis = new StableTicksAxis();
+		final NumberAxis xAxis = new NumberAxis();
+		final NumberAxis yAxis = new NumberAxis();
 		xAxis.setLabel("X");
 		yAxis.setLabel("Y");
-		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
+		final Plot lineChart = new Plot(xAxis,yAxis);              
 		lineChart.setTitle("Test Moving, Rotating, and Editing CallOuts");
 		plotData.setYAxisComparator(PlotData.reverseSort);
 		yAxis.setAxisTickFormatter(plotData.getYAxisTickFormatter());
-		lineChart.getData().addAll(plotData.getJavaFXSeries());
-
-		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
+		lineChart.addData(plotData.getJavaFXSeries());
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		

@@ -3,15 +3,12 @@ package test.plotEditMenu;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
+import javaFX.plots.Plot;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import test.FXTester;
@@ -34,15 +31,11 @@ public class TestSaveAsPngTitle implements FXTester {
 		NumberPlotData plotData = new NumberPlotData();
 		plotData.addAll(series1,series2);
 
-		final NumberAxis xAxis = new NumberAxis();
-		final NumberAxis yAxis = new NumberAxis();
-		xAxis.setLabel("X");
-		yAxis.setLabel("Y");
-		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);                
+		final Plot lineChart = new Plot();   
+		lineChart.getXAxis().setLabel("X");
+		lineChart.getYAxis().setLabel("Y");               
 		lineChart.setTitle("Test Save/Save As using the Title as the File Name (Note special chars `~!@#$% ^&*() _-+={[]}|\'  \":;?/>.<,)");
-		lineChart.getData().addAll(plotData.getJavaFXSeries());
-		
-		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
+		lineChart.addData(plotData.getJavaFXSeries());
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		

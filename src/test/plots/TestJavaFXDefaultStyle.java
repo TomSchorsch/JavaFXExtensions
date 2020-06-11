@@ -5,10 +5,8 @@ import java.util.Random;
 import javaFX.ext.controls.Instructions;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
+import javaFX.plots.Plot;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.LineChart.SortingPolicy;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import test.FXTester;
@@ -33,13 +31,10 @@ public class TestJavaFXDefaultStyle implements FXTester {
 		}
 
 		// Create Plot
-		final NumberAxis xAxis = new NumberAxis();
-		final NumberAxis yAxis = new NumberAxis();
-		xAxis.setLabel("X");
-		yAxis.setLabel("Y");
-		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
+		final Plot lineChart = new Plot();              
+		lineChart.getXAxis().setLabel("X");
+		lineChart.getYAxis().setLabel("Y");
 		lineChart.setTitle("JavaFX Default Symbols and Colors");
-		lineChart.setAxisSortingPolicy(SortingPolicy.NONE);
 		lineChart.getData().addAll(plotData.getJavaFXSeries());
 
 		Scene scene = new Scene(lineChart,1200,600);

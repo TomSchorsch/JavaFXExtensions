@@ -3,15 +3,12 @@ package test.zoom;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
-import javaFX.plots.axis.StableTicksAxis;
+import javaFX.plots.Plot;
 import javaFX.plots.overlay.PlotInfo;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import test.FXTester;
@@ -31,21 +28,12 @@ public class TestPanning implements FXTester {
 				(xx -> xx.doubleValue()+Math.random()*3.8), 
 				(yy -> 6+random.nextGaussian()*6));
 
-//		final NumberAxis xAxis = new NumberAxis();
-//		final NumberAxis yAxis = new NumberAxis();
-		final StableTicksAxis xAxis = new StableTicksAxis();
-		final StableTicksAxis yAxis = new StableTicksAxis();
-		xAxis.setLabel("X");
-		yAxis.setLabel("Y");
-
-		var lineChart = new LineChart<Number,Number>(xAxis,yAxis);  
-		lineChart.getData().add(series1);
-		lineChart.getData().add(series2);
+		final Plot lineChart = new Plot();   
+		lineChart.getXAxis().setLabel("X");
+		lineChart.getYAxis().setLabel("Y");   
+		lineChart.addData(series1,series2);
 
 		lineChart.setTitle("Random Data");
-
-		
-		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		

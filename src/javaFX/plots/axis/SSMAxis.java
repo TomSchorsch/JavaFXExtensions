@@ -38,7 +38,7 @@ import javafx.util.Duration;
  *
  * @author Jason Winnebeck
  */
-public class StableTicksSSMAxis extends ValueAxis<Number> {
+public class SSMAxis extends ValueAxis<Number> {
 
 	/**
 	 * Schorsch additions
@@ -80,10 +80,10 @@ public class StableTicksSSMAxis extends ValueAxis<Number> {
 	 */
 	private BooleanProperty forceZeroInRange = new SimpleBooleanProperty( true );
 
-	public StableTicksSSMAxis() {
+	public SSMAxis() {
 	}
 
-	public StableTicksSSMAxis( double lowerBound, double upperBound ) {
+	public SSMAxis( double lowerBound, double upperBound ) {
 		super( lowerBound, upperBound );
 	}
 

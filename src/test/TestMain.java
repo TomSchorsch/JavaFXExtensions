@@ -26,7 +26,6 @@ import test.callouts.TestAllCallOuts;
 import test.callouts.TestCallOutSeriesEditor;
 import test.callouts.TestFontProperties;
 import test.callouts.TestLineProperties;
-import test.callouts.TestCallOutSeriesEditor;
 import test.controls.FileChoiceBoxTest;
 import test.controls.LabelerTest;
 import test.controls.MappedRadioButtonsTest;

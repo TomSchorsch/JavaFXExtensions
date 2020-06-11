@@ -11,6 +11,8 @@ import javaFX.plots.overlay.Classification;
 import javaFX.plots.overlay.PlotInfo;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.title.Title;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -19,6 +21,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -26,9 +29,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.converter.DoubleStringConverter;
 
 public class PlotEditor {
 	
+	static Double[] FontSize = new Double[] {8.0,9.0,10.0,10.5,11.0,12.0,14.0,16.0,18.0,20.0,22.0,24.0,26.0,28.0,30.0};
 	
 	static Map<LineChart<?,?>,Editor> mapLineChart2Editor = new HashMap<LineChart<?,?>,Editor>();
 	
@@ -106,6 +111,13 @@ public class PlotEditor {
 		{
 			titleTextField.end();
 			gridPane.add(new Text("Title"), 1, row); // col, row
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(FontSize, Title.getTitleSize(scene));
+			comboBox.setMaxWidth(60);
+			gridPane.add(comboBox, 2, row); // col, row
+			comboBox.getSelectionModel().selectedItemProperty().addListener(
+					(observable, oldValue, newValue) -> {
+						Title.setTitleSize(scene,newValue);
+					});
 			// Get and set the initial String value, Center the text and add it to the Grid Pane
 			titleTextField.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
 			titleTextField.setAlignment(Pos.CENTER);
@@ -130,6 +142,14 @@ public class PlotEditor {
 		{
 			subTitleTextField.end();
 			gridPane.add(new Text("SubTitle"), 1, row); // col, row
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(FontSize, Title.getSubTitleSize(scene));
+			comboBox.setMaxWidth(60);
+			gridPane.add(comboBox, 2, row); // col, row
+			comboBox.getSelectionModel().selectedItemProperty().addListener(
+					(observable, oldValue, newValue) -> {
+						Title.setSubTitleSize(scene,newValue);
+					});
+
 			// Get and set the initial String value, Center the text and add it to the Grid Pane
 			subTitleTextField.setMaxWidth(MAX_CHOICEBOX_SIZE*2);
 			subTitleTextField.setAlignment(Pos.CENTER);
@@ -169,7 +189,7 @@ public class PlotEditor {
 			});
 		}
 		{
-			gridPane.add(new Text("Legend Position : "),1, row);
+			gridPane.add(new Text("Legend Position : "),1, row,3,1);
 			ChoiceBox<Side> choiceBox = Editor.getEnumChoiceBox(new Side[] {Side.BOTTOM, Side.LEFT, Side.RIGHT}, lineChart.getLegendSide());
 			choiceBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			choiceBox.setOnAction(event -> { Legend.repositionLegend(scene, choiceBox.getValue());});
@@ -184,7 +204,7 @@ public class PlotEditor {
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		{
-			gridPane.add(new Text("Edit Plot Info"),1, row);
+			gridPane.add(new Text("Edit Plot Info"),1, row,3,1);
 			String originalText = PlotInfo.getText(scene);
 			TextField textField = new TextField(originalText);
 			textField.end();
@@ -238,4 +258,16 @@ public class PlotEditor {
 		GridPane.setValignment(separator, VPos.CENTER);
 	}
 
+//	public static ComboBox<Double> getDoubleComboBox(Double[] values, Double value) {
+//		// get list of enumerations
+//		ObservableList<Double> list = FXCollections.observableArrayList();
+//		list.addAll(values);
+//		// create a ChoiceBox with those values, set the default value, set the size, etc.
+//		var comboBox = new ComboBox<Double>(list);
+//		comboBox.setEditable(true);
+//		comboBox.setConverter(new DoubleStringConverter());
+////		GridPane.setFillWidth(comboBox, true);
+//		comboBox.setValue(value);
+//		return comboBox;
+//	}
 }

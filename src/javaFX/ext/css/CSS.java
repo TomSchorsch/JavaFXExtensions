@@ -13,13 +13,16 @@ import java.util.stream.Stream;
 
 import javaFX.ext.utility.ListIterator;
 import javaFX.ext.utility.MyColors;
+import javaFX.plots.AxisEditor;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.legend.Legend;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
@@ -223,13 +226,8 @@ public class CSS  {
 		private static Map<LineChart<?,?>,CSS> mapLineChart2CSS = new HashMap<LineChart<?,?>,CSS> ();
 
 
-
-		public CSS(LineChart lineChart) {
-			new CSS(lineChart, SymbolStyle.filled);
-		}
-
 		@SuppressWarnings("unchecked")
-		public CSS(LineChart lineChart, SymbolStyle symbolStyle) {
+		private CSS(LineChart lineChart, SymbolStyle symbolStyle) {
 			this.lineChart = lineChart;
 			this.defaultSymbolStyle = symbolStyle;
 			mapLineChart2CSS.put(lineChart, this);
@@ -239,7 +237,27 @@ public class CSS  {
 			replaceCSSSettings();
 			lineChart.getData().addListener((ListChangeListener<Data>) c ->  addingDataToChartLateCheck());
 			setDefaultColorsAndSymbols();
+			Axis axis = lineChart.getXAxis();
+			AxisEditor.setAxisFontSize(axis, AxisEditor.getAxisFontSize(axis));
+			axis = lineChart.getYAxis();
+			AxisEditor.setAxisFontSize(axis, AxisEditor.getAxisFontSize(axis));
 		}
+
+		public static CSS get(LineChart lineChart) {
+			if (mapLineChart2CSS.containsKey(lineChart)) return mapLineChart2CSS.get(lineChart);
+			return get(lineChart, SymbolStyle.filled);
+		}
+		public static CSS get(LineChart lineChart, SymbolStyle symbolStyle) {
+			if (mapLineChart2CSS.containsKey(lineChart)) {
+				CSS css = mapLineChart2CSS.get(lineChart);
+				if (!css.defaultSymbolStyle.equals(symbolStyle)) {
+					css.setDefaultSymbols(symbolStyle);
+				}
+				return css;
+			}
+			return new CSS(lineChart, symbolStyle);
+		}
+
 
 		private void setDefaultSymbols(SymbolStyle symbolStyle) {
 			if (symbolStyle.equals(SymbolStyle.unfilled)) defaultSymbols = new ListIterator<Symbol>(unfilled_symbols);
@@ -252,8 +270,6 @@ public class CSS  {
 		public static Label getXAxisLabel(LineChart chart)	{ return (Label)chart.getXAxis().lookup(".axis-label");}
 		public static Label getYAxisLabel(LineChart chart)	{ return (Label)chart.getYAxis().lookup(".axis-label");}
 //		public static TilePane getLegend(LineChart chart)	{ return (TilePane) chart.lookup(".chart-legend");}
-
-		public static CSS retrieveCSS(LineChart lineChart)	{ return mapLineChart2CSS.get(lineChart);}
 
 		private void standardChartSettings() {
 			lineChart.setAnimated(false);
@@ -296,7 +312,7 @@ public class CSS  {
 
 		private void replaceCSSSettings() {
 			lineChart.getStylesheets().add(cssFile);
-			List<Series> series = getSeriesFromChart();
+			List<Series<Number,Number>> series = getSeriesFromChart();
 			series.forEach(s -> {
 				replaceSeriesSettings(s); 			
 				getDataFromSeries(s).forEach((Data d) -> replaceDataSettings(d));
@@ -647,15 +663,14 @@ public class CSS  {
 				Symbol.v_rectangle, Symbol.v_rectangle_whitefilled, Symbol.v_rectangle_filled)
 				.collect(Collectors.toCollection(HashSet::new));
 
-		private Set<Symbol> getSymbolSet(Symbol symbol) {
-			if (squareSymbols.contains(symbol)) return squareSymbols;
-			else if (horizontalSymbols.contains(symbol)) return horizontalSymbols;
-			else if (verticalSymbols.contains(symbol)) return verticalSymbols;
-			else if (bigSquareSymbols.contains(symbol)) return bigSquareSymbols;
-			else if (smallSquareSymbols.contains(symbol)) return smallSquareSymbols;
-			else return null; // should not occur but if it  it will be obvious
-
-		}
+//		private Set<Symbol> getSymbolSet(Symbol symbol) {
+//			if (squareSymbols.contains(symbol)) return squareSymbols;
+//			else if (horizontalSymbols.contains(symbol)) return horizontalSymbols;
+//			else if (verticalSymbols.contains(symbol)) return verticalSymbols;
+//			else if (bigSquareSymbols.contains(symbol)) return bigSquareSymbols;
+//			else if (smallSquareSymbols.contains(symbol)) return smallSquareSymbols;
+//			else return null; // should not occur but if it does it will be obvious
+//		}
 
 		public static double symbolWidthMultiplier(Symbol symbol) {
 			if (squareSymbols.contains(symbol)) return 1.0;
@@ -678,11 +693,11 @@ public class CSS  {
 		////////////////////////////////////////////////////////////////
 		// Utility methods
 		////////////////////////////////////////////////////////////////
-		public List<Series> getSeriesFromChart() {
+		public List<Series<Number,Number>> getSeriesFromChart() {
 			@SuppressWarnings("unchecked")
-			ObservableList<Series> list = lineChart.getData();
-			List<Series> newList = new ArrayList<Series>(list.size());
-			for (Series series :list) {  // no routines need to deal with the callOut data series so it is removed here.
+			ObservableList<Series<Number,Number>> list = lineChart.getData();
+			List<Series<Number,Number>> newList = new ArrayList<Series<Number,Number>>(list.size());
+			for (Series<Number,Number> series :list) {  // no routines need to deal with the callOut data series so it is removed here.
 				if (!CallOut.setCallOutSeries.contains(series.getName())) {
 					newList.add(series);
 				}

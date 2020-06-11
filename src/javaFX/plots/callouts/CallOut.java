@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.FXUtil;
+import javaFX.plots.Plot;
 import javaFX.plots.PlotData;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javafx.collections.ObservableList;
@@ -32,7 +32,7 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
-public class CallOut <XTYPE,YTYPE> {
+public class CallOut<XTYPE,YTYPE> {
 	/*
 	 * An example of a CallOut at angle 0 from a given point:    ---- my CallOut
 	 * 
@@ -95,21 +95,21 @@ public class CallOut <XTYPE,YTYPE> {
 	// However, those defaults can be modified after creating the CallOut object and before adding CallOut data points
 	public CallOutSettings defaultCallOutSettings = new CallOutSettings();
 
-	static Map<Scene,List<CallOut>> mapScene2CallOuts = new HashMap<Scene,List<CallOut>>();
-	static Map<LineChart<?,?>,List<CallOut>> mapLineChart2CallOuts = new HashMap<LineChart<?,?>,List<CallOut>>();
+	static Map<Scene,List<CallOut<?,?>>> mapScene2CallOuts = new HashMap<Scene,List<CallOut<?,?>>>();
+	static Map<LineChart<Number,Number>,List<CallOut<?,?>>> mapLineChart2CallOuts = new HashMap<LineChart<Number,Number>,List<CallOut<?,?>>>();
 	public static Set<String> setCallOutSeries = new HashSet<String>();
 
-	public static List<CallOut> getCallOuts(Scene scene) {
+	public static List<CallOut<?,?>> getCallOuts(Scene scene) {
 		if (mapScene2CallOuts.containsKey(scene)) return mapScene2CallOuts.get(scene);
-		else return new ArrayList<CallOut>();
+		else return new ArrayList<CallOut<?,?>>();
 	}
 	
 	// Two maps are needed to keep track of items
 	// mapData2CallOut maps the Data point to the CallOut (CallOut Settings actually) that will be annnotating that data point
 	// mapText2Data enables you to get to the original data given that you have the text (because the user clicked on it)
 	// With the two maps you can get from the text on the display to the Data and then to the CallOut Settings
-	public Map<Data<Object,Object>,CallOutSettings> mapData2CallOutSettings = new HashMap<Data<Object,Object>,CallOutSettings>(); 
-	Map<Text,Data<Object,Object>> mapText2Data = new HashMap<Text,Data<Object,Object>>(); 
+	public Map<Data<Number,Number>,CallOutSettings> mapData2CallOutSettings = new HashMap<Data<Number,Number>,CallOutSettings>(); 
+	Map<Text,Data<Number,Number>> mapText2Data = new HashMap<Text,Data<Number,Number>>(); 
 
 	// THis is the chart being annotated
 	// It is needed to get the X and Y Axis to transform mouse coordinates into chart coordinates
@@ -149,11 +149,11 @@ public class CallOut <XTYPE,YTYPE> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Data<Object,Object>> getData() {
-		List<Data<Object,Object>> list = new ArrayList<>();
+	public List<Data<Number,Number>> getData() {
+		List<Data<Number,Number>> list = new ArrayList<>();
 		for (Object data : callOutSeries.getData()) {
 			if (mapData2CallOutSettings.containsKey(data)) {
-				list.add((Data<Object,Object>)data);
+				list.add((Data<Number,Number>)data);
 			}
 		}
 		return list;
@@ -176,7 +176,6 @@ public class CallOut <XTYPE,YTYPE> {
 	}
 
 	// Uses provided CallOut Settings
-	@SuppressWarnings("unchecked")
 	public void create(XTYPE x, YTYPE y, String text, CallOutSettings cos) {
 		CallOutSettings cosDup = new CallOutSettings();
 		CallOutSettings.duplicateSettingsFromTo(cos, cosDup);
@@ -197,10 +196,9 @@ public class CallOut <XTYPE,YTYPE> {
 //	}
 
 	// creates and configures the CallOuts given the individual CallOut Settings
-	@SuppressWarnings("unchecked")
-	public static void configure(Scene scene, CallOut... callOuts) {
+	public static void configure(Scene scene, CallOut<?,?>... callOuts) {
 //		Scene scene = stage.getScene();
-		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
+		Plot lineChart = SceneOverlayManager.getLineChart(scene);
 		if (lineChart == null) {
 			System.out.println("Must call 'callOut.addToChart(lineChart);' (or equivalent) to add the CallOuts (as a data series) to the Line Chart");
 			return;
@@ -210,19 +208,19 @@ public class CallOut <XTYPE,YTYPE> {
 			return;
 		}
 		if (!mapScene2CallOuts.containsKey(scene)) {
-			mapScene2CallOuts.put(scene, new ArrayList<CallOut>());
+			mapScene2CallOuts.put(scene, new ArrayList<CallOut<?,?>>());
 		}
 		
-		for (CallOut callOut : callOuts) {
+		for (CallOut<?,?> callOut : callOuts) {
 			callOut.lineChart = lineChart;
-			for (Series series : lineChart.getData()) {
+			for (Series<Number,Number> series : lineChart.getData()) {
 				if (series.getName().equals(callOut.callOutName)) {
-					List<Data> listData = series.getData();
+					List<Data<Number, Number>> listData = series.getData();
 					callOut.callOutSeries = series;
 					for(int i = 0; i < callOut.callOutList.size(); i++) {
 						CallOutSettings cos = (CallOutSettings) callOut.callOutList.get(i);
-						Data data = listData.get(i*2);
-						Data data2 = listData.get(i*2+1);
+						Data<Number,Number> data = listData.get(i*2);
+						Data<Number,Number> data2 = listData.get(i*2+1);
 						cos.setData(data);
 						cos.setData2(data2);		
 						callOut.mapData2CallOutSettings.put(data,cos);
@@ -244,17 +242,16 @@ public class CallOut <XTYPE,YTYPE> {
 	private void configure() {
 		
 
-		ObservableList<Data<Object,Object>> listData = callOutSeries.getData();
+		@SuppressWarnings("unchecked")
+		ObservableList<Data<Number,Number>> listData = callOutSeries.getData();
 
-
-		CSS css = CSS.retrieveCSS(lineChart);
-		if (css == null) css = new CSS(lineChart, SymbolStyle.whitefilled);
+		CSS css = CSS.get(lineChart);
 		css.setSymbolColor(callOutSeries, Color.TRANSPARENT);
 		css.setSymbolFillColor(callOutSeries, Color.TRANSPARENT);
 		css.setSymbolOutlineColor(callOutSeries, Color.TRANSPARENT);
 		css.setLineColor(callOutSeries, Color.TRANSPARENT);
 		replaceStackPaneDataNodeWithLineAndTextGroup(listData);
-		for (Data<Object,Object> data : listData) {
+		for (Data<Number,Number> data : listData) {
 
 			// Construct the CallOut line and text
 			CallOutSettings cos = mapData2CallOutSettings.get(data);
@@ -285,11 +282,11 @@ public class CallOut <XTYPE,YTYPE> {
 		}
 	}
 
-	private void replaceStackPaneDataNodeWithLineAndTextGroup(ObservableList<Data<Object,Object>> listData) {
-		listData.forEach((Data<Object,Object> data) -> {replaceStackPaneWithGroup(data);});
+	private void replaceStackPaneDataNodeWithLineAndTextGroup(ObservableList<Data<Number,Number>> listData) {
+		listData.forEach((Data<Number,Number> data) -> {replaceStackPaneWithGroup(data);});
 	}
 	
-	private void replaceStackPaneWithGroup(Data<Object,Object> data) {
+	private void replaceStackPaneWithGroup(Data<Number,Number> data) {
 		StackPane sp = (StackPane)data.getNode();
 		Group group = (Group)sp.getParent();
 		group.getChildren().remove(sp);
@@ -484,7 +481,7 @@ public class CallOut <XTYPE,YTYPE> {
 		}
 	}
 	
-	public static Line getLine(Data<Object,Object> data) {
+	public static Line getLine(Data<Number,Number> data) {
 		return getLine((Group)data.getNode());
 	}
 	public static Line getLine(Group group) {
@@ -498,7 +495,7 @@ public class CallOut <XTYPE,YTYPE> {
 		return line;
 	}
 	
-	public static Text getText(Data<Object,Object> data) {
+	public static Text getText(Data<Number,Number> data) {
 		return getText((Group)data.getNode());
 	}
 	public static Text getText(Group group) {
@@ -568,7 +565,7 @@ public class CallOut <XTYPE,YTYPE> {
 	class Delta { double x, y; } 
 	private final Delta dataOffset = new Delta();
 
-	private void setMouseTextEventHandlers(Data<Object,Object> data, Text text, CallOutSettings cos) {
+	private void setMouseTextEventHandlers(Data<Number,Number> data, Text text, CallOutSettings cos) {
 
 		if(editCallOutByRightClicking){
 			text.setOnMouseClicked((MouseEvent mouseEvent) -> callOutEditClickEvent(mouseEvent, text));
@@ -585,7 +582,7 @@ public class CallOut <XTYPE,YTYPE> {
 	}
 
 	// Enables the line (entire CallOut) to be dragged)
-	private void setMouseLineEventHandlers(Data<Object,Object> data, Line line) {
+	private void setMouseLineEventHandlers(Data<Number,Number> data, Line line) {
 		if (moveCallOutByDragging) {
 			line.setOnMouseEntered(mouseEvent -> {((Line)mouseEvent.getSource()).setCursor(Cursor.HAND);});
 			line.setOnMouseExited (mouseEvent -> {((Line)mouseEvent.getSource()).setCursor(Cursor.DEFAULT);});
@@ -604,7 +601,7 @@ public class CallOut <XTYPE,YTYPE> {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	public void mousePressed(MouseEvent mouseEvent, Data<Object,Object> data) {
+	public void mousePressed(MouseEvent mouseEvent, Data<Number,Number> data) {
 		//		System.out.println("Mouse Pressed");
 		if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
 			((Node)mouseEvent.getSource()).setCursor(Cursor.HAND);  
@@ -625,7 +622,7 @@ public class CallOut <XTYPE,YTYPE> {
 		}
 	}
 
-	private void mouseReleased(MouseEvent mouseEvent, Data<Object,Object> data ) {
+	private void mouseReleased(MouseEvent mouseEvent, Data<Number,Number> data ) {
 		// When the mouse is pressed the cursor is changed to a HAND (symbol for dragging)
 		// This code changes it back to the default when the mouse is released
 		Cursor cursor = ((Node)mouseEvent.getSource()).getCursor();
@@ -647,7 +644,7 @@ public class CallOut <XTYPE,YTYPE> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void draggingTextToRotate(MouseEvent mouseEvent, CallOutSettings cos, Data<Object,Object> data) {
+	private void draggingTextToRotate(MouseEvent mouseEvent, CallOutSettings cos, Data<Number,Number> data) {
 		if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
 			// Get mouse coordinates on scene
 			Point2D pointInScene = new Point2D(mouseEvent.getSceneX(), mouseEvent.getSceneY());
@@ -688,7 +685,7 @@ public class CallOut <XTYPE,YTYPE> {
 		}
 	}
 
-	private void moveCallOutLineByDragging(MouseEvent mouseEvent, Data<Object,Object> data) {
+	private void moveCallOutLineByDragging(MouseEvent mouseEvent, Data<Number,Number> data) {
 		Node node = (Node)mouseEvent.getSource();
 		node.setOnMouseDragged(e -> {
 			// Get mouse coordinates on scene

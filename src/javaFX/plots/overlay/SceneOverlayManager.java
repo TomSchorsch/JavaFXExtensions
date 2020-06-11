@@ -7,6 +7,7 @@ import javaFX.ext.utility.Logger;
 import javaFX.ext.utility.SaveAsPng;
 import javaFX.plots.AllSeriesEditor;
 import javaFX.plots.AxisEditor;
+import javaFX.plots.Plot;
 import javaFX.plots.PlotEditor;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.callouts.CallOutSettingsSeriesEditor;
@@ -81,13 +82,13 @@ public class SceneOverlayManager {
 	// Helper routine - Given a scene,gets the LineChart
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-	public static LineChart<?,?> getLineChart(Scene scene) {
+	public static Plot getLineChart(Scene scene) {
 		StackPane sp = getStackPaneOverlay(scene);
 		for (Node node : sp.getChildren()) {
-			if (node instanceof LineChart) return (LineChart<?, ?>) node;
+			if (node instanceof LineChart) return (Plot) node;
 			if (node instanceof BorderPane) {
 				BorderPane bp = (BorderPane) node;
-				if (bp.getCenter() != null && bp.getCenter() instanceof LineChart<?,?>) return (LineChart<?, ?>) bp.getCenter();
+				if (bp.getCenter() != null && bp.getCenter() instanceof LineChart<?,?>) return (Plot) bp.getCenter();
 			}
 		}
 		return null;  // should not occur
@@ -97,7 +98,7 @@ public class SceneOverlayManager {
 	// EditMenu
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static void addEditMenu(Scene scene, Logger logger) {
-		LineChart<?,?> lineChart = getLineChart(scene);
+		Plot lineChart = getLineChart(scene);
 		lineChart.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent mouseEvent) {
 				if (MouseButton.SECONDARY.equals(mouseEvent.getButton())) {
@@ -109,13 +110,13 @@ public class SceneOverlayManager {
 		});
 	}
 
-	private static ContextMenu createMenu(LineChart<?, ?> lineChart, Logger logger, double mouseX, double mouseY) {
+	private static ContextMenu createMenu(Plot lineChart, Logger logger, double mouseX, double mouseY) {
 
 		final ContextMenu contextMenu = new ContextMenu();
 
 		final Scene scene = lineChart.getScene();
 
-		final CSS css = CSS.retrieveCSS(lineChart);
+		final CSS css = CSS.get(lineChart);
 
 //		Button dummyButton = new Button();
 //		final SymbolGrid symbolGrid = new SymbolGrid(css.defaultSymbols, Color.BLACK, dummyButton);

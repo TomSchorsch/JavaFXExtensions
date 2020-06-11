@@ -17,6 +17,7 @@
 package javaFX.plots.axis;
 
 import java.text.NumberFormat;
+import java.util.List;
 
 /**
  * DefaultAxisTickFormatter formats labels using a default number instance.
@@ -56,4 +57,11 @@ public class DefaultAxisTickFormatter implements AxisTickFormatter {
 	public String format( Number value ) {
 		return currFormat.format( value );
 	}
+	
+	public List<String> getlabels(){
+		return null;
+	}
+	public void setlabels(List<String> labels){
+	}
+
 }

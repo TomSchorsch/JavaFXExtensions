@@ -4,16 +4,13 @@ import java.io.File;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.ext.utility.SaveAsPng;
 import javaFX.plots.NumberPlotData;
+import javaFX.plots.Plot;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import test.FXTester;
@@ -36,18 +33,13 @@ public class TestSaveAsPngGiven implements FXTester {
 		NumberPlotData plotData = new NumberPlotData();
 		plotData.addAll(series1,series2);
 
-		final NumberAxis xAxis = new NumberAxis();
-		final NumberAxis yAxis = new NumberAxis();
-		xAxis.setLabel("X");
-		yAxis.setLabel("Y");
-		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);             
+		final Plot lineChart = new Plot();   
+		lineChart.getXAxis().setLabel("X");
+		lineChart.getYAxis().setLabel("Y");         
 		lineChart.setTitle("Test Save / Save As using a provided file name (in this case XYZZY)");
 		SaveAsPng.setChartSaveFile(lineChart, new File("XYZZY.png"));
-		lineChart.getData().addAll(plotData.getJavaFXSeries());
+		lineChart.addData(plotData.getJavaFXSeries());
 
-		
-		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
-		
 		Scene scene = new Scene(lineChart,1200,600);
 		
 		SceneOverlayManager.addOverlays(scene, logger, SceneOption.Legend, SceneOption.EditMenu);	

@@ -3,16 +3,13 @@ package test.plots;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.NumberPlotData;
-import javaFX.plots.axis.StableTicksAxis;
-import javaFX.plots.axis.StableTicksSSMAxis;
+import javaFX.plots.Plot;
+import javaFX.plots.SSMPlot;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
@@ -38,16 +35,13 @@ public class TestSSMAxis implements FXTester {
 		}
 
 		// Create Plot
-		final StableTicksSSMAxis xAxis = new StableTicksSSMAxis();
-		final StableTicksAxis yAxis = new StableTicksAxis();
-		xAxis.setLabel("Time (SSM)");
-		yAxis.setLabel("Y");
-		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
+//		final Plot lineChart = new Plot(new NumberAxis(), new SSMAxis());              
+		final Plot lineChart = new SSMPlot();              
+		lineChart.getXAxis().setLabel("Time (SSM)");
+		lineChart.getYAxis().setLabel("Y");
 		lineChart.setTitle("Test SSM Axis Editor");
 		lineChart.setAxisSortingPolicy(SortingPolicy.NONE);
-		lineChart.getData().addAll(plotData.getJavaFXSeries());
-		
-		new CSS(lineChart, SymbolStyle.whitefilled);
+		lineChart.addData(plotData.getJavaFXSeries());
 	
 		Scene scene = new Scene(lineChart,1200,600);
 		

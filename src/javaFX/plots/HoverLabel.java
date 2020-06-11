@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 
 public class HoverLabel {
 
-	private HashMap<Data<?,?>, Label> mapData2Label = new HashMap<Data<?,?>,Label>();
+	private HashMap<Data<Number,Number>, Label> mapData2Label = new HashMap<Data<Number,Number>,Label>();
 
 	public  HoverLabel() {
 	}
@@ -29,7 +29,7 @@ public class HoverLabel {
 	////////////////////////////////////////////////////////////////
 
 	@SuppressWarnings("rawtypes")
-	public Data create(Data<?,?> data, String text) {
+	public Data create(Data<Number,Number> data, String text) {
 		Label label = new Label(text);
 		CSS.setBackgroundColor(label, Color.WHITESMOKE);
 		CSS.setBorderRadius(label, 5);
@@ -44,7 +44,7 @@ public class HoverLabel {
 	}
 
 	public void addLabelsToChart() {
-		for (final Data data : mapData2Label.keySet()) {
+		for (final Data<Number,Number> data : mapData2Label.keySet()) {
 			final Label label = mapData2Label.get(data);
 //			label.setStyle(label.getStyle()+"; "+data.getNode().getStyle());
 			CSS.setBackgroundColor(label, Color.WHITE);

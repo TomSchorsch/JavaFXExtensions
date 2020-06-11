@@ -26,9 +26,9 @@ import javafx.scene.text.Text;
 
 public class CallOutSettingsSeriesEditor  {
 
-		static Map<CallOut,Editor> map2Editor = new HashMap<CallOut,Editor>();
+		static Map<CallOut<?,?>,Editor> map2Editor = new HashMap<CallOut<?,?>,Editor>();
 		// This routine sets up the Editable window
-		public static void open(Scene scene, CallOut callOut, CSS css, double screenX, double screenY) {
+		public static void open(Scene scene, CallOut<?,?> callOut, CSS css, double screenX, double screenY) {
 			Editor editor = map2Editor.get(callOut);
 			if (editor != null) {
 				System.out.println("Editor already open");
@@ -49,7 +49,7 @@ public class CallOutSettingsSeriesEditor  {
 		
 		static final double MAX_CHOICEBOX_SIZE = 100.0;  // set a universal max size for the Choice Boxes that are created below 
 
-		private static GridPane getGridPaneForEditor(Scene scene, CallOut callOut) {
+		private static GridPane getGridPaneForEditor(Scene scene, CallOut<?,?> callOut) {
 
 			// set up GridPane for Editor labels and entries, set up spacing between entries and between other elements in the editor
 			GridPane gridPane = new GridPane();
@@ -135,7 +135,7 @@ public class CallOutSettingsSeriesEditor  {
 				choicelineWidthComboBox.getSelectionModel().selectedItemProperty().addListener(
 						(observable, oldValue, newValue) -> {
 							callOut.defaultCallOutSettings.setLineWidth((Double)newValue);
-							callOut.getData().stream().forEach(data -> ((CSS) callOut.mapData2CallOutSettings.get(data)).setLineWidth((Double)newValue));
+							callOut.getData().stream().forEach(data -> callOut.mapData2CallOutSettings.get(data).setLineWidth((Double)newValue));
 							resetLineAndText(callOut);
 						});
 				gridPane.add(choicelineWidthComboBox,3,row++);
@@ -220,16 +220,16 @@ public class CallOutSettingsSeriesEditor  {
 			return gridPane;
 		}
 		
-		private static void resetText(CallOut callOut) {
-			callOut.getData().stream().forEach(data -> callOut.setCalloutTextProperties(CallOut.getText((Data<Object, Object>) data),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));
+		private static void resetText(CallOut<?,?> callOut) {
+			callOut.getData().stream().forEach(data -> callOut.setCalloutTextProperties(CallOut.getText((Data<Number,Number>) data),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));
 		}
 		
-		private static void resetLineAndText(CallOut callOut) {
-			callOut.getData().stream().forEach(data -> callOut.setCallOutLineAndPositioningProperties(CallOut.getText((Data<Object, Object>) data),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));				
+		private static void resetLineAndText(CallOut<?,?> callOut) {
+			callOut.getData().stream().forEach(data -> callOut.setCallOutLineAndPositioningProperties(CallOut.getText((Data<Number,Number>) data),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));				
 		}
 
-		private static void resetCallOutLocation(CallOut callOut) {
-			callOut.getData().stream().forEach(data -> callOut.setCallOutDataLocation((Group)((Data<Object, Object>) data).getNode(),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));
+		private static void resetCallOutLocation(CallOut<?,?> callOut) {
+			callOut.getData().stream().forEach(data -> callOut.setCallOutDataLocation((Group)((Data<Number,Number>) data).getNode(),(CallOutSettings) callOut.mapData2CallOutSettings.get(data)));
 			callOut.callOutSeries.getNode().getParent().getParent().getParent().requestLayout();   // needed because it won't relayout otherwise
 		}
 		

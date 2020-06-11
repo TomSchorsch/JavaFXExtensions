@@ -3,21 +3,15 @@ package test.zoom;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.Logger;
 import javaFX.plots.Pair;
+import javaFX.plots.Plot;
 import javaFX.plots.PlotData;
-import javaFX.plots.axis.StableTicksAxis;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.overlay.PlotInfo;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
 import javafx.stage.Stage;
 import test.FXTester;
 
@@ -37,20 +31,15 @@ public class TestZoomWithMoveableCallOuts implements FXTester {
 				(xx -> xx.doubleValue()+Math.random()*3.8), 
 				(yy -> 6+random.nextGaussian()*6));
 
-		final StableTicksAxis xAxis = new StableTicksAxis();
-		final StableTicksAxis yAxis = new StableTicksAxis();
-		xAxis.setLabel("X");
-		yAxis.setLabel("Y");
-
-		var lineChart = new LineChart<Number,Number>(xAxis,yAxis);  
+		final Plot lineChart = new Plot();   
+		lineChart.getXAxis().setLabel("X");
+		lineChart.getYAxis().setLabel("Y");   
 		lineChart.setTitle("Random Data");
-		var callOut = new CallOut("singleton", plotData);
+		var callOut = new CallOut<Number,Number>("singleton", plotData);
 		Pair<Number,Number> data = plotData.getSeriesData("series1").get(5);
 		callOut.create(data.x, data.y, "Sample CallOut Info");
 
-		lineChart.getData().addAll(plotData.getJavaFXSeries());
-
-		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
+		lineChart.addData(plotData.getJavaFXSeries());
 		
 		Scene scene = new Scene(lineChart,1200,600);
 		

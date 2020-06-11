@@ -109,6 +109,28 @@ public class PlotData<XTYPE, YTYPE> {
 				}
 				return "";
 			}
+			
+			public List<String> getlabels(){
+				List<String> list = new ArrayList<String>();
+				for (String s : mapXString2Number.keySet()) {
+					list.add(s);
+				}
+				return list;
+			}
+			
+			public void setlabels(List<String> labels){
+				if (labels.size() != mapXString2Number.keySet().size()) {
+					System.out.println("AxisTickFormatter setLabels are of the wrong size");
+				}
+				else {
+					int i = 1;
+					for (String s : labels) {
+						mapXNumber2String.put(i,s);
+						mapXString2Number.put(s, i++);
+						
+					}
+				}
+			}
 		};
 		return atf;
 	}
@@ -122,8 +144,33 @@ public class PlotData<XTYPE, YTYPE> {
 				}
 				return "";
 			}
+			
+			public List<String> getlabels(){
+				List<String> list = new ArrayList<String>();
+				for (String s : mapYString2Number.keySet()) {
+					list.add(s);
+				}
+				return list;
+			}
+			
+			public void setlabels(List<String> labels){
+				if (labels.size() != mapYString2Number.keySet().size()) {
+					System.out.println("AxisTickFormatter setLabels are of the wrong size");
+				}
+				else {
+					int i = 1;
+					for (String s : labels) {
+						mapYNumber2String.put(i,s);
+						mapYString2Number.put(s, i++);
+						
+					}
+				}
+			}
+
+			
 		};
 		return atf;
+	
 	}
 	
 	public Number convertXType(XTYPE val) {

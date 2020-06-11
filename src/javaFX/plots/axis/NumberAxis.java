@@ -37,7 +37,7 @@ import javafx.util.Duration;
  *
  * @author Jason Winnebeck
  */
-public class StableTicksAxis extends ValueAxis<Number> {
+public class NumberAxis extends ValueAxis<Number> {
 
 	/**
 	 * Possible tick spacing at the 10^1 level. These numbers must be &gt;= 1 and &lt; 10.
@@ -73,10 +73,10 @@ public class StableTicksAxis extends ValueAxis<Number> {
 	 */
 	private BooleanProperty forceZeroInRange = new SimpleBooleanProperty( true );
 
-	public StableTicksAxis() {
+	public NumberAxis() {
 	}
 
-	public StableTicksAxis( double lowerBound, double upperBound ) {
+	public NumberAxis( double lowerBound, double upperBound ) {
 		super( lowerBound, upperBound );
 	}
 

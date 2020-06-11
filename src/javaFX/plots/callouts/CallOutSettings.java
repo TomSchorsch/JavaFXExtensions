@@ -38,10 +38,10 @@ public class CallOutSettings {
 	static Double[] FontSize = new Double[] {8.0,9.0,10.0,10.5,11.0,12.0,14.0,16.0,18.0,20.0,22.0,24.0,26.0,28.0,30.0};
 
 	// Standard Setters and getters
-	public Data<Object,Object> getData() {return data;}
-	public void      		 setData(Data<Object,Object> data) {this.data = data;}
-	protected Data<Object,Object>	getData2() {return data2;}
-	protected void      		 setData2(Data<Object,Object> data2) {this.data2 = data2;}
+	public Data<Number,Number> getData() {return data;}
+	public void      		 setData(Data<Number,Number> data) {this.data = data;}
+	protected Data<Number,Number>	getData2() {return data2;}
+	protected void      		 setData2(Data<Number,Number> data2) {this.data2 = data2;}
 	public String getText() {return text;}
 	public void   setText(String text) {this.text = text;}
 	public Boolean getTextRotated() {return textRotated;}
@@ -92,8 +92,8 @@ public class CallOutSettings {
 	ChangeListener<? super Double> angleListener = null; 
 
 	// default values of all the CallOut properties
-	private Data<Object,Object> data = null;
-	private Data<Object,Object> data2 = null;
+	private Data<Number,Number> data = null;
+	private Data<Number,Number> data2 = null;
 	private String text = "";
 	private boolean textRotated = true;
 	private Double angle = 30.0;
@@ -113,7 +113,7 @@ public class CallOutSettings {
 	}
 
 	// CallOut Constructor (can change default settings based on a provided template)
-	protected CallOutSettings(CallOutSettings cos, String text, Data<Object,Object> data, Data<Object,Object> data2) {
+	protected CallOutSettings(CallOutSettings cos, String text, Data<Number,Number> data, Data<Number,Number> data2) {
 		if (cos != null) duplicateSettingsFromTo(cos,this);
 		this.setText(text);
 		this.setData(data);
@@ -139,7 +139,7 @@ public class CallOutSettings {
 	}
 
 	// This routine sets up the Editable window
-	public void edit(CallOut co, double screenX, double screenY, Text text) {
+	public void edit(CallOut<?,?> co, double screenX, double screenY, Text text) {
 		if (this.editor != null) {
 			System.out.println("Editor already open");
 		}
@@ -196,7 +196,7 @@ public class CallOutSettings {
 
 	static final double MAX_CHOICEBOX_SIZE = 100.0;  // set a universal max size for the Choice Boxes that are created below 
 
-	private GridPane getGridPaneForEditor(final CallOut co, final Text text) {
+	private GridPane getGridPaneForEditor(final CallOut<?,?> co, final Text text) {
 
 		// set up GridPane for Editor labels and entries, set up spacing between entries and between other elements in the editor
 		GridPane gridPane = new GridPane();
@@ -215,7 +215,7 @@ public class CallOutSettings {
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Get the current X and Y values, label them as such and add the two fields to the GridPane 
 		{
-			gridPane.add(new Text("Data"), 1, row); // col, row
+			gridPane.add(new Text("Location"), 1, row); // col, row
 			xTextField = new TextField(this.data.getXValue().toString());
 			xTextField.setMaxWidth(MAX_CHOICEBOX_SIZE*0.8);
 			xTextField.setAlignment(Pos.CENTER);
@@ -227,7 +227,7 @@ public class CallOutSettings {
 
 			xTextField.setOnKeyReleased(event -> {
 				if (event.getCode() == KeyCode.ENTER){
-					Object x = getNumber(xTextField.getText(),originalX);
+					Number x = getNumber(xTextField.getText(),originalX);
 					xTextField.setText(x.toString());
 					data.setXValue(x);
 					co.setCalloutTextProperties(text,this);

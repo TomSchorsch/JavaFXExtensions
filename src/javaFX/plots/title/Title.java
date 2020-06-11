@@ -17,13 +17,8 @@ import javafx.scene.layout.VBox;
 
 public class Title {
 	
-	
-	static Map<Scene,BorderPane> mapScene2BorderPane = new HashMap<Scene,BorderPane>();
-	static Map<Scene,VBox> mapScene2TitlePane = new HashMap<Scene,VBox>();
-	static Map<Scene,Label> mapScene2Title = new HashMap<Scene,Label>();
-	static Map<Scene,Label> mapScene2SubTitle = new HashMap<Scene,Label>();
 
-	
+	static Map<Scene,TitleInfo> mapScene2TitleInfo = new HashMap<Scene,TitleInfo>();
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Title Manager
@@ -33,14 +28,23 @@ public class Title {
 	// The Title Border Pane is (1) a Border Pane and (2) has a chart as its Center node
 	// It is the same as the Legend Border
 	public static  BorderPane getTitleBorderPane(Scene scene) {
-		if (mapScene2BorderPane.containsKey(scene)) return mapScene2BorderPane.get(scene);
+		if (mapScene2TitleInfo.containsKey(scene)) {
+			TitleInfo ti = mapScene2TitleInfo.get(scene);
+			if (ti.borderPane != null) {
+				return ti.borderPane;
+			}
+		} 
+		else {
+			mapScene2TitleInfo.put(scene, new TitleInfo());
+		}
+		TitleInfo ti = mapScene2TitleInfo.get(scene);
 		StackPane sp = SceneOverlayManager.getStackPaneOverlay(scene);
 		LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 		for (Node node : sp.getChildren()) {
 			if (node instanceof BorderPane) {
 				BorderPane bp = (BorderPane) node;
 				if (bp.getCenter() != null && bp.getCenter().equals(lineChart)) {
-					mapScene2BorderPane.put(scene,bp);
+					ti.borderPane = bp;
 					return bp;
 				}
 			}
@@ -51,34 +55,35 @@ public class Title {
 	
 	
 	public static void addTitle(Scene scene) {
-		if (mapScene2TitlePane.containsKey(scene)) {
+		if (mapScene2TitleInfo.containsKey(scene)) {
 			setTitlePosition(scene);		
 		}
 		else {
+			mapScene2TitleInfo.put(scene, new TitleInfo());
 			LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 			VBox titlePane = new VBox();
 			titlePane.setPadding(new Insets(0,10,0,0));
 			titlePane.setSpacing(4);
 			titlePane.setAlignment(Pos.CENTER);
-			mapScene2TitlePane.put(scene,titlePane);
+			mapScene2TitleInfo.get(scene).titlePane = titlePane;
 			Label title = new Label(lineChart.getTitle());
 			CSS.setFontSize(title,16.0);
 			CSS.setFontWeight(title,CSS.FontWeight.bold);
-			mapScene2Title.put(scene,title);
+			mapScene2TitleInfo.get(scene).title = title;
 			Label subTitle = new Label("");
 			CSS.setFontSize(subTitle,12.0);
 			CSS.setFontWeight(subTitle,CSS.FontWeight.bold);
-			mapScene2SubTitle.put(scene,subTitle);			
+			mapScene2TitleInfo.get(scene).subTitle = subTitle;			
 			lineChart.setTitle(null);
 			setTitlePosition(scene);			
 		}
 	}
 	
 	public static Label getTitleLabel(Scene scene) {
-		if (!mapScene2Title.containsKey(scene)) {	
-			mapScene2Title.put(scene,new Label(""));
+		if (!mapScene2TitleInfo.containsKey(scene)) {
+			mapScene2TitleInfo.put(scene, new TitleInfo());
 		}
-		return mapScene2Title.get(scene);
+		return mapScene2TitleInfo.get(scene).title;
 	}
 	public static String getTitle(Scene scene) {
 		Label label = getTitleLabel(scene);
@@ -89,10 +94,10 @@ public class Title {
 	}
 	
 	public static Label getSubTitleLabel(Scene scene) {
-		if (!mapScene2SubTitle.containsKey(scene)) {	
-			mapScene2SubTitle.put(scene,new Label(""));
+		if (!mapScene2TitleInfo.containsKey(scene)) {
+			mapScene2TitleInfo.put(scene, new TitleInfo());
 		}
-		return mapScene2SubTitle.get(scene);
+		return mapScene2TitleInfo.get(scene).subTitle;
 	}
 	public static String getSubTitle(Scene scene) {
 		Label label = getSubTitleLabel(scene);
@@ -114,7 +119,7 @@ public class Title {
 	}
 	
 	private static void setTitlePosition(Scene scene) {
-		VBox vBox = mapScene2TitlePane.get(scene);
+		VBox vBox = mapScene2TitleInfo.get(scene).titlePane;
 		vBox.getChildren().clear();
 		if (!getTitle(scene).equals("")) {
 			vBox.getChildren().add(getTitleLabel(scene));
@@ -123,7 +128,7 @@ public class Title {
 			vBox.getChildren().add(getSubTitleLabel(scene));
 		}
 		BorderPane bp = getTitleBorderPane(scene);	
-		bp.setTop(mapScene2TitlePane.get(scene));
+		bp.setTop(mapScene2TitleInfo.get(scene).titlePane);
 	}
 
 	public static void removeTitle(Scene scene) {
@@ -134,6 +139,21 @@ public class Title {
 	public static boolean isTitleVisible(Scene scene) {
 		BorderPane bp = getTitleBorderPane(scene);
 		return bp.getTop() != null; 
+	}
+	
+	public static Double getTitleSize(Scene scene) {
+		return mapScene2TitleInfo.get(scene).titleSize;
+	}
+	public static Double getSubTitleSize(Scene scene) {
+		return mapScene2TitleInfo.get(scene).subTitleSize;
+	}
+	public static void setTitleSize(Scene scene, Double titleSize) {
+		mapScene2TitleInfo.get(scene).titleSize = titleSize;
+		CSS.setFontSize(mapScene2TitleInfo.get(scene).title,titleSize);
+	}
+	public static void setSubTitleSize(Scene scene, Double subTitleSize) {
+		mapScene2TitleInfo.get(scene).subTitleSize = subTitleSize;
+		CSS.setFontSize(mapScene2TitleInfo.get(scene).subTitle,subTitleSize);
 	}
 
 }

@@ -77,7 +77,7 @@ public class Legend {
 		else {
 			LineChart<?,?> lineChart = SceneOverlayManager.getLineChart(scene);
 			lineChart.setLegendVisible(false);
-			CSS css = CSS.retrieveCSS(SceneOverlayManager.getLineChart(scene));
+			CSS css = CSS.get(SceneOverlayManager.getLineChart(scene));
 			mapScene2ListLegendItems.put(scene, new ArrayList<Label>());
 			for (Series<?,?> series : css.getSeriesFromChart()) {
 				Label label = createLegendItem(series, css, new Label());
@@ -92,7 +92,7 @@ public class Legend {
 			legendPane.setPadding(new Insets(0,3,0,3));
 			setLegendSizeAndOrientation(scene);
 			
-			StackPane padding = new StackPane(legendPane);
+			new StackPane(legendPane); // adding a window for padding based on the side the legend is on
 			setLegendPosition(scene);			
 		}
 	}
@@ -178,7 +178,7 @@ public class Legend {
 	// If it needs two or more rows it switches to a FLow Box (Either Horizontal or vertical)
 	// Some improvements could be made to adjust the flow-box size so that it does not have (say) 16 items on the top row and then only 1 item on the bottom row)
 	public static Pane createLegend(LineChart<?,?> lineChart, Side side) {
-		CSS css = CSS.retrieveCSS(lineChart);
+		CSS css = CSS.get(lineChart);
 
 		Pane legendPane = null;
 		FlowPane fp = new FlowPane();
@@ -245,7 +245,7 @@ public class Legend {
 	}
 	
 	private static void refreshLegendItems(Scene scene) {
-		CSS css = CSS.retrieveCSS(SceneOverlayManager.getLineChart(scene));
+		CSS css = CSS.get(SceneOverlayManager.getLineChart(scene));
 		for (Series<?,?> series : css.getSeriesFromChart()) {
 			createLegendItem(series, css, MapSeries2LegendItem.get(series));
 		}

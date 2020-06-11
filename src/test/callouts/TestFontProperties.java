@@ -3,20 +3,18 @@ package test.callouts;
 import java.util.Random;
 
 import javaFX.ext.controls.Instructions;
-import javaFX.ext.css.CSS;
 import javaFX.ext.css.CSS.FontStyle;
 import javaFX.ext.css.CSS.FontWeight;
-import javaFX.ext.css.CSS.SymbolStyle;
 import javaFX.ext.utility.ListIterator;
 import javaFX.ext.utility.Logger;
 import javaFX.ext.utility.MyColors;
+import javaFX.plots.Plot;
 import javaFX.plots.PlotData;
-import javaFX.plots.axis.StableTicksAxis;
+import javaFX.plots.axis.NumberAxis;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import test.FXTester;
@@ -98,17 +96,15 @@ public class TestFontProperties implements FXTester {
 			callOutFontWeight.create(data.x, data.y,weightList.repeat().toString(),cos);			
 		}
 
-		final StableTicksAxis xAxis = new StableTicksAxis();
-		final StableTicksAxis yAxis = new StableTicksAxis();
+		final NumberAxis xAxis = new NumberAxis();
+		final NumberAxis yAxis = new NumberAxis();
 		xAxis.setLabel("X");
 		yAxis.setLabel("Y");
-		final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);              
-		lineChart.getData().addAll(plotData.getJavaFXSeries());
+		final Plot lineChart = new Plot(xAxis,yAxis);              
+		lineChart.addData(plotData.getJavaFXSeries());
 		
 		yAxis.setAxisTickFormatter(plotData.getYAxisTickFormatter());
 		lineChart.setTitle("CallOut Font Properties");
-		
-		CSS css = new CSS(lineChart,SymbolStyle.unfilled);
 		
 		Scene scene = new Scene(lineChart,1200,600);
 
