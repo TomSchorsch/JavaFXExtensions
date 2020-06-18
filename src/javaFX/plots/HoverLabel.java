@@ -2,6 +2,7 @@ package javaFX.plots;
 
 import java.util.HashMap;
 //import java.util.Map;
+import java.util.Map;
 
 import javaFX.ext.css.CSS;
 import javaFX.ext.utility.FXUtil;
@@ -10,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -19,7 +21,8 @@ import javafx.scene.paint.Color;
 
 public class HoverLabel {
 
-	private HashMap<Data<Number,Number>, Label> mapData2Label = new HashMap<Data<Number,Number>,Label>();
+	static Map<LineChart<Number,Number>,Map<Data<Number,Number>, Label>> mapChartToLabels = new HashMap<LineChart<Number,Number>,Map<Data<Number,Number>, Label>>();
+	private Map<Data<Number,Number>, Label> mapData2Label = new HashMap<Data<Number,Number>,Label>();
 
 	public  HoverLabel() {
 	}
@@ -43,7 +46,8 @@ public class HoverLabel {
 		return data;
 	}
 
-	public void addLabelsToChart() {
+	public void addLabelsToChart(LineChart<Number,Number> lineChart) {
+		mapChartToLabels.put(lineChart, mapData2Label);
 		for (final Data<Number,Number> data : mapData2Label.keySet()) {
 			final Label label = mapData2Label.get(data);
 //			label.setStyle(label.getStyle()+"; "+data.getNode().getStyle());
@@ -75,6 +79,13 @@ public class HoverLabel {
 				});
 			}
 		}
+	}
+	
+	public static Map<Data<Number,Number>, Label> getHoverTextMap(LineChart<Number,Number> lineChart) {
+		if (mapChartToLabels.containsKey(lineChart)) {
+			return mapChartToLabels.get(lineChart);
+		}
+		return null;
 	}
 }
 

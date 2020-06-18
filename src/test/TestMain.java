@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javaFX.ext.controls.Config;
 import javaFX.ext.controls.MappedRadioButtons;
-import javaFX.ext.controls.TextWindow;
 import javaFX.ext.utility.FXUtil;
 import javaFX.ext.utility.Logger;
 import javafx.application.Application;
@@ -18,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -36,8 +34,10 @@ import test.plots.TestHoverLabel;
 import test.plots.TestPlotAndSeriesEditor;
 import test.plots.TestPlotEditor;
 import test.plots.TestSSMAxis;
+import test.plots.TestSaveRestore;
 import test.plots.TestSeriesEditor;
 import test.plots.TestStableNumberAxis;
+import test.plots.TestSymbolsAndSizes;
 import test.plots.TestSymbolsIndividualSizes;
 import test.plots.TestTrackNumberAxisNoSort;
 import test.plots.TestTrackNumberAxisReverseSort;
@@ -67,7 +67,7 @@ public class TestMain extends Application {
 
 		initializeCenterDisplayArea();
 		initializeBottomDisplayArea();
-
+		
 		restoreConfig();
 		double width = FXUtil.getWidth(mainPane);
 		double height = FXUtil.getHeight(mainPane);
@@ -103,6 +103,7 @@ public class TestMain extends Application {
 		FXTester callOuts = (l) -> {;};
 		FXTester saves = (l) -> {;};
 		FXTester zoom = (l) -> {;};
+		FXTester saveRestore = (l) -> {;};
 		// Note: The above are anonymous constructors of the Interface FX Tester
 		// FXTestyer has a single Abstract Method "Execute" that takes a Logger as a parameter
 		// (l) -> {;};  is a method constructor for an anonymous execute... method
@@ -121,6 +122,7 @@ public class TestMain extends Application {
 		mapClass2Text.put(new TestPlotAndSeriesEditor(),"- Test Plot and Series Editor");
 
 		mapClass2Text.put(plotsExtra,"Test Additional Plot capabilities:");
+		mapClass2Text.put(new TestSymbolsAndSizes(),"- Test different Symbols and Sizes");
 		mapClass2Text.put(new TestSymbolsIndividualSizes(),"- Test Individual Symbol Sizes");
 
 		mapClass2Text.put(plotsString,"Test Plot with String Axis:");
@@ -144,12 +146,14 @@ public class TestMain extends Application {
 		mapClass2Text.put(new TestSaveAsPngTitle(), "- Test 'Save' & 'Save as' (title)");
 		mapClass2Text.put(new TestSaveAsPngGiven(), "- Test 'Save' & 'Save as' (given)");
 
-
 		mapClass2Text.put(zoom, "Test Plot Zoom:");
 		mapClass2Text.put(new TestZoom(), "- Zoom Controls -Rewritten");
 		mapClass2Text.put(new TestZoomWithMoveableCallOuts(), "- Zoom With moveable annotations");
 		mapClass2Text.put(new TestPanning(), "- Test Panning (with Zooming)");
 		
+		mapClass2Text.put(saveRestore, "Test Save To File & Restore:");
+		mapClass2Text.put(new TestSaveRestore(), "- Test Save To File & Restore (right Click on Chart)");
+
 		rbs = new MappedRadioButtons<FXTester>(mapClass2Text, MappedRadioButtons.PAGE_AXIS);
 		rbs.addNewRank(controls);
 		rbs.addNewRank(plots);
@@ -177,13 +181,15 @@ public class TestMain extends Application {
 		buttonPane.setAlignment(Pos.CENTER);
 
 		// position bottom window text box beneath buttons
-		TextWindow windowText = new TextWindow(10);
-		VBox bottomPane= new VBox(10.0, buttonPane, windowText.getPane());
-		VBox.setVgrow(windowText.getPane(),Priority.ALWAYS);
-
+//		TextWindow windowText = new TextWindow(10);
+//		VBox bottomPane= new VBox(10.0, buttonPane, windowText.getPane());
+		VBox bottomPane= new VBox(10.0, buttonPane);
+//		VBox.setVgrow(windowText.getPane(),Priority.ALWAYS);
+		
 		// assign to bottom of Border Pane
 		mainPane.setBottom(bottomPane);
 		BorderPane.setMargin(bottomPane, new Insets(10));  // top, right, bottom, left
+
 	}
 
 	private void execute() {
@@ -196,14 +202,14 @@ public class TestMain extends Application {
 
 	public void restoreConfig() {
 		Config config = new Config(this.getClass().getName(), logger);
-		config.load();
-		config.restoreConfigs("mappedRadioButtons", rbs);
+		config.loadFromFile();
+		config.restore("mappedRadioButtons", rbs);
 	}
 
 	public void saveConfig() {
 		Config config = new Config(this.getClass().getName(), logger);
-		config.saveConfigs("mappedRadioButtons", rbs);
-		config.save();
+		config.save("mappedRadioButtons", rbs);
+		config.saveToFile();
 	}
 
 }

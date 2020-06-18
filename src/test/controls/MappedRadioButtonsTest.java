@@ -49,14 +49,14 @@ public class MappedRadioButtonsTest implements FXTester {
 		
 	public void restoreConfig() {
 		Config config = new Config(this.getClass().getName(), logger);
-		config.load();
-		config.restoreConfigs("radioButtons", rbs);
+		config.loadFromFile();
+		config.restore("radioButtons", rbs);
 	}
 
 	public void saveConfig() {
 		Config config = new Config(this.getClass().getName(), logger);
-		config.saveConfigs("radioButtons", rbs);
-		config.save();
+		config.save("radioButtons", rbs);
+		config.saveToFile();
 	}
 
 }

@@ -230,7 +230,7 @@ public class AxisEditor {
 
 		{
 			gridPane.add(new Text("Tick Label rotation : "),1, row,2,1);
-			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.tickLabelRotationArray, axis.getTickLabelRotation());
+			ComboBox<Double> comboBox = Editor.getDoubleComboBox(CSS.tickLabelRotationArray, -axis.getTickLabelRotation());
 			comboBox.setMaxSize(MAX_CHOICEBOX_SIZE, Double.MAX_VALUE);
 			comboBox.setOnAction(event -> { 
 				axis.setTickLabelRotation(-comboBox.getValue());
@@ -252,7 +252,7 @@ public class AxisEditor {
 
 	}
 	
-	private static void setLowerBound (Axis axis, RadioButton axisAutoRangeButton, TextField lowerRangeTextField, double lowBound) {
+	private static void setLowerBound (Axis<?> axis, RadioButton axisAutoRangeButton, TextField lowerRangeTextField, double lowBound) {
 		axisAutoRangeButton.setSelected(false);
 		axis.setAutoRanging(false);
 		Double lower = getNumber(lowerRangeTextField.getText(),lowBound);
@@ -260,7 +260,7 @@ public class AxisEditor {
 		((ValueAxis<?>)axis).setLowerBound(lower);	
 	}
 
-	private static void setUpperBound (Axis axis, RadioButton axisAutoRangeButton, TextField upperRangeTextField, double upperBound) {
+	private static void setUpperBound (Axis<?> axis, RadioButton axisAutoRangeButton, TextField upperRangeTextField, double upperBound) {
 		axisAutoRangeButton.setSelected(false);
 		axis.setAutoRanging(false);
 		Double upper = getNumber(upperRangeTextField.getText(),upperBound);

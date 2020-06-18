@@ -9,6 +9,7 @@ import javaFX.plots.AllSeriesEditor;
 import javaFX.plots.AxisEditor;
 import javaFX.plots.Plot;
 import javaFX.plots.PlotEditor;
+import javaFX.plots.PlotFile;
 import javaFX.plots.callouts.CallOut;
 import javaFX.plots.callouts.CallOutSettingsSeriesEditor;
 import javaFX.plots.legend.Legend;
@@ -28,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class SceneOverlayManager {
 
@@ -123,10 +125,10 @@ public class SceneOverlayManager {
 //		dummyButton.setOnAction((event) -> {css.setSymbol(symbolGrid.getValue());}); 
 
 		//////////////////////////////////////////////////////////////////////////////////////////////
-		// Save Options
+		// Save to PNG Options
 		//////////////////////////////////////////////////////////////////////////////////////////////
-		final MenuItem saveItem = new MenuItem("Save");
-		saveItem.setOnAction(new EventHandler<ActionEvent>() {
+		final MenuItem savePngItem = new MenuItem("Save to PNG");
+		savePngItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent event) {
 				File file = SaveAsPng.save(lineChart);
 				if (file == null) {logger.println("File not saved");}
@@ -134,11 +136,31 @@ public class SceneOverlayManager {
 			}
 		});
 
-		final MenuItem saveAsItem = new MenuItem("Save As");
-		saveAsItem.setOnAction((event) -> {
+		final MenuItem saveAsPngItem = new MenuItem("Save As to PNG");
+		saveAsPngItem.setOnAction((event) -> {
 			File file = SaveAsPng.saveAs(lineChart);
 			if (file == null) {logger.println("File not saved");}
 			else {logger.println("Saved as "+file.getAbsolutePath());}
+		});
+		contextMenu.getItems().addAll(savePngItem, saveAsPngItem, new SeparatorMenuItem());
+
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		// Save / Restore to/from Plot Object  Options
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		final MenuItem saveItem = new MenuItem("Save to Plot Object");
+		saveItem.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent event) {
+				PlotFile.save(scene,  SaveAsPng.getFileFromChartSettings(lineChart), logger);
+			}
+		});
+
+		final MenuItem saveAsItem = new MenuItem("Restore from Plot Object");
+		saveAsItem.setOnAction((event) -> {
+			Scene plotScene = PlotFile.restore(SaveAsPng.getFileFromChartSettings(lineChart), logger);
+			Stage stage = new Stage();
+			stage.setScene(plotScene);
+			stage.show();
+
 		});
 		contextMenu.getItems().addAll(saveItem, saveAsItem, new SeparatorMenuItem());
 

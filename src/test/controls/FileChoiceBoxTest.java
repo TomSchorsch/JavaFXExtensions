@@ -48,16 +48,16 @@ public class FileChoiceBoxTest implements FXTester {
 		
 	public void restoreConfig() {
 		Config config = new Config(this.getClass().getName(), logger);
-		config.load();
-		config.restoreConfigs("fileChoiceBox", fileChoiceBox);
-		config.restoreConfigs("dirChoiceBox", dirChoiceBox);
+		config.loadFromFile();
+		config.restore("fileChoiceBox", fileChoiceBox);
+		config.restore("dirChoiceBox", dirChoiceBox);
 	}
 
 	public void saveConfig() {
 		Config config = new Config(this.getClass().getName(), logger);
-		config.saveConfigs("fileChoiceBox", fileChoiceBox);
-		config.saveConfigs("dirChoiceBox", dirChoiceBox);
-		config.save();
+		config.save("fileChoiceBox", fileChoiceBox);
+		config.save("dirChoiceBox", dirChoiceBox);
+		config.saveToFile();
 	}
 
 }

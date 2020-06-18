@@ -24,7 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class CallOutSettings {
-	
+
 	// These set up some reasonable values for Angle, Line Length, Line Width, and Font Size
 	// Programmatically these can be set to any value but the editor offers these choices only
 	public static Double[] Angle = new Double[] {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 75.0, 80.0, 85.0,
@@ -40,8 +40,8 @@ public class CallOutSettings {
 	// Standard Setters and getters
 	public Data<Number,Number> getData() {return data;}
 	public void      		 setData(Data<Number,Number> data) {this.data = data;}
-	protected Data<Number,Number>	getData2() {return data2;}
-	protected void      		 setData2(Data<Number,Number> data2) {this.data2 = data2;}
+	public Data<Number,Number>	getData2() {return data2;}
+	public void      		 setData2(Data<Number,Number> data2) {this.data2 = data2;}
 	public String getText() {return text;}
 	public void   setText(String text) {this.text = text;}
 	public Boolean getTextRotated() {return textRotated;}
@@ -109,7 +109,7 @@ public class CallOutSettings {
 
 	// gives you a CallOut settings w/out the text and data point
 	// this can be modified and then supplied as a template when creating the CallOuts themselves
-	protected CallOutSettings() { 
+	public CallOutSettings() { 
 	}
 
 	// CallOut Constructor (can change default settings based on a provided template)

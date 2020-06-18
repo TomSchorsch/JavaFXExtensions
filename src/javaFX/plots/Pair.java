@@ -1,6 +1,9 @@
 package javaFX.plots;
 
-public class Pair<XTYPE,YTYPE> {
+import java.io.Serializable;
+
+public class Pair<XTYPE,YTYPE> implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public final XTYPE x;
 	public final YTYPE y;
 	public Pair(XTYPE x, YTYPE y) {

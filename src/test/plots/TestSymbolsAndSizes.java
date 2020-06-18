@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import test.FXTester;
 
 
-public class TestSymbolsIndividualSizes implements FXTester {
+public class TestSymbolsAndSizes implements FXTester {
 
 	Random random = new Random();
 	@Override
@@ -28,7 +28,7 @@ public class TestSymbolsIndividualSizes implements FXTester {
 		NumberPlotData plotData = new NumberPlotData();
 
 		// Generate data
-		for (double d = 1.0; d <=14.0; d = d+1.0) {
+		for (double d = 1.0; d <=40.0; d = d+1.0) {
 			double factor = 1 + 1.0/d;
 			double val = d;
 			XYChart.Series<Number,Number> series = FXTester.getSeriesData("series"+String.format("%02.0f",d), 12, 1.0,  d,  
@@ -41,17 +41,14 @@ public class TestSymbolsIndividualSizes implements FXTester {
 		final Plot lineChart = new Plot();              
 		lineChart.getXAxis().setLabel("X");
 		lineChart.getYAxis().setLabel("Y");                
-		lineChart.setTitle("Test Symbols of different sizes on the same series");
+		lineChart.setTitle("Test different Symbols and sizes");
 		lineChart.addData(plotData.getJavaFXSeries());
 
 		ListIterator<Double> listSizes = new ListIterator<Double>(CSS.symbolSizeArray);
 		CSS css = CSS.get(lineChart);
 		for (Series<Number, Number> series : css.getSeriesFromChart()) {
-			css.setSymbol(series, css.defaultSymbols.getNext());
-			listSizes.reset();
-			for (Data<Number, Number> data : series.getData()) {
-				css.setSymbolSize(data, listSizes.getNext());
-			}
+			css.setSymbol(series, css.allSymbols.getNext());
+			css.setSymbolSize(series, listSizes.getNext());
 		}
 		
 		Scene scene = new Scene(lineChart,1200,600);
@@ -61,10 +58,8 @@ public class TestSymbolsIndividualSizes implements FXTester {
 		Stage stage = FXTester.displayResults(scene);
 		
 		Instructions txt = new Instructions(stage.getScene());
-		txt.addCenter("Tests Individual Symbol Sizes");
-		txt.add("Programmatically, the individual data values of a data series were given different sizes");
-		txt.add("These sizes can be set by the Plot and Series Editors as a whole but cannot be individually changed / edited");
-		txt.add("<b>I.e. there is no data point editor at this time</b>");
+		txt.addCenter("Tests different Symbols and Sizes");
+		txt.add("Programmatically, the data series were given different symbols and sizes");
 		txt.display();
 	}
 }

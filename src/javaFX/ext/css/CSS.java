@@ -170,7 +170,7 @@ public class CSS  {
 		public static Set<Symbol> setWhitefilledSymbols = new HashSet<Symbol>(); 	static { setWhitefilledSymbols.addAll(Arrays.asList(whitefilled_symbols));
 		setWhitefilledSymbols.add(Symbol.cross_whitefilled); setWhitefilledSymbols.add(Symbol.plus_whitefilled); setWhitefilledSymbols.add(Symbol.checkmark_whitefilled); }
 
-		public static List<Symbol> allSymbols = new ArrayList<Symbol>();
+		public static ListIterator<Symbol> allSymbols = new ListIterator<Symbol>();
 		static {
 			allSymbols.addAll(Arrays.asList(unfilled_symbols));
 			allSymbols.addAll(Arrays.asList(whitefilled_symbols));

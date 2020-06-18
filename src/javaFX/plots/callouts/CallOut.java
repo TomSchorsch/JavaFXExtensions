@@ -95,7 +95,7 @@ public class CallOut<XTYPE,YTYPE> {
 	// However, those defaults can be modified after creating the CallOut object and before adding CallOut data points
 	public CallOutSettings defaultCallOutSettings = new CallOutSettings();
 
-	static Map<Scene,List<CallOut<?,?>>> mapScene2CallOuts = new HashMap<Scene,List<CallOut<?,?>>>();
+	protected static Map<Scene,List<CallOut<?,?>>> mapScene2CallOuts = new HashMap<Scene,List<CallOut<?,?>>>();
 	static Map<LineChart<Number,Number>,List<CallOut<?,?>>> mapLineChart2CallOuts = new HashMap<LineChart<Number,Number>,List<CallOut<?,?>>>();
 	public static Set<String> setCallOutSeries = new HashSet<String>();
 
@@ -114,7 +114,7 @@ public class CallOut<XTYPE,YTYPE> {
 	// THis is the chart being annotated
 	// It is needed to get the X and Y Axis to transform mouse coordinates into chart coordinates
 	@SuppressWarnings("rawtypes")
-	LineChart lineChart = null;
+	public LineChart lineChart = null;
 
 	// CallOut Behavior Settings
 	boolean moveCallOutByDragging = true;
@@ -124,7 +124,7 @@ public class CallOut<XTYPE,YTYPE> {
 	PlotData<XTYPE,YTYPE> plotData;
 	
 	@SuppressWarnings("rawtypes")
-	protected Series callOutSeries;
+	public Series callOutSeries;
 	protected String callOutName;
 
 	// The default constructor
@@ -136,6 +136,18 @@ public class CallOut<XTYPE,YTYPE> {
 		setCallOutSeries.add(name);
 		this.callOutName = name;
 		this.plotData = plotData;
+	}
+	
+	// only called when restoring a callout from a saved file
+	public CallOut(String name) { 
+		setCallOutSeries.add(name);
+		this.callOutName = name;
+	}
+	public static void addCallOut(Scene scene, CallOut callOut) {
+		if (!mapScene2CallOuts.containsKey(scene)) {
+			mapScene2CallOuts.put(scene, new ArrayList<CallOut<?,?>>());
+		}
+		mapScene2CallOuts.get(scene).add(callOut);
 	}
 
 	public String getName() {
@@ -230,16 +242,9 @@ public class CallOut<XTYPE,YTYPE> {
 				}
 			}
 		}
-		
-	
-		
-		
-//		for (CallOut2 callOut : mapLineChart2CallOuts.get(lineChart)) {		
-		
-	
 	}
 	
-	private void configure() {
+	public void configure() {
 		
 
 		@SuppressWarnings("unchecked")

@@ -54,14 +54,13 @@ public class TestHoverLabel implements FXTester {
 			}
 		}
 	
-		Scene scene = new Scene(lineChart,1200,600);
-		
+		Scene scene = new Scene(lineChart,1200,600);		
 		
 		SceneOverlayManager.addOverlays(scene, logger, SceneOption.All);	
 		
 		Stage stage = FXTester.displayResults(scene);
 		
-		hl.addLabelsToChart();
+		hl.addLabelsToChart(lineChart);
 		
 		Instructions txt = new Instructions(stage.getScene());
 		txt.addCenter("Tests Hover Labels");
