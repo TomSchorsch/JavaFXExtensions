@@ -141,7 +141,8 @@ public class SaveAsPng {
 		if (mapChart2File.containsKey(chart)) {
 			return mapChart2File.get(chart);
 		}
-		String fileName = removeCharsNotAllowedInAFileName(Title.getTitle(chart.getScene()));
+		String fileName = System.getProperty("user.home")+File.separatorChar+removeCharsNotAllowedInAFileName(Title.getTitle(chart.getScene()));
+//		String fileName = removeCharsNotAllowedInAFileName(Title.getTitle(chart.getScene()));
 		return new File(fileName);
 	}
 	

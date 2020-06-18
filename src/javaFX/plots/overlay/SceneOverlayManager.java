@@ -150,13 +150,21 @@ public class SceneOverlayManager {
 		final MenuItem saveItem = new MenuItem("Save to Plot Object");
 		saveItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent event) {
-				PlotFile.save(scene,  SaveAsPng.getFileFromChartSettings(lineChart), logger);
+				File file = SaveAsPng.getFileFromChartSettings(lineChart);
+				if (!file.getName().endsWith(".plot")) {
+					file = new File(file.getAbsolutePath()+".plot");
+				}
+				PlotFile.save(scene,  file, logger);
 			}
 		});
 
 		final MenuItem saveAsItem = new MenuItem("Restore from Plot Object");
 		saveAsItem.setOnAction((event) -> {
-			Scene plotScene = PlotFile.restore(SaveAsPng.getFileFromChartSettings(lineChart), logger);
+			File file = SaveAsPng.getFileFromChartSettings(lineChart);
+			if (!file.getName().endsWith(".plot")) {
+				file = new File(file.getAbsolutePath()+".plot");
+			}
+			Scene plotScene = PlotFile.restore(file, logger);
 			Stage stage = new Stage();
 			stage.setScene(plotScene);
 			stage.show();
