@@ -1,10 +1,5 @@
 # JavaFXExtensions
 
-## Contains a few stand alone control extensions:
-  - <b>FileChoiceBox</b> - maintains a history of previously chosen files so user can choose a new file from a filepicker OR select a previously chosen file from the pull-down.
-  - <b>MappedRadioButtons</b> - creates a bunch of radio buttons which display strings (the mapped-to value) but when selected return the mapped-from value.  2 features include indented sub-radio buttons and multiple columns of radio buttons.   
-  - <b>Config</b> - config is a helper utility for the above.  It enables the "history state" of the FileChoiceBox control and the selected items in the MappedRadioButtons control to be saved between successive executions of your program.
-
 ## Contains a LineChart Plot Editor</b><br>
 The default JavaFX LineChart had some limitations in terms of available Symbols and Colors at runtime and some of those limitations are addressed by this project.  The "Editor" porition of this is to edit everything on the chart BUT the data... (i.e. colors, fonts, line sizes, etc.)
 
