@@ -82,6 +82,10 @@ public class SSMAxis extends ValueAxis<Number> {
 
 	public SSMAxis() {
 	}
+	
+	public SSMAxis(String label) {
+		setLabel(label);
+	}
 
 	public SSMAxis( double lowerBound, double upperBound ) {
 		super( lowerBound, upperBound );

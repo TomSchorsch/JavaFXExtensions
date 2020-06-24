@@ -32,7 +32,11 @@ public class SaveAsPng {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// "Save"ing a Scene
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static File save(Scene scene, File file) {
+	public static File save(Scene scene, final File file) {		
+		FXUtil.runSafe(()-> saveLater(scene, file));
+		return file;
+	}
+	private static File saveLater(Scene scene, File file) {
 		file = addParentDirectory(file);
 		file = addPng(file);
 		WritableImage image = scene.snapshot(null);
@@ -43,15 +47,18 @@ public class SaveAsPng {
 		} catch (IOException e) {
 			// TODO: handle exception here
 		}
-		return null;
+		return file;
 	}
 
 	public static File save(Scene scene, String FileName) {
 		return save(scene, new File(FileName));
 	}
 
-
 	public static void writeLegend(Scene scene, File file) {
+		FXUtil.runSafe(()-> writeLegendLater(scene, file));		
+	}
+
+	private static void writeLegendLater(Scene scene, File file) {
 		FlowPane legendPane = Legend.getLegend(scene);
 		if (legendPane != null) {
 			File legendFile = new File(file.getAbsolutePath().replace(".png", "_Legend.png"));
@@ -141,19 +148,12 @@ public class SaveAsPng {
 		if (mapChart2File.containsKey(chart)) {
 			return mapChart2File.get(chart);
 		}
-		String fileName = System.getProperty("user.home")+File.separatorChar+removeCharsNotAllowedInAFileName(Title.getTitle(chart.getScene()));
+		String fileName = System.getProperty("user.home")+File.separatorChar+FXUtil.removeCharsNotAllowedInAFileName(Title.getTitle(chart.getScene()));
 //		String fileName = removeCharsNotAllowedInAFileName(Title.getTitle(chart.getScene()));
 		return new File(fileName);
 	}
 	
-	private static String removeCharsNotAllowedInAFileName(String fileName) {
-		String newFileName = fileName.replace(" ", "_").replace(":", "-")
-		.replace("<", "-").replace(">", "-")
-		.replace("\\", "").replace("/", "")
-		.replace("*", "").replace("?", "").replace("|", "").replace("\"", "");
-		return newFileName;
-	}
-	
+
 	private static File addPng(File file) {
 		if (!file.getAbsolutePath().endsWith(".png")) {
 			file = new File(file.getAbsoluteFile()+".png");

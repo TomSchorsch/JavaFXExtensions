@@ -2,6 +2,8 @@ package javaFX.plots.zoommanager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
 
 import javaFX.plots.AxisEditor;
 import javaFX.plots.overlay.SceneOverlayManager;
@@ -50,6 +52,8 @@ public class ZoomManager {
 	double initXUpperBound = 0;
 	double initYLowerBound = 0;
 	double initYUpperBound = 0;
+	
+	private static Map<Scene,ZoomManager> mapScene2ZoomManager = new HashMap<Scene,ZoomManager>();
 
 	public <X,Y> ZoomManager(LineChart<X,Y> lineChart) {
 		this.scene = lineChart.getScene();
@@ -64,6 +68,10 @@ public class ZoomManager {
 		rect.widthProperty().bind(rectX.subtract(rectinitX));
 		rect.heightProperty().bind(rectY.subtract(rectinitY));
 		setMouseAndScrollHandlers();
+	}
+	
+	public static ZoomManager get(Scene scene) {
+		return mapScene2ZoomManager.get(scene);
 	}
 
 	public Pane getZoomRectangle() {
@@ -506,9 +514,11 @@ public class ZoomManager {
 			initYUpperBound = yAxis.getUpperBound(); 	
 		}
 	}
-	private void restoreChart() {
+	public void restoreChart() {
 		// the first sets are to enable the editor to get the right values as the autoranging 
 		// will not yet have occurred by the time the Editort is called to set the values
+		xAxis.setAutoRanging(false);
+		yAxis.setAutoRanging(false);
 		xAxis.setLowerBound(initXLowerBound);
 		xAxis.setUpperBound(initXUpperBound); 
 		yAxis.setLowerBound(initYLowerBound);

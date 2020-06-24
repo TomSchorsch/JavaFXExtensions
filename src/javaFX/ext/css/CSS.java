@@ -726,7 +726,6 @@ public class CSS  {
 
 		private void addingDataToChartLateCheck() {
 			System.out.println("Cannot add Data to a chart after creating a CSS ( i.e. calling 'chart.getData().add(series)' after already calling CSS css = new CSS(...)' )");
-			System.exit(1);
 		}
 
 }

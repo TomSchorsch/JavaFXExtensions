@@ -1,6 +1,10 @@
 package javaFX.ext.utility;
 
 import javaFX.ext.css.CSS;
+import javaFX.plots.Plot;
+import javaFX.plots.overlay.SceneOverlayManager;
+import javaFX.plots.zoommanager.ZoomManager;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -37,6 +41,29 @@ public class FXUtil {
 		Bounds bounds = node.getLayoutBounds();
 		parent.getChildren().remove(node); // ensure that the node is NOT part of the dummy scene
 		return bounds;
+	}
+	
+	public static String removeCharsNotAllowedInAFileName(String fileName) {
+		String newFileName = fileName.replace(" ", "_").replace(":", "-")
+		.replace("<", "-").replace(">", "-")
+		.replace("\\", "").replace("/", "")
+		.replace("*", "").replace("?", "").replace("|", "").replace("\"", "");
+		return newFileName;
+	}
+	
+	public static void runSafe (Runnable runnable) {
+		if (Platform.isFxApplicationThread()) {
+			runnable.run();
+		}
+		else {
+			Platform.runLater(runnable);
+		}
+	}
+	
+	public static void layoutChart(Scene scene) {
+		Plot plot = SceneOverlayManager.getLineChart(scene);
+		ZoomManager zoomManager = ZoomManager.get(scene);
+		runSafe(()-> zoomManager.restoreChart());
 	}
 
 }

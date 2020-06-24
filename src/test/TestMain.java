@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javaFX.ext.controls.Config;
 import javaFX.ext.controls.MappedRadioButtons;
 import javaFX.ext.utility.FXUtil;
 import javaFX.ext.utility.Logger;
@@ -24,9 +23,6 @@ import test.callouts.TestAllCallOuts;
 import test.callouts.TestCallOutSeriesEditor;
 import test.callouts.TestFontProperties;
 import test.callouts.TestLineProperties;
-import test.controls.FileChoiceBoxTest;
-import test.controls.LabelerTest;
-import test.controls.MappedRadioButtonsTest;
 import test.plotEditMenu.TestSaveAsPngGiven;
 import test.plotEditMenu.TestSaveAsPngTitle;
 import test.plots.TestCDFPlot;
@@ -67,8 +63,7 @@ public class TestMain extends Application {
 
 		initializeCenterDisplayArea();
 		initializeBottomDisplayArea();
-		
-		restoreConfig();
+
 		double width = FXUtil.getWidth(mainPane);
 		double height = FXUtil.getHeight(mainPane);
 
@@ -95,7 +90,6 @@ public class TestMain extends Application {
 		// Center controls go here
 
 		// These are "do nothing" testers, They serve as place holder and enable me to establish new Ranks
-		FXTester controls = (l) -> {;};  
 		FXTester plots = (l) -> {;};		
 		FXTester plotsExtra = (l) -> {;};
 		FXTester plotsSpecific = (l) -> {;};
@@ -110,10 +104,6 @@ public class TestMain extends Application {
 		// it accepts a Logger "l" as a parameter -> and then does nothing {;}
 
 		var mapClass2Text = new LinkedHashMap<FXTester,String>();
-		mapClass2Text.put(controls,"Test Controls:");
-		mapClass2Text.put(new LabelerTest(),"- Labeler");
-		mapClass2Text.put(new FileChoiceBoxTest(),"- File Choice Box");
-		mapClass2Text.put(new MappedRadioButtonsTest(),"- Mapped Radio Buttons");
 
 		mapClass2Text.put(plots,"Test Plot and Series Editors:");
 		mapClass2Text.put(new TestXAndYAxisEditors(),"- X and Y Axis Editors");
@@ -155,7 +145,6 @@ public class TestMain extends Application {
 		mapClass2Text.put(new TestSaveRestore(), "- Test Save To File & Restore (right Click on Chart)");
 
 		rbs = new MappedRadioButtons<FXTester>(mapClass2Text, MappedRadioButtons.PAGE_AXIS);
-		rbs.addNewRank(controls);
 		rbs.addNewRank(plots);
 		rbs.addNewRank(plotsString);
 		rbs.addNewRank(callOuts);
@@ -197,20 +186,6 @@ public class TestMain extends Application {
 		for (FXTester test : selected) {
 			test.execute(logger);
 		}
-		saveConfig();
 	}
-
-	public void restoreConfig() {
-		Config config = new Config(this.getClass().getName(), logger);
-		config.loadFromFile();
-		config.restore("mappedRadioButtons", rbs);
-	}
-
-	public void saveConfig() {
-		Config config = new Config(this.getClass().getName(), logger);
-		config.save("mappedRadioButtons", rbs);
-		config.saveToFile();
-	}
-
 }
 

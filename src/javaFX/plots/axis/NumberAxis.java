@@ -75,6 +75,10 @@ public class NumberAxis extends ValueAxis<Number> {
 
 	public NumberAxis() {
 	}
+	
+	public NumberAxis(String label) {
+		setLabel(label);
+	}
 
 	public NumberAxis( double lowerBound, double upperBound ) {
 		super( lowerBound, upperBound );

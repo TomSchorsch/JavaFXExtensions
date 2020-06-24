@@ -127,7 +127,7 @@ public class MappedRadioButtons<T> {
 		}
 	}
 
-	private void setSubButtons(RadioButton controller) {
+	protected void setSubButtons(RadioButton controller) {
 		boolean selected = controller.isSelected();
 		mapController2Controlled.get(controller).forEach(rb -> rb.setSelected(selected));
 	}
