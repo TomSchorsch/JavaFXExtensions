@@ -159,7 +159,6 @@ public class ZoomManager {
 
 	private void chartPan(MouseEvent mouseEvent) {
 		if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			panning= true;		
 			((Node)mouseEvent.getSource()).setCursor(Cursor.HAND);
 			xOrigin = mouseEvent.getX();
 			yOrigin = mouseEvent.getY();
@@ -190,7 +189,6 @@ public class ZoomManager {
 
 	private void chartZoom(MouseEvent mouseEvent) {
 		if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			dragging= true;
 			double xShift = getSceneShiftX(chartRegion);  
 			double yShift = getSceneShiftY(chartRegion);  
 			double mouseX = mouseEvent.getX()+xShift;
@@ -212,7 +210,8 @@ public class ZoomManager {
 		else if (mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			if (dragging) {
 				dragging = false;
-				if ((rectinitX.get() >= rectX.get()) || (rectinitY.get() >= rectY.get())) {
+				if ((rectinitX.get() >= rectX.get()+5) || (rectinitY.get() >= rectY.get()+5)) {
+//					System.out.println(rectinitX.get()+" >= "+rectX.get()+" or "+rectinitY.get()+" >= "+rectY.get());
 					restoreChart();
 				}
 				else {

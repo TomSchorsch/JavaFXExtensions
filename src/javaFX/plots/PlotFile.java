@@ -24,6 +24,7 @@ import javaFX.plots.legend.Legend;
 import javaFX.plots.overlay.SceneOverlayManager;
 import javaFX.plots.overlay.SceneOverlayManager.SceneOption;
 import javaFX.plots.title.Title;
+import javaFX.plots.zoommanager.ZoomManager;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -82,6 +83,7 @@ public class PlotFile {
 		plotFile.restoreAxisSettings();
 		plotFile.restoreLegend();
 		plotFile.hoverLabel.addLabelsToChart(plotFile.lineChart);
+		Plot plot = SceneOverlayManager.getLineChart(plotFile.scene);
 		return plotFile.scene;
 	}
 
@@ -190,6 +192,7 @@ public class PlotFile {
 		axis.setLabel((String)map.get(SS+"Label"));
 		AxisEditor.setAxisFontSize(axis,(Double)map.get(SS+"LabelSize"));
 		Boolean autoRanging = (Boolean)map.get(SS+"AutoRange");
+		axis.setAutoRanging(autoRanging);
 		if (!autoRanging) {
 			axis.setLowerBound((Double)map.get(SS+"LowerBound"));
 			axis.setUpperBound((Double)map.get(SS+"UpperBound"));
